@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-
+import React, { useEffect, useState } from "react";
 import { Grid, Stack } from "@chakra-ui/layout";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Input, InputGroup, Button, useToast, Box } from "@chakra-ui/react";
@@ -7,31 +6,43 @@ import BoardCard from "./BoardCard";
 import styled from "styled-components";
 import CreateBoardModal from "components/Modal/Modal";
 import { firestore } from "configs/firebase/firestore";
-import { collection, getDocs, doc, setDoc } from "firebase/firestore"; // import Loading from "./Loader";
+import { collection, addDoc, onSnapshot } from "firebase/firestore"; // import Loading from "./Loader";
 import { useForm } from "react-hook-form";
+import { v4 as uuidv4 } from "uuid";
+import { Board } from "utils/interfaces";
+import BoardSkeleton from "components/Loader/BoardSkeleton";
+import { boardsRef } from "utils/firebaseCollection";
 
 const BoardsContainer = styled.div`
   padding-top: 50px;
   width: 95%;
   margin: 0 auto;
 `;
-interface BoardValues {
+interface BoardFormValues {
   board_title: string;
   board_limit: number;
 }
 export const RetroBody = () => {
+  const [boards, setBoards] = useState<Board[] | undefined>(undefined);
+  const [loading, setLoading] = useState<boolean>(true);
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<BoardValues>();
+  } = useForm<BoardFormValues>();
 
-  const sds = useEffect(() => {
-    async function fetchBoards() {
-      const boardsQuery = await getDocs(collection(firestore, "boards"));
-      console.log(boardsQuery.docs);
-    }
-    fetchBoards();
+  useEffect(() => {
+    const boardsCollectionSnap = onSnapshot(
+      collection(firestore, "boards"),
+      (snapshot) => {
+        const payload = snapshot.docs.map((doc) => {
+          return { ...doc.data(), board_id: doc.id };
+        }) as Board[];
+        setBoards(payload);
+        setLoading(false);
+      }
+    );
+    return boardsCollectionSnap;
   }, []);
   const {
     isOpen: isBoardModalOpen,
@@ -39,10 +50,32 @@ export const RetroBody = () => {
     onOpen: openBoardModal,
   } = useDisclosure();
 
-  const handleCreateBoard = async (data: BoardValues) => {
+  const handleCreateBoard = async (data: BoardFormValues) => {
     try {
-      await setDoc(doc(firestore, "boards"), data);
-    } catch {}
+      await addDoc(boardsRef, {
+        ...data,
+        board_id: uuidv4(),
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const renderBoardCards = () => {
+    return loading ? (
+      <BoardSkeleton amount={5} />
+    ) : (
+      boards?.map((board) => {
+        return (
+          <BoardCard
+            key={board.board_id}
+            to={`/board/${board.board_id}`}
+            header={board.board_title}
+            boardId={board.board_id}
+          />
+        );
+      })
+    );
   };
 
   return (
@@ -58,15 +91,7 @@ export const RetroBody = () => {
           justifyContent="center"
           gap={6}
         >
-          {/* {boards?.map((board) => {
-            return (
-              <BoardCard
-                to={`/board/${board._id}`}
-                header={board.board_title}
-                boardId={board._id}
-              />
-            );
-          })} */}
+          {renderBoardCards()}
           <Box>
             <CreateBoardModal
               modalTitle="Create Board"

@@ -8,18 +8,16 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  Button,
   Box,
   Icon,
   Text,
-  Stack,
-  InputGroup,
-  Input,
   useDisclosure,
 } from "@chakra-ui/react";
 
 import { FaEllipsisV } from "react-icons/fa";
-import { useForm } from "react-hook-form";
+import { deleteDoc, doc } from "firebase/firestore";
+import { firestore } from "configs/firebase/firestore";
+import EditBoard from "./EditBoard";
 
 interface Props {
   to?: string;
@@ -33,29 +31,20 @@ const Grid = styled.div`
 `;
 
 const BoardCard = (props: Props) => {
-  const { isOpen, onClose, onOpen } = useDisclosure();
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
-
   const [deleteModalOpen, setdeleteModalOpen] = useState(false);
+  const { onOpen } = useDisclosure();
 
-  const handleDeleteBoard = () => {
-    setdeleteModalOpen(false);
-  };
-
-  const handleEditBoard = (ev: React.FormEvent) => {
+  const handleDeleteBoard = async () => {
     try {
-      ev.preventDefault();
-
-      onClose();
+      const currentBoardRef = doc(firestore, "boards", props.boardId);
+      await deleteDoc(currentBoardRef);
     } catch (err) {
       console.log(err);
+    } finally {
+      setdeleteModalOpen(false);
     }
   };
+
   return (
     <>
       <Box
@@ -68,9 +57,11 @@ const BoardCard = (props: Props) => {
       >
         <Grid>
           <Link href={props.to ?? ""} passHref>
-            <Text fontSize="lg" color="#4b5489" fontWeight="700">
-              {props.header}
-            </Text>
+            <a>
+              <Text fontSize="lg" color="#4b5489" fontWeight="700">
+                {props.header}
+              </Text>
+            </a>
           </Link>
           <Menu>
             <MenuButton background="none !important">
@@ -87,30 +78,7 @@ const BoardCard = (props: Props) => {
         </Grid>
       </Box>
 
-      <Modal
-        modalTitle="Edit Board Details"
-        isOpen={isOpen}
-        onOpen={onOpen}
-        onClose={onClose}
-      >
-        <form onSubmit={handleEditBoard}>
-          <Stack spacing={3}>
-            <InputGroup>
-              <Input
-                type="text"
-                {...register("board_title", {
-                  required: true,
-                })}
-                placeholder="Board Title"
-              />
-            </InputGroup>
-
-            <div>
-              <Button type="submit">Update board</Button>
-            </div>
-          </Stack>
-        </form>
-      </Modal>
+      <EditBoard />
       <AlertDialog
         isOpen={deleteModalOpen}
         onClose={() => setdeleteModalOpen(false)}
