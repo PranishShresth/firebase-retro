@@ -1,22 +1,18 @@
-import { useCallback, useEffect, useContext } from "react";
-// import RetroColumn from "./RetroColumn";
+import { useCallback } from "react";
 import styled, { css } from "styled-components";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
-import { useDispatch, useSelector } from "react-redux";
-// import { useParams } from "react-router";
 import {
   isPositionChanged,
   calculateItemPosition,
 } from "utils/dragAndDropUtils";
 import Loading from "components/Loader/BoardSkeleton";
-// import { itemActions } from "../reducers/itemReducer";
-// import RetroColumnListHeader from "./RetroColumnHeader";
 import { Box } from "@chakra-ui/layout";
-// import { SocketContext } from "../context/SocketContext";
 import RetroBoardHeader from "./RetroBoardHeader";
 import { useRetroContext } from "context/RetroBoardContext";
 import RetroColumn from "./RetroColumn";
 import RetroListHeader from "./RetroList/RetroListHeader";
+import { doc, updateDoc } from "firebase/firestore";
+import { firestore } from "configs/firebase/firestore";
 // import NoPageFound from "";
 
 const ColumnsWrapper = styled.main`
@@ -68,7 +64,8 @@ interface BoardParam {
 }
 export const RetroBoardSingle = () => {
   const {
-    board: { board, lists },
+    board: { items, lists },
+    dispatch,
   } = useRetroContext();
 
   const currentListCount = lists.length;
@@ -78,31 +75,36 @@ export const RetroBoardSingle = () => {
     /*...*/
   }, []);
 
-  const onDragEnd = useCallback((result: DropResult) => {
-    const { source, destination, draggableId } = result;
-    if (!isPositionChanged(source, destination)) return;
-    if (!destination) return;
-    // const position = calculateItemPosition(
-    //   items,
-    //   source,
-    //   destination,
-    //   draggableId
-    // );
-    // const payload = {
-    //   source: source.droppableId,
-    //   destination: destination.droppableId,
-    //   position: position,
-    //   item_id: draggableId,
-    // };
-    // dispatch(itemActions.reorderItem(payload));
+  const onDragEnd = useCallback(
+    async (result: DropResult) => {
+      const { source, destination, draggableId } = result;
+      if (!isPositionChanged(source, destination)) return;
+      if (!destination) return;
+      const position = calculateItemPosition(
+        items,
+        source,
+        destination,
+        draggableId
+      );
 
-    // socket?.emit("REORDER_ITEM", payload);
+      const itemRef = doc(firestore, "items", draggableId);
+      dispatch({
+        type: "REORDER_ITEM_REQUESTED",
+        payload: {
+          source: source.droppableId,
+          destination: destination.droppableId,
+          item_id: draggableId,
+          position,
+        },
+      });
 
-    // dispatch({
-    //   type: "REORDER_ITEM_REQUESTED",
-    //   payload,
-    // });
-  }, []);
+      await updateDoc(itemRef, {
+        item_order: position,
+        list_id: destination.droppableId,
+      });
+    },
+    [items, dispatch]
+  );
 
   // if (loading) {
   //   return <Loading />;

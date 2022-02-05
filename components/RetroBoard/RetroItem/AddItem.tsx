@@ -1,5 +1,5 @@
 import { Button, Textarea, Stack, IconButton } from "@chakra-ui/react";
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { v4 as uuidv4 } from "uuid";
 
@@ -9,6 +9,8 @@ import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
+import { calculateInitialItemPosition } from "utils/dragAndDropUtils";
+import { useRetroContext } from "context/RetroBoardContext";
 
 interface Props {
   list_id: string;
@@ -26,6 +28,10 @@ interface FormValues {
 function AddItem({ list_id }: Props) {
   const router = useRouter();
   const boardId = "" + router.query.boardId;
+  const {
+    board: { items },
+  } = useRetroContext();
+
   const {
     handleSubmit,
     control,
@@ -47,12 +53,14 @@ function AddItem({ list_id }: Props) {
     }
     const doc_id = uuidv4();
     try {
+      const item_order = calculateInitialItemPosition(items);
       const ref = doc(firestore, "items", doc_id);
       await setDoc(ref, {
         ...data,
         item_id: doc_id,
         board_id: boardId,
-        list_id: list_id,
+        list_id,
+        item_order,
         createdAt: serverTimestamp(),
       });
       resetField("item_title");

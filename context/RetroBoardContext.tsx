@@ -61,6 +61,8 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
     fetchCurrentBoard();
   }, [boardId, dispatch]);
 
+  // lists subscription
+
   useEffect(() => {
     const q = query(
       collection(firestore, "lists"),
@@ -72,6 +74,22 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
         return { ...doc.data(), doc_id: doc.id };
       });
       dispatch({ type: "FETCH_LISTS_FULFILLED", payload });
+    });
+    return listsCollectionSnap;
+  }, [boardId]);
+
+  // items subscription
+  useEffect(() => {
+    const q = query(
+      collection(firestore, "items"),
+      where("board_id", "==", boardId)
+    );
+
+    const listsCollectionSnap = onSnapshot(q, (snapshot) => {
+      const payload = snapshot.docs.map((doc) => {
+        return { ...doc.data(), doc_id: doc.id };
+      });
+      dispatch({ type: "FETCH_ITEMS_FULFILLED", payload });
     });
     return listsCollectionSnap;
   }, [boardId]);

@@ -87,3 +87,11 @@ function getSortedItems(items: Item[] | undefined) {
   if (!items) return [];
   return [...items].sort((a, b) => a.item_order - b.item_order);
 }
+
+export const calculateInitialItemPosition = (items: Item[]): number => {
+  const itemPositions = items.map(({ item_order }) => item_order);
+  if (itemPositions.length > 0) {
+    return Math.max(...itemPositions) + 1;
+  }
+  return 1;
+};
