@@ -7,6 +7,7 @@ import { GiSelfLove } from "react-icons/gi";
 
 import styled from "styled-components";
 import { Item } from "utils/interfaces";
+import EditItem from "./RetroItem/EditItem";
 interface Props {
   item: Item;
   children?: React.ReactChild;

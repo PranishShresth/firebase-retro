@@ -40,7 +40,6 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const boardId = "" + router.query.boardId;
   const [state, dispatch] = useReducer(RetroBoardReducer, initialState);
-
   useEffect(() => {
     async function fetchCurrentBoard() {
       dispatch({ type: "FETCH_BOARD_REQUESTED" });
@@ -63,17 +62,19 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
   }, [boardId, dispatch]);
 
   useEffect(() => {
-    const boardsCollectionSnap = onSnapshot(
+    const q = query(
       collection(firestore, "lists"),
-      (snapshot) => {
-        const payload = snapshot.docs.map((doc) => {
-          return { ...doc.data(), doc_id: doc.id };
-        });
-        dispatch({ type: "FETCH_LISTS_FULFILLED", payload });
-      }
+      where("board_id", "==", boardId)
     );
-    return boardsCollectionSnap;
-  }, []);
+
+    const listsCollectionSnap = onSnapshot(q, (snapshot) => {
+      const payload = snapshot.docs.map((doc) => {
+        return { ...doc.data(), doc_id: doc.id };
+      });
+      dispatch({ type: "FETCH_LISTS_FULFILLED", payload });
+    });
+    return listsCollectionSnap;
+  }, [boardId]);
 
   return (
     <RetroBoardContext.Provider value={{ board: state, dispatch }}>

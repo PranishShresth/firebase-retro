@@ -6,6 +6,7 @@ import RetroCard from "./RetroCard";
 import { Draggable, DroppableProvided } from "react-beautiful-dnd";
 import { Item } from "utils/interfaces";
 import { useRetroContext } from "context/RetroBoardContext";
+import AddItem from "./RetroItem/AddItem";
 
 const RetroCardContainer = styled.div`
   display: flex;
@@ -71,9 +72,9 @@ const RetroColumn = ({ list_id, droppableProvided }: Props) => {
 
         {droppableProvided?.placeholder}
       </RetroCardContainer>
-      {/* <BottomListButton>
+      <BottomListButton>
         <AddItem list_id={list_id} />
-      </BottomListButton> */}
+      </BottomListButton>
     </>
   );
 };

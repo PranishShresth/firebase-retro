@@ -1,12 +1,14 @@
 import { Button, Textarea, Stack, IconButton } from "@chakra-ui/react";
 import React, { useState, useContext } from "react";
-import { useDispatch } from "react-redux";
 import { FaPlus } from "react-icons/fa";
+import { v4 as uuidv4 } from "uuid";
 
 import styled from "styled-components";
 import { GiCrossMark } from "react-icons/gi";
 import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { firestore } from "configs/firebase/firestore";
 
 interface Props {
   list_id: string;
@@ -27,6 +29,7 @@ function AddItem({ list_id }: Props) {
   const {
     handleSubmit,
     control,
+    resetField,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
@@ -39,25 +42,20 @@ function AddItem({ list_id }: Props) {
   const close = () => setOpen(false);
 
   const handleAddingItem = async (data: FormValues) => {
+    if (data.item_title === "") {
+      return;
+    }
+    const doc_id = uuidv4();
     try {
-      if (data.item_title === "") {
-        return;
-      }
-      //   const id = new ObjectID().toString();
-      //   const payload = {
-      //     list: list_id,
-      //     board: boardId,
-      //     _id: id,
-      //     ...formValues,
-      //   };
-
-      //   //   dispatch(itemActions.addItem(payload));
-
-      //   dispatch({
-      //     type: "CREATE_ITEM_REQUESTED",
-      //     payload,
-      //   });
-
+      const ref = doc(firestore, "items", doc_id);
+      await setDoc(ref, {
+        ...data,
+        item_id: doc_id,
+        board_id: boardId,
+        list_id: list_id,
+        createdAt: serverTimestamp(),
+      });
+      resetField("item_title");
       setOpen(false);
     } catch (err) {
       console.log(err);

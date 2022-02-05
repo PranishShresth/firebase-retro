@@ -60,9 +60,9 @@ const BoardCard = ({ board }: Props) => {
         <Grid>
           <Link href={`board/${board.board_id}`} passHref>
             <a>
-              <Text fontSize="lg" color="#4b5489" fontWeight="700">
-                {board.board_title}
-              </Text>
+              {/* <Text fontSize="lg" color="#4b5489" fontWeight="700"> */}
+              {board.board_title}
+              {/* </Text> */}
             </a>
           </Link>
           <Menu>

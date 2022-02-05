@@ -36,8 +36,8 @@ const EditBoard = ({
   });
 
   const handleEditBoard = async (data: FormValues) => {
-    const boardRef = doc(firestore, "boards", board.board_id);
     try {
+      const boardRef = doc(firestore, "boards", board.board_id);
       await setDoc(boardRef, data);
     } catch (err) {
       console.log(err);

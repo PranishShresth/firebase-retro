@@ -25,6 +25,7 @@ const CreateList = () => {
   const {
     handleSubmit,
     control,
+    resetField,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
@@ -45,7 +46,7 @@ const CreateList = () => {
         board_id: boardId,
         createdAt: serverTimestamp(),
       });
-
+      resetField("list_title");
       closeListModal();
     } catch (err) {
       console.log(err);
@@ -68,7 +69,12 @@ const CreateList = () => {
                 control={control}
                 name="list_title"
                 render={({ field }) => (
-                  <Input {...field} type="text" placeholder="List Title" />
+                  <Input
+                    {...field}
+                    type="text"
+                    placeholder="List Title"
+                    value={field.value}
+                  />
                 )}
               />
             </InputGroup>

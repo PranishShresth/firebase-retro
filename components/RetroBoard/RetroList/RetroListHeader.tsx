@@ -94,7 +94,7 @@ export default function RetroListHeader({ list_title, list_id }: Props) {
         </Box>
       ) : (
         <RetroColumnHeader>
-          <div onClick={() => setEditMode(true)}>{list_title} sadasdas</div>
+          <div onClick={() => setEditMode(true)}>{list_title}</div>
           <Icon
             as={FaTrash}
             size="mini"

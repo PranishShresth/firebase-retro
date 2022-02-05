@@ -23,7 +23,6 @@ const RetroBoardHeader = () => {
   const {
     board: { board, lists },
   } = useRetroContext();
-  console.log(board, lists);
   const currentListCount = lists && lists?.length;
   const boardLimit = board?.board_limit;
   const showListCreation = boardLimit && boardLimit > currentListCount;

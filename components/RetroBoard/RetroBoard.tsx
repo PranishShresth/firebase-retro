@@ -73,22 +73,6 @@ export const RetroBoardSingle = () => {
 
   const currentListCount = lists.length;
 
-  console.log(board, "here");
-  // const params = useParams<BoardParam>();
-  // const lists = useSelector(listsSelector);
-  // const { socket } = useContext(SocketContext);
-
-  // const currentBoardLists = lists.filter((l) => l.board === params.boardId);
-  // const items = useSelector(itemsSelector);
-  // const currentBoard = useSelector(boardSelector);
-  // const listCount = useSelector(getListCountsPerBoard);
-
-  // const loading = useSelector(loadingSelector);
-
-  // useEffect(() => {
-  //   dispatch({ type: "FETCH_BOARD_REQUESTED", payload: params.boardId });
-  // }, [params.boardId, dispatch]);
-
   const onDragStart = useCallback(() => {
     console.log("draggin");
     /*...*/
