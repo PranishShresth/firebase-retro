@@ -10,7 +10,7 @@ import { Controller, useForm } from "react-hook-form";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import { calculateInitialItemPosition } from "utils/dragAndDropUtils";
-import { useRetroContext } from "context/RetroBoardContext";
+import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 
 interface Props {
   list_id: string;
@@ -55,6 +55,7 @@ function AddItem({ list_id }: Props) {
     try {
       const item_order = calculateInitialItemPosition(items);
       const ref = doc(firestore, "items", doc_id);
+
       await setDoc(ref, {
         ...data,
         item_id: doc_id,
@@ -64,7 +65,6 @@ function AddItem({ list_id }: Props) {
         createdAt: serverTimestamp(),
       });
       resetField("item_title");
-      setOpen(false);
     } catch (err) {
       console.log(err);
     }

@@ -37,7 +37,7 @@ const RetroCard = ({ item, provided, snapshot }: Props) => {
         item_id={item.item_id}
         content={item.item_title}
         isOpen={isOpen}
-        onClose={onClose}
+        closeEditMode={onClose}
       />
     );
   }

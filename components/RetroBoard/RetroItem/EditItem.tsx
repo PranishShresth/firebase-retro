@@ -1,6 +1,6 @@
 import { Button, Textarea, Stack, IconButton } from "@chakra-ui/react";
 import { firestore } from "configs/firebase/firestore";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import React, { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { IoMdClose } from "react-icons/io";
@@ -9,13 +9,13 @@ interface Props {
   isOpen: boolean;
   content: string;
   item_id: string;
-  onClose: () => void;
+  closeEditMode: () => void;
 }
 
 interface FormValues {
   item_title: string;
 }
-function EditItem({ isOpen, onClose, content, item_id }: Props) {
+function EditItem({ isOpen, closeEditMode, content, item_id }: Props) {
   const {
     handleSubmit,
     control,
@@ -28,8 +28,9 @@ function EditItem({ isOpen, onClose, content, item_id }: Props) {
 
   const handleEditingItem = async (data: FormValues) => {
     try {
-      const boardRef = doc(firestore, "items", item_id);
-      await setDoc(boardRef, data);
+      const itemRef = doc(firestore, "items", item_id);
+      await updateDoc(itemRef, { ...data });
+      closeEditMode();
     } catch (err) {
       console.log(err);
     }
@@ -64,7 +65,7 @@ function EditItem({ isOpen, onClose, content, item_id }: Props) {
                 aria-label="cross"
                 icon={<IoMdClose />}
                 size="md"
-                onClick={onClose}
+                onClick={closeEditMode}
               />
             </Stack>
           </Stack>
