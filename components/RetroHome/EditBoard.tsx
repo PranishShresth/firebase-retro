@@ -1,32 +1,48 @@
 import React from "react";
-import {
-  Stack,
-  InputGroup,
-  Input,
-  Button,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
+import { Stack, InputGroup, Input, Button } from "@chakra-ui/react";
+import { Controller, useForm } from "react-hook-form";
 import Modal from "components/Modal/Modal";
+import { firestore } from "configs/firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
+import { Board } from "utils/interfaces";
 
-const EditBoard = () => {
-  const { isOpen, onClose, onOpen } = useDisclosure();
+interface Props {
+  isEditModalOpen: boolean;
+  closeEditBoardModal: () => void;
+  openEditBoardModal: () => void;
+  board: Board;
+}
+
+interface FormValues {
+  board_title: string;
+  board_limit: number;
+}
+
+const EditBoard = ({
+  isEditModalOpen,
+  closeEditBoardModal,
+  openEditBoardModal,
+  board,
+}: Props) => {
   const {
-    register,
     handleSubmit,
-
+    control,
     formState: { errors },
-  } = useForm<{ board_title: string; board_limit: number }>();
+  } = useForm<FormValues>({
+    defaultValues: {
+      board_title: board.board_title,
+      board_limit: board.board_limit,
+    },
+  });
 
-  const handleEditBoard = (data: {
-    board_title: string;
-    board_limit: number;
-  }) => {
+  const handleEditBoard = async (data: FormValues) => {
+    const boardRef = doc(firestore, "boards", board.board_id);
     try {
-      onClose();
+      await setDoc(boardRef, data);
     } catch (err) {
       console.log(err);
     } finally {
+      closeEditBoardModal();
     }
   };
 
@@ -34,19 +50,31 @@ const EditBoard = () => {
     <div>
       <Modal
         modalTitle="Edit Board Details"
-        isOpen={isOpen}
-        onOpen={onOpen}
-        onClose={onClose}
+        isOpen={isEditModalOpen}
+        onOpen={openEditBoardModal}
+        onClose={closeEditBoardModal}
       >
         <form onSubmit={handleSubmit(handleEditBoard)}>
           <Stack spacing={3}>
             <InputGroup>
-              <Input
-                type="text"
-                {...register("board_title", {
-                  required: true,
-                })}
-                placeholder="Board Title"
+              <Controller
+                control={control}
+                name="board_title"
+                render={({ field }) => <Input {...field} />}
+              />
+            </InputGroup>
+            <InputGroup>
+              <Controller
+                control={control}
+                name="board_limit"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    type="number"
+                    // value={board.board_limit}
+                    placeholder="Number of cards"
+                  />
+                )}
               />
             </InputGroup>
 

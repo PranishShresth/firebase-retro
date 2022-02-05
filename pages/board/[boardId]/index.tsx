@@ -1,0 +1,24 @@
+import React from "react";
+import { RetroBoardProvider } from "context/RetroBoardContext";
+import { RetroBoardSingle } from "components/RetroBoard";
+import { RetroHeader } from "components/RetroHome";
+import styled from "styled-components";
+const AppWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+`;
+const RetroBoard = () => {
+  return (
+    <AppWrapper>
+      <RetroBoardProvider>
+        <RetroHeader />
+        <RetroBoardSingle />
+      </RetroBoardProvider>
+    </AppWrapper>
+  );
+};
+
+export default RetroBoard;

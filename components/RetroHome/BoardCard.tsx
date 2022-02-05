@@ -18,11 +18,10 @@ import { FaEllipsisV } from "react-icons/fa";
 import { deleteDoc, doc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import EditBoard from "./EditBoard";
+import { BoardWithDocId } from "utils/interfaces";
 
 interface Props {
-  to?: string;
-  boardId: string;
-  header: string;
+  board: BoardWithDocId;
 }
 
 const Grid = styled.div`
@@ -30,13 +29,17 @@ const Grid = styled.div`
   justify-content: space-between;
 `;
 
-const BoardCard = (props: Props) => {
+const BoardCard = ({ board }: Props) => {
   const [deleteModalOpen, setdeleteModalOpen] = useState(false);
-  const { onOpen } = useDisclosure();
+  const {
+    isOpen: isEditModalOpen,
+    onClose: closeEditBoardModal,
+    onOpen: openEditBoardModal,
+  } = useDisclosure();
 
   const handleDeleteBoard = async () => {
     try {
-      const currentBoardRef = doc(firestore, "boards", props.boardId);
+      const currentBoardRef = doc(firestore, "boards", board.doc_id);
       await deleteDoc(currentBoardRef);
     } catch (err) {
       console.log(err);
@@ -44,7 +47,6 @@ const BoardCard = (props: Props) => {
       setdeleteModalOpen(false);
     }
   };
-
   return (
     <>
       <Box
@@ -56,10 +58,10 @@ const BoardCard = (props: Props) => {
         height="60px"
       >
         <Grid>
-          <Link href={props.to ?? ""} passHref>
+          <Link href={`board/${board.board_id}`} passHref>
             <a>
               <Text fontSize="lg" color="#4b5489" fontWeight="700">
-                {props.header}
+                {board.board_title}
               </Text>
             </a>
           </Link>
@@ -68,7 +70,7 @@ const BoardCard = (props: Props) => {
               <Icon as={FaEllipsisV} />
             </MenuButton>
             <MenuList>
-              <MenuItem onClick={onOpen}>Edit</MenuItem>
+              <MenuItem onClick={openEditBoardModal}>Edit</MenuItem>
               <MenuItem>Archive</MenuItem>
               <MenuItem onClick={() => setdeleteModalOpen(true)}>
                 Delete
@@ -76,15 +78,20 @@ const BoardCard = (props: Props) => {
             </MenuList>
           </Menu>
         </Grid>
-      </Box>
+        <EditBoard
+          isEditModalOpen={isEditModalOpen}
+          closeEditBoardModal={closeEditBoardModal}
+          openEditBoardModal={openEditBoardModal}
+          board={board}
+        />
 
-      <EditBoard />
-      <AlertDialog
-        isOpen={deleteModalOpen}
-        onClose={() => setdeleteModalOpen(false)}
-        onClick={handleDeleteBoard}
-        title="Delete Board"
-      />
+        <AlertDialog
+          isOpen={deleteModalOpen}
+          onClose={() => setdeleteModalOpen(false)}
+          onClick={handleDeleteBoard}
+          title="Delete Board"
+        />
+      </Box>
     </>
   );
 };

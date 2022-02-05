@@ -6,6 +6,10 @@ export interface Board {
   updatedAt: string;
 }
 
+export interface BoardWithDocId extends Board {
+  doc_id: string;
+}
+
 export interface List {
   list_id: string;
   list_title: string;
