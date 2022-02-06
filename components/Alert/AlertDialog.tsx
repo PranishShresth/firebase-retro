@@ -13,16 +13,18 @@ import { useRef } from "react";
 interface Props {
   title: string;
   isOpen: boolean;
+  ariaLabel: string;
   onClose: () => void;
   onClick: () => void;
 }
 
-export default function AlertDialogBar({
+export const AlertDialogBar = ({
   title,
   isOpen,
   onClose,
   onClick,
-}: Props) {
+  ariaLabel,
+}: Props) => {
   const cancelRef = useRef(null);
 
   return (
@@ -31,6 +33,7 @@ export default function AlertDialogBar({
         isOpen={isOpen}
         leastDestructiveRef={cancelRef}
         onClose={onClose}
+        aria-label={ariaLabel}
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
@@ -54,4 +57,4 @@ export default function AlertDialogBar({
       </AlertDialog>
     </>
   );
-}
+};

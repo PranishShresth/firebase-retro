@@ -4,8 +4,10 @@ import { useDispatch } from "react-redux";
 import { Input } from "@chakra-ui/input";
 import { FaTrash } from "react-icons/fa";
 import { Box, Icon, useDisclosure } from "@chakra-ui/react";
-import { Controller, useForm } from "react-hook-form";
-// import DeleteAlert from "./AlertDialog";
+import { Controller, useForm, useFormState } from "react-hook-form";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { firestore } from "configs/firebase/firestore";
+import { AlertDialogBar } from "components/Alert";
 
 const RetroColumnHeader = styled.div`
   font-weight: bold;
@@ -34,7 +36,7 @@ export default function RetroListHeader({ list_title, list_id }: Props) {
   } = useDisclosure();
 
   const {
-    handleSubmit,
+    getValues,
     control,
     formState: { errors },
   } = useForm<FormValues>({
@@ -45,30 +47,27 @@ export default function RetroListHeader({ list_title, list_id }: Props) {
 
   const [editMode, setEditMode] = useState(false);
 
-  const updateList = () => {
-    // if (formValues.list_title.length < 1) {
-    //   return;
-    // }
-    // dispatch({
-    //   type: "UPDATE_LIST_REQUESTED",
-    //   payload: { list_id, ...formValues },
-    // });
-    // dispatch(listActions.updateList({ _id: list_id, ...formValues }));
-    // setEditMode(false);
-  };
-
-  const deleteList = () => {
-    // dispatch({ type: "DELETE_LIST_REQUESTED", payload: { list_id } });
-    // dispatch(listActions.removeList({ _id: list_id }));
-  };
-
-  const handleUpdateList = (ev: React.KeyboardEvent) => {
+  const deleteList = async () => {
     try {
-      const { key } = ev as React.KeyboardEvent<HTMLInputElement>;
-      if (key === "Enter") {
-        return updateList();
+      const itemRef = doc(firestore, "lists", list_id);
+      await deleteDoc(itemRef);
+    } catch {
+      console.log("err");
+    }
+  };
+
+  const handleUpdateList = async (ev: React.KeyboardEvent) => {
+    const { key } = ev as React.KeyboardEvent<HTMLInputElement>;
+    if (key === "Enter") {
+      try {
+        const list_title = getValues("list_title");
+        const listRef = doc(firestore, "lists", list_id);
+        setEditMode(false);
+        await updateDoc(listRef, { list_title });
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {}
+    }
   };
 
   return (
@@ -85,8 +84,7 @@ export default function RetroListHeader({ list_title, list_id }: Props) {
                 fontWeight="bold"
                 variant="filled"
                 placeholder="List Title"
-                // onChange={handleChange}
-                // onBlur={handleSubmit}
+                // onBlur={handleUpdateList}
                 onKeyDown={handleUpdateList}
               />
             )}
@@ -104,12 +102,13 @@ export default function RetroListHeader({ list_title, list_id }: Props) {
         </RetroColumnHeader>
       )}
 
-      {/* <DeleteAlert
+      <AlertDialogBar
         isOpen={isDeleteDialogOpen}
         onClose={closeDeleteDialog}
         onClick={deleteList}
         title="Delete Column"
-      /> */}
+        ariaLabel="Delete List Dialogue"
+      />
     </>
   );
 }
