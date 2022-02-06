@@ -1,18 +1,30 @@
 import { signInWithAnonymousCredentials } from "configs/firebase/firebaseAuth";
-import { UserCredential } from "firebase/auth";
-import { createContext, useContext, useEffect, useState } from "react";
+import { User, UserCredential } from "firebase/auth";
+import React, { createContext, useContext, useEffect, useState } from "react";
+
+type AnonymousUser = Pick<User, "uid" | "isAnonymous" | "metadata">;
 
 interface Auth {
-  user: null | UserCredential;
+  user: null | AnonymousUser;
 }
+
 const AuthContext = createContext<Auth>({ user: null });
 
-export const AuthProvider = () => {
-  const [user, setUser] = useState<UserCredential | null>(null);
+export const useAuthContext = () => {
+  return useContext(AuthContext);
+};
+
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [user, setUser] = useState<AnonymousUser | null>(null);
   useEffect(() => {
     signInWithAnonymousCredentials().then((authUser: UserCredential) => {
-      setUser(authUser);
+      const {
+        user: { isAnonymous, metadata, uid },
+      } = authUser;
+      setUser({ isAnonymous, metadata, uid });
     });
   }, []);
-  return <AuthContext.Provider value={{ user }}></AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+  );
 };

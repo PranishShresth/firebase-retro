@@ -8,6 +8,15 @@ import { GiSelfLove } from "react-icons/gi";
 import styled from "styled-components";
 import { Item } from "utils/interfaces";
 import EditItem from "./RetroItem/EditItem";
+import { firestore } from "configs/firebase/firestore";
+import {
+  arrayRemove,
+  arrayUnion,
+  deleteDoc,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
+import { useAuthContext } from "context/Auth/AuthContext";
 interface Props {
   item: Item;
   children?: React.ReactChild;
@@ -59,7 +68,7 @@ const RetroCard = ({ item, provided, snapshot }: Props) => {
         <RetroCardActions
           item_id={item.item_id}
           openEditBox={openEditBox}
-          upvotes={item.item_upvotes}
+          item_upvotes={item.item_upvotes}
         />
       </Stack>
     </StyledBox>
@@ -69,30 +78,44 @@ const RetroCard = ({ item, provided, snapshot }: Props) => {
 const RetroCardActions = ({
   item_id,
   openEditBox,
-  upvotes,
-}: {
+  item_upvotes,
+}: // upvotes,
+{
   item_id: string;
   openEditBox: () => void;
-  upvotes: number;
+  item_upvotes: string[];
 }) => {
-  const [isUpvote, setIsUpvote] = useState(false);
-  const deleteItem = useCallback(() => {
-    // const payload = { item_id };
-    // dispatch(itemActions.deleteItem(payload));
-    // dispatch({
-    //   type: "DELETE_ITEM_REQUESTED",
-    //   payload,
-    // });
-  }, []);
+  const { user } = useAuthContext();
+  const deleteItem = async () => {
+    try {
+      const itemRef = doc(firestore, "items", item_id);
+      await deleteDoc(itemRef);
+    } catch {
+      console.log("err");
+    }
+  };
 
-  const toggleUpvote = () => {
-    setIsUpvote((prevState) => !prevState);
-    const payload = { _id: item_id, isUpvote: !isUpvote };
+  const toggleUpvote = async () => {
+    if (user) {
+      const itemRef = doc(firestore, "items", item_id);
+      if (!item_upvotes.includes(user?.uid)) {
+        await updateDoc(itemRef, {
+          item_upvotes: arrayUnion(user?.uid),
+        });
+      } else {
+        await updateDoc(itemRef, {
+          item_upvotes: arrayRemove(user?.uid),
+        });
+      }
+    }
+  };
 
-    // dispatch({
-    //   type: "UPDATE_ITEM_REQUESTED",
-    //   payload,
-    // });
+  const isUpvoted = () => {
+    if (user) {
+      const isUpvoted = item_upvotes.includes(user.uid);
+      return isUpvoted ? "red" : "black";
+    }
+    return "black";
   };
 
   return (
@@ -114,7 +137,12 @@ const RetroCardActions = ({
 
       <IconButton
         aria-label="Like"
-        icon={<GiSelfLove />}
+        icon={
+          <>
+            <GiSelfLove color={isUpvoted()} />
+            {item_upvotes.length}
+          </>
+        }
         isRound
         size="xs"
         onClick={toggleUpvote}

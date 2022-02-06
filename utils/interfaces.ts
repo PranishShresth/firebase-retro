@@ -14,6 +14,7 @@ export interface List {
   list_id: string;
   list_title: string;
   board_id: string;
+  user_id: string;
   createdAt: string;
 }
 
@@ -23,6 +24,11 @@ export interface Item {
   item_order: number;
   board_id: string;
   list_id: string;
-  item_upvotes: number;
+  user_id: string;
+  item_upvotes: string[];
   createdAt: string;
+}
+
+export interface Upvotes {
+  user_id: string;
 }

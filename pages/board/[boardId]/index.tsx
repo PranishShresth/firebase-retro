@@ -1,5 +1,5 @@
 import React from "react";
-import { RetroBoardProvider } from "context/RetroBoardContext";
+import { RetroBoardProvider } from "context/RetroBoard/RetroBoardContext";
 import { RetroBoardSingle } from "components/RetroBoard";
 import { RetroHeader } from "components/RetroHome";
 import styled from "styled-components";

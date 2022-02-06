@@ -10,11 +10,13 @@ import Modal from "components/Modal/Modal";
 import { v4 as uuidv4 } from "uuid";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
+import { useAuthContext } from "context/Auth/AuthContext";
 interface FormValues {
   list_title: string;
 }
 const CreateList = () => {
   const router = useRouter();
+  const { user } = useAuthContext();
   const boardId = "" + router.query.boardId;
   const {
     isOpen,
@@ -43,6 +45,7 @@ const CreateList = () => {
       await setDoc(ref, {
         ...data,
         list_id: doc_id,
+        user_id: user?.uid,
         board_id: boardId,
         createdAt: serverTimestamp(),
       });

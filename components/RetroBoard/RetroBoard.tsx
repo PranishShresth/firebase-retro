@@ -8,7 +8,7 @@ import {
 import Loading from "components/Loader/BoardSkeleton";
 import { Box } from "@chakra-ui/layout";
 import RetroBoardHeader from "./RetroBoardHeader";
-import { useRetroContext } from "context/RetroBoardContext";
+import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 import RetroColumn from "./RetroColumn";
 import RetroListHeader from "./RetroList/RetroListHeader";
 import { doc, updateDoc } from "firebase/firestore";

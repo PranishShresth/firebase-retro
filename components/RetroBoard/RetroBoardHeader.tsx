@@ -5,7 +5,7 @@ import { GiNinjaHead } from "react-icons/gi";
 // import CreateList from "./List/CreateList";
 // import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { useRetroContext } from "context/RetroBoardContext";
+import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 import AddList from "./RetroList/AddList";
 
 const IconDiv = styled.div`

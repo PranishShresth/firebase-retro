@@ -5,7 +5,7 @@ import RetroCard from "./RetroCard";
 // import AddItem from "./Item/AddItem";
 import { Draggable, DroppableProvided } from "react-beautiful-dnd";
 import { Item } from "utils/interfaces";
-import { useRetroContext } from "context/RetroBoardContext";
+import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 import AddItem from "./RetroItem/AddItem";
 
 const RetroCardContainer = styled.div`

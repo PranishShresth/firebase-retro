@@ -11,6 +11,7 @@ import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import { calculateInitialItemPosition } from "utils/dragAndDropUtils";
 import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
+import { useAuthContext } from "context/Auth/AuthContext";
 
 interface Props {
   list_id: string;
@@ -27,6 +28,7 @@ interface FormValues {
 }
 function AddItem({ list_id }: Props) {
   const router = useRouter();
+  const { user } = useAuthContext();
   const boardId = "" + router.query.boardId;
   const {
     board: { items },
@@ -61,7 +63,10 @@ function AddItem({ list_id }: Props) {
         item_id: doc_id,
         board_id: boardId,
         list_id,
+        user_id: user?.uid,
+        item_upvotes: [],
         item_order,
+
         createdAt: serverTimestamp(),
       });
       resetField("item_title");
