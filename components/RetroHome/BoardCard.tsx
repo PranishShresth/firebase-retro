@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import React, { useState } from "react";
-import AlertDialog from "components/Alert/AlertDialog";
+import { AlertDialogBar } from "components/Alert";
 import Modal from "components/Modal/Modal";
 import Link from "next/link";
 import {
@@ -59,11 +59,7 @@ const BoardCard = ({ board }: Props) => {
       >
         <Grid>
           <Link href={`board/${board.board_id}`} passHref>
-            <a>
-              {/* <Text fontSize="lg" color="#4b5489" fontWeight="700"> */}
-              {board.board_title}
-              {/* </Text> */}
-            </a>
+            <a>{board.board_title}</a>
           </Link>
           <Menu>
             <MenuButton background="none !important">
@@ -85,11 +81,12 @@ const BoardCard = ({ board }: Props) => {
           board={board}
         />
 
-        <AlertDialog
+        <AlertDialogBar
           isOpen={deleteModalOpen}
           onClose={() => setdeleteModalOpen(false)}
           onClick={handleDeleteBoard}
           title="Delete Board"
+          ariaLabel="Delete Board Alert"
         />
       </Box>
     </>

@@ -4,7 +4,6 @@ import { FaPlus } from "react-icons/fa";
 import { v4 as uuidv4 } from "uuid";
 
 import styled from "styled-components";
-import { GiCrossMark } from "react-icons/gi";
 import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
@@ -12,6 +11,7 @@ import { firestore } from "configs/firebase/firestore";
 import { calculateInitialItemPosition } from "utils/dragAndDropUtils";
 import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 import { useAuthContext } from "context/Auth/AuthContext";
+import { IoMdClose } from "react-icons/io";
 
 interface Props {
   list_id: string;
@@ -112,7 +112,7 @@ function AddItem({ list_id }: Props) {
               </Button>
               <IconButton
                 aria-label="cross"
-                icon={<GiCrossMark />}
+                icon={<IoMdClose />}
                 size="md"
                 onClick={close}
               />

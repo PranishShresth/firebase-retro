@@ -1,4 +1,4 @@
-import { signInWithAnonymousCredentials } from "configs/firebase/firebaseAuth";
+import { signInWithAnonymousCredentials } from "configs/firebase/firebaseClient";
 import { User, UserCredential } from "firebase/auth";
 import React, { createContext, useContext, useEffect, useState } from "react";
 

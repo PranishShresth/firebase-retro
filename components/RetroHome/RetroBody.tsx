@@ -8,7 +8,6 @@ import CreateBoardModal from "components/Modal/Modal";
 import { firestore } from "configs/firebase/firestore";
 import {
   collection,
-  addDoc,
   onSnapshot,
   serverTimestamp,
   doc,
@@ -18,7 +17,6 @@ import { useForm } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
 import { BoardWithDocId } from "utils/interfaces";
 import BoardSkeleton from "components/Loader/BoardSkeleton";
-import { boardsRef } from "utils/firebaseCollection";
 
 const BoardsContainer = styled.div`
   padding-top: 50px;
@@ -74,16 +72,6 @@ export const RetroBody = () => {
     }
   };
 
-  const renderBoardCards = () => {
-    return loading ? (
-      <BoardSkeleton amount={5} />
-    ) : (
-      boards?.map((board) => {
-        return <BoardCard key={board.board_id} board={board} />;
-      })
-    );
-  };
-
   return (
     <>
       <BoardsContainer>
@@ -97,7 +85,13 @@ export const RetroBody = () => {
           justifyContent="center"
           gap={6}
         >
-          {renderBoardCards()}
+          {loading ? (
+            <BoardSkeleton amount={5} />
+          ) : (
+            boards?.map((board) => {
+              return <BoardCard key={board.board_id} board={board} />;
+            })
+          )}
           <Box>
             <CreateBoardModal
               modalTitle="Create Board"
