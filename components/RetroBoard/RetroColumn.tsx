@@ -38,7 +38,6 @@ interface Props {
 }
 
 const RetroColumn = ({ list_id, droppableProvided }: Props) => {
-  //   const items = useSelector(itemsSelector);
   const {
     board: { items },
   } = useRetroContext();

@@ -5,7 +5,6 @@ import {
   isPositionChanged,
   calculateItemPosition,
 } from "utils/dragAndDropUtils";
-import Loading from "components/Loader/BoardSkeleton";
 import { Box } from "@chakra-ui/layout";
 import RetroBoardHeader from "./RetroBoardHeader";
 import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
@@ -13,6 +12,10 @@ import RetroColumn from "./RetroColumn";
 import RetroListHeader from "./RetroList/RetroListHeader";
 import { doc, updateDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
+import NoPageFound from "components/404page/PageNotFound";
+import { isEmpty } from "lodash-es";
+import { Skeleton } from "@chakra-ui/react";
+import { RetroBoardSkeleton } from "components/Loader";
 // import NoPageFound from "";
 
 const ColumnsWrapper = styled.main`
@@ -64,7 +67,7 @@ interface BoardParam {
 }
 export const RetroBoardSingle = () => {
   const {
-    board: { items, lists },
+    board: { items, lists, board, status },
     dispatch,
   } = useRetroContext();
 
@@ -106,13 +109,13 @@ export const RetroBoardSingle = () => {
     [items, dispatch]
   );
 
-  // if (loading) {
-  //   return <Loading />;
-  // }
+  if (status === "pending") {
+    return <RetroBoardSkeleton />;
+  }
 
-  // if (!currentBoard) {
-  //   return <NoPageFound />;
-  // }
+  if (!board) {
+    return <NoPageFound />;
+  }
 
   return (
     <>
@@ -120,7 +123,6 @@ export const RetroBoardSingle = () => {
       <RetroBoardCanvas>
         <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
           <ColumnsWrapper>
-            {/* {board.lists.map} */}
             {lists?.map((list) => {
               return (
                 <FlexBox key={list.list_id} listCount={currentListCount}>

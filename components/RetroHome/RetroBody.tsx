@@ -16,7 +16,7 @@ import {
 import { useForm } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
 import { BoardWithDocId } from "utils/interfaces";
-import BoardSkeleton from "components/Loader/BoardSkeleton";
+import Skeleton from "components/Loader/Skeleton";
 
 const BoardsContainer = styled.div`
   padding-top: 50px;
@@ -86,7 +86,7 @@ export const RetroBody = () => {
           gap={6}
         >
           {loading ? (
-            <BoardSkeleton amount={5} />
+            <Skeleton amount={5} height="60px" width="240px" />
           ) : (
             boards?.map((board) => {
               return <BoardCard key={board.board_id} board={board} />;

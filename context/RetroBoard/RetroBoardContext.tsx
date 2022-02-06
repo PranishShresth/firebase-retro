@@ -40,6 +40,7 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const boardId = "" + router.query.boardId;
   const [state, dispatch] = useReducer(RetroBoardReducer, initialState);
+
   useEffect(() => {
     async function fetchCurrentBoard() {
       dispatch({ type: "FETCH_BOARD_REQUESTED" });
@@ -48,7 +49,7 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
       const [listsData, itemsData, boardData] = await Promise.all([
         getDocs(listsQuery) ?? [],
         getDocs(itemsQuery) ?? [],
-        getDoc(doc(firestore, "boards", boardId) ?? {}),
+        getDoc(doc(firestore, "boards", boardId) ?? undefined),
       ]);
 
       const payload = {
