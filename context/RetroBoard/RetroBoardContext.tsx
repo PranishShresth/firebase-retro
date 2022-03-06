@@ -45,7 +45,10 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     (async () => {
-      const boardsRef = collection(firestore, "boards");
+      const boardsRef = query(
+        collection(firestore, "boards"),
+        orderBy("createdAt", "asc")
+      );
       const boardSnapshot = await getDocs(boardsRef);
       const boards = boardSnapshot.docs.map((doc) => {
         return { ...doc.data() } as Board;
@@ -82,8 +85,6 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
   }, [boardId, dispatch]);
 
   // lists subscription
-
-  useEffect(() => {}, []);
 
   useEffect(() => {
     const q = query(

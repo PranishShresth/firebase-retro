@@ -20,6 +20,7 @@ import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 import { Controller, useForm } from "react-hook-form";
 import { v4 as uuidV4 } from "uuid";
 import { useToast } from "@chakra-ui/react";
+import { throttle } from "lodash-es";
 
 interface Props {
   list_id: string;
@@ -158,7 +159,7 @@ const MoveListContainer = ({
           control={control}
           name="board_id"
           render={({ field }) => (
-            <Select placeholder="Select Board to Move List" {...field}>
+            <Select placeholder="Lists..." {...field}>
               {allBoards?.map((board) => (
                 <option key={board.board_id} value={board.board_id}>
                   {board.board_title}
@@ -168,7 +169,7 @@ const MoveListContainer = ({
           )}
         />
 
-        <Box onClick={copyListToAnotherBoard}>
+        <Box onClick={throttle(copyListToAnotherBoard, 4000)}>
           <Button isFullWidth={false}>Move List</Button>
         </Box>
       </Stack>
