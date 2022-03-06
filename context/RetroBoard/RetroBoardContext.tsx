@@ -13,6 +13,7 @@ import {
   getDoc,
   getDocs,
   onSnapshot,
+  orderBy,
   query,
   where,
 } from "firebase/firestore";
@@ -23,6 +24,7 @@ import {
   RetroBoardReducer,
   RetroBoardState,
 } from "./RetroBoardReducer";
+import { Board, List } from "utils/interfaces";
 
 const RetroBoardContext = createContext<{
   board: RetroBoardState;
@@ -42,6 +44,20 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(RetroBoardReducer, initialState);
 
   useEffect(() => {
+    (async () => {
+      const boardsRef = collection(firestore, "boards");
+      const boardSnapshot = await getDocs(boardsRef);
+      const boards = boardSnapshot.docs.map((doc) => {
+        return { ...doc.data() } as Board;
+      });
+      dispatch({
+        type: "FETCH_BOARDS_FULFILLED",
+        payload: boards,
+      });
+    })();
+  }, []);
+
+  useEffect(() => {
     async function fetchCurrentBoard() {
       dispatch({ type: "FETCH_BOARD_REQUESTED" });
       const listsQuery = query(listsRef, where("board_id", "==", boardId));
@@ -53,16 +69,21 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
       ]);
 
       const payload = {
-        board: boardData.data(),
+        board: boardData.data() as Board,
         items: itemsData.docs.map((x) => x.data()),
         lists: listsData.docs.map((x) => x.data()),
       };
-      dispatch({ type: "FETCH_BOARD_FULFILLED", payload });
+      dispatch({
+        type: "FETCH_BOARD_FULFILLED",
+        payload,
+      });
     }
     fetchCurrentBoard();
   }, [boardId, dispatch]);
 
   // lists subscription
+
+  useEffect(() => {}, []);
 
   useEffect(() => {
     const q = query(
@@ -72,7 +93,7 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
 
     const listsCollectionSnap = onSnapshot(q, (snapshot) => {
       const payload = snapshot.docs.map((doc) => {
-        return { ...doc.data(), doc_id: doc.id };
+        return { ...doc.data(), doc_id: doc.id } as List & { doc_id: string };
       });
       dispatch({ type: "FETCH_LISTS_FULFILLED", payload });
     });
@@ -86,13 +107,13 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
       where("board_id", "==", boardId)
     );
 
-    const listsCollectionSnap = onSnapshot(q, (snapshot) => {
+    const itemsCollectionSnap = onSnapshot(q, (snapshot) => {
       const payload = snapshot.docs.map((doc) => {
-        return { ...doc.data(), doc_id: doc.id };
+        return { ...doc.data(), doc_id: doc.id } as List & { doc_id: string };
       });
       dispatch({ type: "FETCH_ITEMS_FULFILLED", payload });
     });
-    return listsCollectionSnap;
+    return itemsCollectionSnap;
   }, [boardId]);
 
   return (

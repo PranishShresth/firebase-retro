@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import {
@@ -13,8 +13,7 @@ import RetroListHeader from "./RetroList/RetroListHeader";
 import { doc, updateDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import NoPageFound from "components/404page/PageNotFound";
-import { isEmpty } from "lodash-es";
-import { Skeleton } from "@chakra-ui/react";
+
 import { RetroBoardSkeleton } from "components/Loader";
 // import NoPageFound from "";
 

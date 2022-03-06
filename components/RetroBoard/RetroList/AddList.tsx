@@ -6,7 +6,7 @@ import { Stack } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/button";
 import { Controller, useForm } from "react-hook-form";
 import { useRouter } from "next/router";
-import Modal from "components/Modal/Modal";
+import { Modal } from "components/Modal";
 import { v4 as uuidv4 } from "uuid";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";

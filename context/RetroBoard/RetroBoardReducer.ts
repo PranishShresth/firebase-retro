@@ -4,10 +4,12 @@ export interface RetroBoardState {
   board: Partial<Board>;
   lists: List[];
   items: Item[];
+  allBoards: Board[];
   status: string;
 }
 export const initialState = {
   board: {},
+  allBoards: [],
   lists: [],
   items: [],
   status: "",
@@ -27,8 +29,11 @@ export function RetroBoardReducer(
     case "FETCH_BOARD_REQUESTED": {
       return { ...state, status: "pending" };
     }
+    case "FETCH_BOARDS_FULFILLED": {
+      return { ...state, allBoards: payload };
+    }
     case "FETCH_BOARD_FULFILLED": {
-      return { ...payload, status: "fulfilled" };
+      return { ...state, ...payload, status: "fulfilled" };
     }
     case "FETCH_LISTS_FULFILLED": {
       return { ...state, lists: payload, status: "fulfilled" };

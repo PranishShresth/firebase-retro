@@ -1,5 +1,5 @@
 import {
-  Modal,
+  Modal as ChakraModal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
@@ -17,14 +17,14 @@ interface Props {
   onOpen: () => void;
 }
 
-export default function Modal1({
+export const Modal = ({
   onClose,
   onOpen,
   modalTitle,
   isOpen,
   triggerName,
   children,
-}: Props) {
+}: Props) => {
   return (
     <>
       {triggerName && (
@@ -33,14 +33,14 @@ export default function Modal1({
         </Button>
       )}
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <ChakraModal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{modalTitle}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>{children}</ModalBody>
         </ModalContent>
-      </Modal>
+      </ChakraModal>
     </>
   );
-}
+};

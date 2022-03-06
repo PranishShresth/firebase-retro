@@ -26,6 +26,7 @@ const RetroBoardHeader = () => {
   const currentListCount = lists && lists?.length;
   const boardLimit = board?.board_limit;
   const showListCreation = boardLimit && boardLimit > currentListCount;
+  console.log(board);
   return (
     <Stack
       direction="row"

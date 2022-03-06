@@ -1,7 +1,7 @@
 import React from "react";
 import { Stack, InputGroup, Input, Button } from "@chakra-ui/react";
 import { Controller, useForm } from "react-hook-form";
-import Modal from "components/Modal/Modal";
+import { Modal } from "components/Modal";
 import { firestore } from "configs/firebase/firestore";
 import { doc, setDoc } from "firebase/firestore";
 import { Board } from "utils/interfaces";

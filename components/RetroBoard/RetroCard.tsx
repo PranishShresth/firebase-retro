@@ -1,10 +1,8 @@
-import React, { useCallback, useContext, useState } from "react";
+import React from "react";
 import { DraggableProvided, DraggableStateSnapshot } from "react-beautiful-dnd";
 import { Box, Stack, Text } from "@chakra-ui/layout";
 import { IconButton, useDisclosure } from "@chakra-ui/react";
-import { FaTrash, FaPencilAlt } from "react-icons/fa";
-import { GiSelfLove } from "react-icons/gi";
-
+import { FiHeart, FiEdit3, FiTrash2 } from "react-icons/fi";
 import styled from "styled-components";
 import { Item } from "utils/interfaces";
 import EditItem from "./RetroItem/EditItem";
@@ -37,6 +35,15 @@ const StyledBox = styled(Box)`
 const ContentDiv = styled.div`
   padding-bottom: 5px;
 `;
+
+const StyledIconAction = styled.div<{ hoverColor?: string; color?: string }>`
+  transition: color 100ms linear;
+  cursor: pointer;
+  color: ${(props) => props.color};
+  &:hover {
+    color: ${(props) => props.hoverColor};
+  }
+`;
 const RetroCard = ({ item, provided, snapshot }: Props) => {
   const { isOpen, onClose, onOpen: openEditBox } = useDisclosure();
 
@@ -60,7 +67,7 @@ const RetroCard = ({ item, provided, snapshot }: Props) => {
       {...provided.dragHandleProps}
     >
       <ContentDiv>
-        <Text overflowWrap="anywhere" fontWeight="bolder">
+        <Text overflowWrap="anywhere" fontWeight="normal" fontSize="15px">
           {item.item_title}
         </Text>
       </ContentDiv>
@@ -113,40 +120,35 @@ const RetroCardActions = ({
   const isUpvoted = () => {
     if (user) {
       const isUpvoted = item_upvotes.includes(user.uid);
-      return isUpvoted ? "red" : "black";
+      return isUpvoted ? "rgb(249, 24, 128);" : "black";
     }
     return "black";
   };
 
   return (
-    <Box display="flex" gridGap="10px" padding="5px 0">
-      <IconButton
-        aria-label="Edit Card"
-        icon={<FaPencilAlt />}
-        isRound
-        size="xs"
-        onClick={openEditBox}
-      />
-      <IconButton
-        aria-label="Delete card"
-        icon={<FaTrash />}
-        isRound
-        size="xs"
-        onClick={deleteItem}
-      />
-
-      <IconButton
-        aria-label="Like"
-        icon={
-          <>
-            <GiSelfLove color={isUpvoted()} />
-            {item_upvotes.length}
-          </>
-        }
-        isRound
-        size="xs"
+    <Box
+      display="flex"
+      gridGap="15px"
+      padding="5px 0"
+      justifyContent="center"
+      alignItems="center"
+    >
+      <StyledIconAction onClick={openEditBox}>
+        <FiEdit3 />
+      </StyledIconAction>
+      <StyledIconAction onClick={deleteItem}>
+        <FiTrash2 />
+      </StyledIconAction>
+      <StyledIconAction
         onClick={toggleUpvote}
-      />
+        hoverColor="rgb(249, 24, 128)"
+        color={isUpvoted()}
+      >
+        <Stack direction="row" spacing={2}>
+          <FiHeart />
+          <span style={{ lineHeight: "16px" }}>{item_upvotes.length}</span>
+        </Stack>
+      </StyledIconAction>
     </Box>
   );
 };

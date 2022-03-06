@@ -1,9 +1,11 @@
+import { serverTimestamp, Timestamp } from "firebase/firestore";
+
 export interface Board {
   board_id: string;
   board_title: string;
   board_limit: number;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 export interface BoardWithDocId extends Board {
@@ -15,7 +17,7 @@ export interface List {
   list_title: string;
   board_id: string;
   user_id: string;
-  createdAt: string;
+  createdAt: Timestamp;
 }
 
 export interface Item {
@@ -26,7 +28,7 @@ export interface Item {
   list_id: string;
   user_id: string;
   item_upvotes: string[];
-  createdAt: string;
+  createdAt: Timestamp;
 }
 
 export interface Upvotes {

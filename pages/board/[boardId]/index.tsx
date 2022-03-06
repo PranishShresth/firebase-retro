@@ -3,6 +3,7 @@ import { RetroBoardProvider } from "context/RetroBoard/RetroBoardContext";
 import { RetroBoardSingle } from "components/RetroBoard";
 import { RetroHeader } from "components/RetroHome";
 import styled from "styled-components";
+import Head from "next/head";
 const AppWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -14,6 +15,9 @@ const RetroBoard = () => {
   return (
     <AppWrapper>
       <RetroBoardProvider>
+        <Head>
+          <title>Retro Board</title>
+        </Head>
         <RetroHeader />
         <RetroBoardSingle />
       </RetroBoardProvider>

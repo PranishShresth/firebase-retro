@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
 import { Input } from "@chakra-ui/input";
-import { FaTrash } from "react-icons/fa";
-import { Box, Icon, useDisclosure } from "@chakra-ui/react";
-import { Controller, useForm, useFormState } from "react-hook-form";
-import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { Box } from "@chakra-ui/react";
+import { Controller, useForm } from "react-hook-form";
+import { doc, updateDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
-import { AlertDialogBar } from "components/Alert";
+import RetroListMenu from "./RetroListMenu";
+import { Board } from "utils/interfaces";
 
 const RetroColumnHeader = styled.div`
   font-weight: bold;
@@ -30,12 +29,6 @@ interface FormValues {
 }
 export default function RetroListHeader({ list_title, list_id }: Props) {
   const {
-    isOpen: isDeleteDialogOpen,
-    onClose: closeDeleteDialog,
-    onOpen: openDeleteDialog,
-  } = useDisclosure();
-
-  const {
     getValues,
     control,
     formState: { errors },
@@ -46,15 +39,6 @@ export default function RetroListHeader({ list_title, list_id }: Props) {
   });
 
   const [editMode, setEditMode] = useState(false);
-
-  const deleteList = async () => {
-    try {
-      const itemRef = doc(firestore, "lists", list_id);
-      await deleteDoc(itemRef);
-    } catch {
-      console.log("err");
-    }
-  };
 
   const handleUpdateList = async (ev: React.KeyboardEvent) => {
     const { key } = ev as React.KeyboardEvent<HTMLInputElement>;
@@ -93,22 +77,9 @@ export default function RetroListHeader({ list_title, list_id }: Props) {
       ) : (
         <RetroColumnHeader>
           <div onClick={() => setEditMode(true)}>{list_title}</div>
-          <Icon
-            as={FaTrash}
-            size="mini"
-            onClick={openDeleteDialog}
-            style={{ cursor: "pointer", fontSize: 14 }}
-          />
+          <RetroListMenu list_id={list_id} />
         </RetroColumnHeader>
       )}
-
-      <AlertDialogBar
-        isOpen={isDeleteDialogOpen}
-        onClose={closeDeleteDialog}
-        onClick={deleteList}
-        title="Delete Column"
-        ariaLabel="Delete List Dialogue"
-      />
     </>
   );
 }

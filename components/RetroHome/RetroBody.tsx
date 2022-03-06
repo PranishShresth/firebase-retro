@@ -4,12 +4,14 @@ import { useDisclosure } from "@chakra-ui/hooks";
 import { Input, InputGroup, Button, useToast, Box } from "@chakra-ui/react";
 import BoardCard from "./BoardCard";
 import styled from "styled-components";
-import CreateBoardModal from "components/Modal/Modal";
+import { Modal as CreateBoardModal } from "components/Modal";
 import { firestore } from "configs/firebase/firestore";
 import {
   collection,
   onSnapshot,
   serverTimestamp,
+  query,
+  orderBy,
   doc,
   setDoc,
 } from "firebase/firestore"; // import Loading from "./Loader";
@@ -45,16 +47,18 @@ export const RetroBody = () => {
   } = useForm<BoardFormValues>();
 
   useEffect(() => {
-    const boardsCollectionSnap = onSnapshot(
+    const q = query(
       collection(firestore, "boards"),
-      (snapshot) => {
-        const payload = snapshot.docs.map((doc) => {
-          return { ...doc.data(), doc_id: doc.id } as BoardWithDocId;
-        });
-        setBoards(payload);
-        setLoading(false);
-      }
+      orderBy("createdAt", "asc")
     );
+
+    const boardsCollectionSnap = onSnapshot(q, (snapshot) => {
+      const payload = snapshot.docs.map((doc) => {
+        return { ...doc.data(), doc_id: doc.id } as BoardWithDocId;
+      });
+      setBoards(payload);
+      setLoading(false);
+    });
     return boardsCollectionSnap;
   }, []);
 

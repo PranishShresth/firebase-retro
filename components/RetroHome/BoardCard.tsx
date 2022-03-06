@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import React, { useState } from "react";
 import { AlertDialogBar } from "components/Alert";
-import Modal from "components/Modal/Modal";
+import { Modal } from "components/Modal";
 import Link from "next/link";
 import {
   Menu,
@@ -10,12 +10,19 @@ import {
   MenuItem,
   Box,
   Icon,
-  Text,
   useDisclosure,
 } from "@chakra-ui/react";
 
 import { FaEllipsisV } from "react-icons/fa";
-import { deleteDoc, doc } from "firebase/firestore";
+import {
+  deleteDoc,
+  doc,
+  query,
+  collection,
+  where,
+  getDocs,
+  writeBatch,
+} from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import EditBoard from "./EditBoard";
 import { BoardWithDocId } from "utils/interfaces";
@@ -40,7 +47,31 @@ const BoardCard = ({ board }: Props) => {
   const handleDeleteBoard = async () => {
     try {
       const currentBoardRef = doc(firestore, "boards", board.doc_id);
-      await deleteDoc(currentBoardRef);
+      const batch = writeBatch(firestore);
+      const itemsQ = query(
+        collection(firestore, "items"),
+        where("board_id", "==", board.board_id)
+      );
+      const listsQ = query(
+        collection(firestore, "lists"),
+        where("board_id", "==", board.board_id)
+      );
+      const [items, boards] = await Promise.all([
+        getDocs(itemsQ),
+        getDocs(listsQ),
+      ]);
+
+      items.docs.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+      boards.docs.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+
+      // commits the batched delete for both items and boards
+      batch.commit();
+
+      deleteDoc(currentBoardRef);
     } catch (err) {
       console.log(err);
     } finally {

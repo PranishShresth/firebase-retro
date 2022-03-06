@@ -20,7 +20,7 @@ export const RetroHeader = () => {
   return (
     <Header>
       <Container>
-        <HeaderBanner>Retro Board</HeaderBanner>{" "}
+        <HeaderBanner>Retro Board</HeaderBanner>
       </Container>
     </Header>
   );
