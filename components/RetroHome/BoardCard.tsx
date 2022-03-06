@@ -56,7 +56,7 @@ const BoardCard = ({ board }: Props) => {
         collection(firestore, "lists"),
         where("board_id", "==", board.board_id)
       );
-      const [items, boards] = await Promise.all([
+      const [items, lists] = await Promise.all([
         getDocs(itemsQ),
         getDocs(listsQ),
       ]);
@@ -64,12 +64,12 @@ const BoardCard = ({ board }: Props) => {
       items.docs.forEach((doc) => {
         batch.delete(doc.ref);
       });
-      boards.docs.forEach((doc) => {
+      lists.docs.forEach((doc) => {
         batch.delete(doc.ref);
       });
 
       // commits the batched delete for both items and boards
-      batch.commit();
+      await batch.commit();
 
       deleteDoc(currentBoardRef);
     } catch (err) {

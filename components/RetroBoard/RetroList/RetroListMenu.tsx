@@ -13,7 +13,13 @@ import { AlertDialogBar } from "components/Alert";
 import React from "react";
 import { useDisclosure } from "@chakra-ui/react";
 import { FaChevronDown } from "react-icons/fa";
-import { doc, deleteDoc, writeBatch, setDoc } from "firebase/firestore";
+import {
+  doc,
+  deleteDoc,
+  writeBatch,
+  setDoc,
+  collection,
+} from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import { Modal as MoveModal } from "components/Modal";
 import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
@@ -31,7 +37,9 @@ const RetroListMenu = ({ list_id }: Props) => {
     onClose: closeDeleteDialog,
     onOpen: openDeleteDialog,
   } = useDisclosure();
-
+  const {
+    board: { items },
+  } = useRetroContext();
   const {
     isOpen: isMoveModalOpen,
     onClose: closeMoveModal,
@@ -40,9 +48,15 @@ const RetroListMenu = ({ list_id }: Props) => {
 
   const deleteList = async () => {
     try {
-      const itemRef = doc(firestore, "lists", list_id);
-
-      await deleteDoc(itemRef);
+      const listRef = doc(firestore, "lists", list_id);
+      const batch = writeBatch(firestore);
+      const allListItems = items.filter((item) => item.list_id === list_id);
+      allListItems.forEach((item) => {
+        const ref = doc(firestore, "items", item.item_id);
+        batch.delete(ref);
+      });
+      await batch.commit();
+      deleteDoc(listRef);
     } catch {
       console.log("err");
     }
