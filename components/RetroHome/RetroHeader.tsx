@@ -14,6 +14,7 @@ const HeaderBanner = styled.div`
 const Container = styled.div`
   width: 95%;
   margin: 0 auto;
+  max-width: 1600px;
 `;
 
 export const RetroHeader = () => {

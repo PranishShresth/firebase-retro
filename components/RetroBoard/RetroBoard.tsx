@@ -26,7 +26,6 @@ const ColumnsWrapper = styled.main`
   overflow-x: auto;
   overflow-y: hidden;
   padding-bottom: 8px;
-  padding-left: 24px;
   position: absolute;
   right: 0;
   top: 0;
@@ -34,32 +33,33 @@ const ColumnsWrapper = styled.main`
   user-select: none;
 `;
 
-const RetroColumnWrapper = styled.div<{ listCount: number }>`
-  ${({ listCount }) =>
-    listCount &&
+const RetroColumnWrapper = styled.div<{ $listCount: number }>`
+  ${({ $listCount }) =>
+    $listCount &&
     css`
-      width: ${listCount > 5 ? "300px" : "100%"};
+      width: ${$listCount > 5 ? "300px" : "100%"};
     `}
   height:100%;
   min-width: 300px;
   max-width: 100%;
-
   padding: 8px;
   display: flex;
   flex-direction: column;
 `;
 
-const FlexBox = styled(Box)<{ listCount: number }>`
-  ${({ listCount }) =>
+const FlexBox = styled(Box)<{ $listCount: number }>`
+  ${({ $listCount }) =>
     css`
-      flex: ${listCount < 5 ? 100 / listCount : 100};
+      flex: ${$listCount < 5 ? 100 / $listCount : 100};
+      max-width: 500px;
     `}
 `;
 const RetroBoardCanvas = styled.div`
-  position: relative;
   flex-grow: 1;
-  width: 95%;
   margin: 0 auto;
+  max-width: 1600px;
+  position: relative;
+  width: calc(100% - 50px);
 `;
 interface BoardParam {
   boardId: string;
@@ -124,8 +124,8 @@ export const RetroBoardSingle = () => {
           <ColumnsWrapper>
             {lists?.map((list) => {
               return (
-                <FlexBox key={list.list_id} listCount={currentListCount}>
-                  <RetroColumnWrapper listCount={currentListCount}>
+                <FlexBox key={list.list_id} $listCount={currentListCount}>
+                  <RetroColumnWrapper $listCount={currentListCount}>
                     <RetroListHeader
                       list_id={list.list_id}
                       list_title={list.list_title}
