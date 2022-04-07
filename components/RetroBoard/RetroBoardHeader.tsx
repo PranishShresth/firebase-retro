@@ -31,9 +31,10 @@ const RetroBoardHeader = () => {
     <Stack
       direction="row"
       justifyContent={"space-between"}
-      padding="25px 0 15px 24px"
+      paddingTop="25px"
       width="95%"
       margin="0 auto"
+      maxWidth="1600px"
     >
       <Stack direction="row">
         <IconDiv>

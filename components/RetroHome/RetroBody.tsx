@@ -24,6 +24,7 @@ const BoardsContainer = styled.div`
   padding-top: 50px;
   width: 95%;
   margin: 0 auto;
+  max-width: 1600px;
 `;
 
 interface BoardFormValues {
