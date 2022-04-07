@@ -127,6 +127,7 @@ export const RetroBoardSingle = () => {
                 <FlexBox key={list.list_id} $listCount={currentListCount}>
                   <RetroColumnWrapper $listCount={currentListCount}>
                     <RetroListHeader
+                      list_colour={list?.list_colour}
                       list_id={list.list_id}
                       list_title={list.list_title}
                     />
@@ -134,6 +135,7 @@ export const RetroBoardSingle = () => {
                       {(provided) => (
                         <RetroColumn
                           droppableProvided={provided}
+                          list_colour={list?.list_colour}
                           list_id={list.list_id}
                         />
                       )}

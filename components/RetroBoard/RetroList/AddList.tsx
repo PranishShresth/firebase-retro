@@ -12,6 +12,7 @@ import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import { useAuthContext } from "context/Auth/AuthContext";
 interface FormValues {
+  list_colour: string;
   list_title: string;
 }
 const CreateList = () => {
@@ -31,6 +32,7 @@ const CreateList = () => {
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
+      list_colour: "#000000",
       list_title: "",
     },
   });
@@ -67,20 +69,39 @@ const CreateList = () => {
       >
         <form onSubmit={handleSubmit(handleCreateList)}>
           <Stack spacing={3}>
-            <InputGroup>
+            <div>
+              <span>Title:</span>
+              <InputGroup>
+                <Controller
+                  control={control}
+                  name="list_title"
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder="List Title"
+                      required
+                      type="text"
+                      value={field.value}
+                    />
+                  )}
+                />
+              </InputGroup>
+            </div>
+            <div>
+              <span>Colour:</span>
               <Controller
                 control={control}
-                name="list_title"
+                name="list_colour"
                 render={({ field }) => (
                   <Input
                     {...field}
-                    type="text"
-                    placeholder="List Title"
+                    size="sm"
+                    type="color"
                     value={field.value}
                   />
                 )}
               />
-            </InputGroup>
+            </div>
             <div>
               <Button type="submit">Create List</Button>
             </div>
