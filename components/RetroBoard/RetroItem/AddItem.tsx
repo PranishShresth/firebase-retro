@@ -58,6 +58,8 @@ function AddItem({ list_id }: Props) {
       const item_order = calculateInitialItemPosition(items);
       const ref = doc(firestore, "items", doc_id);
 
+      resetField("item_title");
+
       await setDoc(ref, {
         ...data,
         item_id: doc_id,
@@ -69,7 +71,6 @@ function AddItem({ list_id }: Props) {
 
         createdAt: serverTimestamp(),
       });
-      resetField("item_title");
     } catch (err) {
       console.log(err);
     }
