@@ -3,7 +3,7 @@ import { Stack, InputGroup, Input, Button } from "@chakra-ui/react";
 import { Controller, useForm } from "react-hook-form";
 import { Modal } from "components/Modal";
 import { firestore } from "configs/firebase/firestore";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { Board } from "utils/interfaces";
 
 interface Props {
@@ -39,7 +39,8 @@ const EditBoard = ({
     try {
       const boardRef = doc(firestore, "boards", board.board_id);
 
-      await setDoc(boardRef, data);
+
+      await updateDoc(boardRef, {...data});
     } catch (err) {
       console.log(err);
     } finally {

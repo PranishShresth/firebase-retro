@@ -49,7 +49,7 @@ export const RetroBody = () => {
   useEffect(() => {
     const q = query(
       collection(firestore, "boards"),
-      orderBy("createdAt", "asc")
+      orderBy("createdAt", "desc")
     );
 
     const boardsCollectionSnap = onSnapshot(q, (snapshot) => {
@@ -108,17 +108,18 @@ export const RetroBody = () => {
                 <Stack spacing={3}>
                   <InputGroup>
                     <Input
-                      type="text"
                       placeholder="Board Title"
+                      required
+                      type="text"
                       {...register("board_title")}
                     />
                   </InputGroup>
                   <InputGroup>
                     <Input
-                      type="number"
-                      min={2}
-                      {...register("board_limit")}
                       placeholder="Number of cards"
+                      required
+                      type="number"
+                      {...register("board_limit")}
                     />
                   </InputGroup>
                   <div>
