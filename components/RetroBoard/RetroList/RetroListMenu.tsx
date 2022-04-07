@@ -12,7 +12,7 @@ import {
 import { AlertDialogBar } from "components/Alert";
 import React from "react";
 import { useDisclosure } from "@chakra-ui/react";
-import { FaChevronDown } from "react-icons/fa";
+import { FiMoreVertical } from "react-icons/fi";
 import {
   doc,
   deleteDoc,
@@ -68,7 +68,7 @@ const RetroListMenu = ({ list_id }: Props) => {
         <MenuButton
           as={IconButton}
           aria-label="Options"
-          icon={<FaChevronDown />}
+          icon={<FiMoreVertical />}
         ></MenuButton>
         <MenuList>
           {/* <MenuItem>Download</MenuItem> */}

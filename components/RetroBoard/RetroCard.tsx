@@ -23,13 +23,11 @@ interface Props {
 }
 
 const StyledBox = styled(Box)`
+  border-radius: 5px;
   box-shadow: rgb(60 64 67 / 30%) 0px 1px 2px 0px,
     rgb(60 64 67 / 15%) 0px 1px 3px 1px;
+  margin: 4px 4px 8px 4px;
   transition: background 100ms linear;
-  border-radius: 5px;
-  margin-bottom: 8px;
-  margin-left: 4px;
-  margin-right: 4px;
 `;
 
 const ContentDiv = styled.div`
@@ -37,9 +35,9 @@ const ContentDiv = styled.div`
 `;
 
 const StyledIconAction = styled.div<{ hoverColor?: string; color?: string }>`
-  transition: color 100ms linear;
-  cursor: pointer;
   color: ${(props) => props.color};
+  cursor: pointer;
+  transition: color 100ms linear;
   &:hover {
     color: ${(props) => props.hoverColor};
   }
@@ -93,6 +91,9 @@ const RetroCardActions = ({
   item_upvotes: string[];
 }) => {
   const { user } = useAuthContext();
+
+  const isUpvoted = user && item_upvotes.includes(user.uid);
+
   const deleteItem = async () => {
     try {
       const itemRef = doc(firestore, "items", item_id);
@@ -117,14 +118,6 @@ const RetroCardActions = ({
     }
   };
 
-  const isUpvoted = () => {
-    if (user) {
-      const isUpvoted = item_upvotes.includes(user.uid);
-      return isUpvoted ? "rgb(249, 24, 128);" : "black";
-    }
-    return "black";
-  };
-
   return (
     <Box
       display="flex"
@@ -140,12 +133,12 @@ const RetroCardActions = ({
         <FiTrash2 />
       </StyledIconAction>
       <StyledIconAction
+        color={isUpvoted ? "#F91880" : "#000000"}
+        hoverColor="#F91880"
         onClick={toggleUpvote}
-        hoverColor="rgb(249, 24, 128)"
-        color={isUpvoted()}
       >
         <Stack direction="row" spacing={2}>
-          <FiHeart />
+          <FiHeart fill={isUpvoted ? "#F91880" : "#FFFFFF"} />
           <span style={{ lineHeight: "16px" }}>{item_upvotes.length}</span>
         </Stack>
       </StyledIconAction>
