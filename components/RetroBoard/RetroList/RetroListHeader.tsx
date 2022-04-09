@@ -6,7 +6,6 @@ import { Controller, useForm } from "react-hook-form";
 import { doc, updateDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import RetroListMenu from "./RetroListMenu";
-import { Board } from "utils/interfaces";
 
 const ListTitleWrapper = styled.div`
   align-items: center;

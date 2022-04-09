@@ -13,6 +13,9 @@ import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { darken } from "@chakra-ui/theme-tools";
+import { calculateInitialListPosition } from "utils/dragAndDropUtils";
+import { list } from "@chakra-ui/react";
+import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 
 const ColourInput = styled.input`
   left: 4px;
@@ -66,6 +69,9 @@ interface FormValues {
 const CreateList = () => {
   const router = useRouter();
   const { user } = useAuthContext();
+  const {
+    board: { lists },
+  } = useRetroContext();
   const boardId = "" + router.query.boardId;
   const {
     isOpen,
@@ -91,12 +97,14 @@ const CreateList = () => {
     }
     const doc_id = uuidv4();
     try {
+      const list_order = calculateInitialListPosition(lists)
       const ref = doc(firestore, "lists", doc_id);
       await setDoc(ref, {
         ...data,
         list_id: doc_id,
         user_id: user?.uid,
         board_id: boardId,
+        list_order,
         createdAt: serverTimestamp(),
       });
       resetField("list_title");
