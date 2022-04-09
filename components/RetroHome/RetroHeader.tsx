@@ -1,3 +1,4 @@
+import Link from "next/link";
 import styled from "styled-components";
 
 const Header = styled.nav.attrs({ className: "header-bar" })`
@@ -21,7 +22,9 @@ export const RetroHeader = () => {
   return (
     <Header>
       <Container>
-        <HeaderBanner>Retro Board</HeaderBanner>
+        <HeaderBanner>
+          <Link href="/">Retro Board</Link>
+        </HeaderBanner>
       </Container>
     </Header>
   );

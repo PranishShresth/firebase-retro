@@ -8,6 +8,11 @@ import { firestore } from "configs/firebase/firestore";
 import RetroListMenu from "./RetroListMenu";
 import { Board } from "utils/interfaces";
 
+const ListTitleWrapper = styled.div`
+  align-items: center;
+  display: flex;
+`;
+
 const RetroColumnHeader = styled.div`
   font-weight: bold;
   font-size: 1.1rem;
@@ -19,15 +24,29 @@ const RetroColumnHeader = styled.div`
   margin: 0 4px;
 `;
 
+const Square = styled.div`
+  background-color: ${({ list_colour }: { list_colour: string }) =>
+    list_colour};
+  border-radius: 4px;
+  height: 16px;
+  margin-right: 8px;
+  width: 16px;
+`;
+
 interface Props {
-  list_title: string;
+  list_colour: string | undefined;
   list_id: string;
+  list_title: string;
 }
 
 interface FormValues {
   list_title: string;
 }
-export default function RetroListHeader({ list_title, list_id }: Props) {
+export default function RetroListHeader({
+  list_colour,
+  list_id,
+  list_title,
+}: Props) {
   const {
     getValues,
     control,
@@ -76,7 +95,10 @@ export default function RetroListHeader({ list_title, list_id }: Props) {
         </Box>
       ) : (
         <RetroColumnHeader>
-          <div onClick={() => setEditMode(true)}>{list_title}</div>
+          <ListTitleWrapper onClick={() => setEditMode(true)}>
+            <Square list_colour={list_colour ?? "#000000"} />
+            {list_title}
+          </ListTitleWrapper>
           <RetroListMenu list_id={list_id} />
         </RetroColumnHeader>
       )}

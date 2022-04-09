@@ -32,12 +32,13 @@ const BottomListButton = styled.div`
 `;
 
 interface Props {
+  list_colour: string;
   list_id: string;
   children?: React.ReactNode;
   droppableProvided?: DroppableProvided;
 }
 
-const RetroColumn = ({ list_id, droppableProvided }: Props) => {
+const RetroColumn = ({ list_colour, list_id, droppableProvided }: Props) => {
   const {
     board: { items },
   } = useRetroContext();
@@ -60,6 +61,7 @@ const RetroColumn = ({ list_id, droppableProvided }: Props) => {
             >
               {(provided, snapshot) => (
                 <RetroCard
+                  list_colour={list_colour}
                   provided={provided}
                   snapshot={snapshot}
                   item={item}

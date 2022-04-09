@@ -16,6 +16,7 @@ import {
 } from "firebase/firestore";
 import { useAuthContext } from "context/Auth/AuthContext";
 interface Props {
+  list_colour: string;
   item: Item;
   children?: React.ReactChild;
   provided: DraggableProvided;
@@ -23,7 +24,8 @@ interface Props {
 }
 
 const StyledBox = styled(Box)`
-  border-radius: 5px;
+  border-left: 5px solid
+    ${({ list_colour }: { list_colour: string }) => list_colour};
   box-shadow: rgb(60 64 67 / 30%) 0px 1px 2px 0px,
     rgb(60 64 67 / 15%) 0px 1px 3px 1px;
   margin: 4px 4px 8px 4px;
@@ -42,7 +44,7 @@ const StyledIconAction = styled.div<{ hoverColor?: string; color?: string }>`
     color: ${(props) => props.hoverColor};
   }
 `;
-const RetroCard = ({ item, provided, snapshot }: Props) => {
+const RetroCard = ({ list_colour, item, provided, snapshot }: Props) => {
   const { isOpen, onClose, onOpen: openEditBox } = useDisclosure();
 
   if (isOpen) {
@@ -58,6 +60,7 @@ const RetroCard = ({ item, provided, snapshot }: Props) => {
 
   return (
     <StyledBox
+      list_colour={list_colour}
       padding="10px 8px"
       background={snapshot.isDragging ? "#e8e9ed" : "white"}
       ref={provided.innerRef}
