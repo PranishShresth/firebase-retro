@@ -1,6 +1,6 @@
 import { DraggableLocation } from "react-beautiful-dnd";
 
-import { Item } from "./interfaces";
+import { Item, List } from "./interfaces";
 
 export const isPositionChanged = (
   source: DraggableLocation,
@@ -95,3 +95,12 @@ export const calculateInitialItemPosition = (items: Item[]): number => {
   }
   return 1;
 };
+
+export const calculateInitialListPosition = (lists: List[]): number => {
+  const listPositions = lists.map(({ list_order }) => list_order);
+  if (listPositions.length > 0) {
+    return Math.max(...listPositions) + 1;
+  }
+  return 1;
+};
+

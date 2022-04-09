@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import styled, { css } from "styled-components";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import {
@@ -47,7 +47,7 @@ const RetroColumnWrapper = styled.div<{ $listCount: number }>`
   flex-direction: column;
 `;
 
-const FlexBox = styled(Box)<{ $listCount: number }>`
+const FlexBox = styled(Box) <{ $listCount: number }>`
   ${({ $listCount }) =>
     css`
       flex: ${$listCount < 5 ? 100 / $listCount : 100};
@@ -71,6 +71,10 @@ export const RetroBoardSingle = () => {
   } = useRetroContext();
 
   const currentListCount = lists.length;
+
+  const sortedList = useMemo(() => {
+    return lists.sort((a, b) => a.list_order - b.list_order)
+  }, [lists])
 
   const onDragStart = useCallback(() => {
     console.log("draggin");
@@ -122,7 +126,7 @@ export const RetroBoardSingle = () => {
       <RetroBoardCanvas>
         <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
           <ColumnsWrapper>
-            {lists?.map((list) => {
+            {sortedList?.map((list) => {
               return (
                 <FlexBox key={list.list_id} $listCount={currentListCount}>
                   <RetroColumnWrapper $listCount={currentListCount}>

@@ -15,6 +15,7 @@ export interface BoardWithDocId extends Board {
 export interface List {
   list_colour: string;
   list_id: string;
+  list_order: number;
   list_title: string;
   board_id: string;
   user_id: string;
