@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { useDispatch } from "react-redux";
+import styled from "styled-components";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Input, InputGroup } from "@chakra-ui/input";
 import { Stack } from "@chakra-ui/layout";
@@ -11,6 +12,53 @@ import { v4 as uuidv4 } from "uuid";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import { useAuthContext } from "context/Auth/AuthContext";
+import { darken } from "@chakra-ui/theme-tools";
+
+const ColourInput = styled.input`
+  left: 4px;
+  position: absolute;
+  top: 4px;
+
+  &:checked + .custom-colour-input {
+    box-shadow: inset 0 0 0 3px #000000;
+  }
+`;
+
+const ColourLabel = styled.label`
+  margin: 4px;
+  position: relative;
+`;
+
+const ColourRow = styled.div`
+  display: flex;
+`;
+
+const CustomColourInput = styled.div<{ colour: string }>`
+  background: ${({ colour }) => colour};
+  border-radius: 4px;
+  height: 30px;
+  position: relative;
+  width: 30px;
+
+  &:hover {
+    background-color: ${({ colour }) => darken(colour, 4)};
+    cursor: pointer;
+  }
+`;
+
+enum Colours {
+  pink = "#E03997",
+  red = "#DB2828",
+  orange = "#F2711C",
+  yellow = "#FBBD08",
+  olive = "#B5CC18",
+  green = "#21BA45",
+  teal = "#00B5AD",
+  blue = "#2185D0",
+  violet = "#6435C9",
+  purple = "#A333C8",
+}
+
 interface FormValues {
   list_colour: string;
   list_title: string;
@@ -93,17 +141,29 @@ const CreateList = () => {
                 control={control}
                 name="list_colour"
                 render={({ field }) => (
-                  <Input
-                    {...field}
-                    size="sm"
-                    type="color"
-                    value={field.value}
-                  />
+                  <ColourRow>
+                    {Object.entries(Colours).map(([key, value]) => (
+                      <ColourLabel htmlFor={key} key={key}>
+                        <ColourInput
+                          {...field}
+                          id={key}
+                          type="radio"
+                          value={value}
+                        />
+                        <CustomColourInput
+                          className="custom-colour-input"
+                          colour={value}
+                        />
+                      </ColourLabel>
+                    ))}
+                  </ColourRow>
                 )}
               />
             </div>
             <div>
-              <Button type="submit">Create List</Button>
+              <Button type="submit" style={{ marginBottom: "12px" }}>
+                Create List
+              </Button>
             </div>
           </Stack>
         </form>
