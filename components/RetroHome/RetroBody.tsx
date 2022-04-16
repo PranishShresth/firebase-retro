@@ -15,10 +15,11 @@ import {
   doc,
   setDoc,
 } from "firebase/firestore"; // import Loading from "./Loader";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
 import { BoardWithDocId } from "utils/interfaces";
 import Skeleton from "components/Loader/Skeleton";
+import { ColourPicker } from "components/ColourPicker";
 
 const BoardsContainer = styled.div`
   padding-top: 50px;
@@ -28,8 +29,9 @@ const BoardsContainer = styled.div`
 `;
 
 interface BoardFormValues {
-  board_title: string;
+  board_colour: string;
   board_limit: number;
+  board_title: string;
 }
 
 export const RetroBody = () => {
@@ -42,10 +44,16 @@ export const RetroBody = () => {
   } = useDisclosure();
 
   const {
-    register,
+    control,
     handleSubmit,
+    register,
+    reset,
     formState: { errors },
-  } = useForm<BoardFormValues>();
+  } = useForm<BoardFormValues>({
+    defaultValues: {
+      board_colour: "#000000",
+    },
+  });
 
   useEffect(() => {
     const q = query(
@@ -65,6 +73,8 @@ export const RetroBody = () => {
 
   const handleCreateBoard = async (data: BoardFormValues) => {
     try {
+      closeBoardModal();
+      reset();
       const doc_id = uuidv4();
       const ref = doc(firestore, "boards", doc_id);
       await setDoc(ref, {
@@ -85,46 +95,64 @@ export const RetroBody = () => {
             base: "1fr",
             sm: "repeat(2, 1fr)",
             md: "repeat(3, 1fr)",
-            lg: "repeat(5, 1fr)",
+            lg: "repeat(4, 1fr)",
+            xl: "repeat(5, 1fr)",
           }}
           justifyContent="center"
           gap={6}
         >
           {loading ? (
-            <Skeleton amount={5} height="60px" width="240px" />
+            <Skeleton amount={5} height="102px" width="100%" />
           ) : (
             boards?.map((board) => {
               return <BoardCard key={board.board_id} board={board} />;
             })
           )}
-          <Box>
+          <Box minHeight="102px">
             <CreateBoardModal
-              modalTitle="Create Board"
+              createBoard
               isOpen={isBoardModalOpen}
-              onOpen={openBoardModal}
+              modalTitle="New Board"
               onClose={closeBoardModal}
-              triggerName="Create"
+              onOpen={openBoardModal}
+              triggerName="New Board"
             >
               <form onSubmit={handleSubmit(handleCreateBoard)}>
                 <Stack spacing={3}>
-                  <InputGroup>
-                    <Input
-                      placeholder="Board Title"
-                      required
-                      type="text"
-                      {...register("board_title")}
-                    />
-                  </InputGroup>
-                  <InputGroup>
-                    <Input
-                      placeholder="Number of cards"
-                      required
-                      type="number"
-                      {...register("board_limit")}
-                    />
-                  </InputGroup>
                   <div>
-                    <Button type="submit">Create Board</Button>
+                    <span>Board Title:</span>
+                    <InputGroup marginTop="4px">
+                      <Input
+                        placeholder="Board Title"
+                        required
+                        type="text"
+                        {...register("board_title")}
+                      />
+                    </InputGroup>
+                  </div>
+                  <div>
+                    <span>Number of cards:</span>
+                    <InputGroup marginTop="4px">
+                      <Input
+                        placeholder="Number of cards"
+                        required
+                        type="number"
+                        {...register("board_limit")}
+                      />
+                    </InputGroup>
+                  </div>
+                  <div>
+                    <span>Colour:</span>
+                    <Controller
+                      control={control}
+                      name="board_colour"
+                      render={({ field }) => <ColourPicker field={field} />}
+                    />
+                  </div>
+                  <div>
+                    <Button marginBottom="12px" type="submit">
+                      Create Board
+                    </Button>
                   </div>
                 </Stack>
               </form>

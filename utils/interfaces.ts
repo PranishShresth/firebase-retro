@@ -1,6 +1,7 @@
 import { serverTimestamp, Timestamp } from "firebase/firestore";
 
 export interface Board {
+  board_colour: string;
   board_id: string;
   board_title: string;
   board_limit: number;

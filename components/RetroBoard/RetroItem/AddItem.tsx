@@ -80,7 +80,6 @@ function AddItem({ list_id }: Props) {
       {!open && (
         <StyledButton
           leftIcon={<FaPlus />}
-          fluid
           variant="solid"
           width="100%"
           onClick={() => {
