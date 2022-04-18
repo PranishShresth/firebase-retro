@@ -101,14 +101,7 @@ export const RetroBody = () => {
           justifyContent="center"
           gap={6}
         >
-          {loading ? (
-            <Skeleton amount={5} height="102px" width="100%" />
-          ) : (
-            boards?.map((board) => {
-              return <BoardCard key={board.board_id} board={board} />;
-            })
-          )}
-          <Box minHeight="102px">
+          <Box minHeight="90px">
             <CreateBoardModal
               createBoard
               isOpen={isBoardModalOpen}
@@ -158,6 +151,13 @@ export const RetroBody = () => {
               </form>
             </CreateBoardModal>
           </Box>
+          {loading ? (
+            <Skeleton amount={5} height="90px" width="100%" />
+          ) : (
+            boards?.map((board) => {
+              return <BoardCard key={board.board_id} board={board} />;
+            })
+          )}
         </Grid>
       </BoardsContainer>
     </>
