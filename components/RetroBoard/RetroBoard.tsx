@@ -47,7 +47,7 @@ const RetroColumnWrapper = styled.div<{ $listCount: number }>`
   flex-direction: column;
 `;
 
-const FlexBox = styled(Box) <{ $listCount: number }>`
+const FlexBox = styled(Box)<{ $listCount: number }>`
   ${({ $listCount }) =>
     css`
       flex: ${$listCount < 5 ? 100 / $listCount : 100};
@@ -73,8 +73,8 @@ export const RetroBoardSingle = () => {
   const currentListCount = lists.length;
 
   const sortedList = useMemo(() => {
-    return lists.sort((a, b) => a.list_order - b.list_order)
-  }, [lists])
+    return lists.sort((a, b) => a.list_order - b.list_order);
+  }, [lists]);
 
   const onDragStart = useCallback(() => {
     console.log("draggin");
@@ -112,7 +112,7 @@ export const RetroBoardSingle = () => {
     [items, dispatch]
   );
 
-  if (status === "pending") {
+  if (status == "pending") {
     return <RetroBoardSkeleton />;
   }
 

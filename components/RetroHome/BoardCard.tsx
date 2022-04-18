@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AlertDialogBar } from "components/Alert";
-import { Modal } from "components/Modal";
+import { format } from "date-fns";
 import Link from "next/link";
 import {
   Menu,
@@ -10,6 +10,7 @@ import {
   MenuItem,
   Box,
   Icon,
+  Text,
   useDisclosure,
 } from "@chakra-ui/react";
 
@@ -31,6 +32,11 @@ interface Props {
   board: BoardWithDocId;
 }
 
+const DateCreated = styled.div`
+  font-size: 12px;
+  margin-top: 8px;
+`;
+
 const Grid = styled.div`
   display: flex;
   justify-content: space-between;
@@ -38,11 +44,23 @@ const Grid = styled.div`
 
 const BoardCard = ({ board }: Props) => {
   const [deleteModalOpen, setdeleteModalOpen] = useState(false);
+  const [formattedDate, setFormattedDate] = useState("");
   const {
     isOpen: isEditModalOpen,
     onClose: closeEditBoardModal,
     onOpen: openEditBoardModal,
   } = useDisclosure();
+
+  useEffect(() => {
+    if (board.createdAt) {
+      const date = format(
+        new Date(board.createdAt.seconds * 1000),
+        "dd/MM/yyyy"
+      );
+
+      setFormattedDate(date);
+    }
+  }, [board.createdAt]);
 
   const handleDeleteBoard = async () => {
     try {
@@ -78,49 +96,56 @@ const BoardCard = ({ board }: Props) => {
       setdeleteModalOpen(false);
     }
   };
-  return (
-    <>
-      <Box
-        borderWidth="1px"
-        borderRadius="lg"
-        overflow="hidden"
-        backgroundColor="white"
-        padding="10px"
-        height="60px"
-      >
-        <Grid>
-          <Link href={`board/${board.board_id}`} passHref>
-            <a>{board.board_title}</a>
-          </Link>
-          <Menu>
-            <MenuButton background="none !important">
-              <Icon as={FaEllipsisV} />
-            </MenuButton>
-            <MenuList>
-              <MenuItem onClick={openEditBoardModal}>Edit</MenuItem>
-              <MenuItem>Archive</MenuItem>
-              <MenuItem onClick={() => setdeleteModalOpen(true)}>
-                Delete
-              </MenuItem>
-            </MenuList>
-          </Menu>
-        </Grid>
-        <EditBoard
-          isEditModalOpen={isEditModalOpen}
-          closeEditBoardModal={closeEditBoardModal}
-          openEditBoardModal={openEditBoardModal}
-          board={board}
-        />
 
-        <AlertDialogBar
-          isOpen={deleteModalOpen}
-          onClose={() => setdeleteModalOpen(false)}
-          onClick={handleDeleteBoard}
-          title="Delete Board"
-          ariaLabel="Delete Board Alert"
-        />
-      </Box>
-    </>
+  return (
+    <Box
+      backgroundColor="white"
+      boxShadow="rgb(0 0 0 / 20%) 0px 1px 3px"
+      borderTop={`0.5rem solid ${board.board_colour ?? "#000000"}`}
+      minHeight="60px"
+      overflow="hidden"
+      padding="1rem"
+    >
+      <Grid>
+        <Link href={`board/${board.board_id}`} passHref>
+          <a>
+            <Text fontSize="2xl">{board.board_title}</Text>
+          </a>
+        </Link>
+        <Menu>
+          <MenuButton
+            background="none !important"
+            borderRadius="sm"
+            transition="all 0.2s"
+            _focus={{ boxShadow: "outline" }}
+          >
+            <Icon as={FaEllipsisV} size={16} />
+          </MenuButton>
+          <MenuList>
+            <MenuItem onClick={openEditBoardModal}>Edit</MenuItem>
+            <MenuItem>Archive</MenuItem>
+            <MenuItem onClick={() => setdeleteModalOpen(true)}>Delete</MenuItem>
+          </MenuList>
+        </Menu>
+      </Grid>
+      <DateCreated>
+        <i>Date Created: {formattedDate}</i>
+      </DateCreated>
+      <EditBoard
+        isEditModalOpen={isEditModalOpen}
+        closeEditBoardModal={closeEditBoardModal}
+        openEditBoardModal={openEditBoardModal}
+        board={board}
+      />
+
+      <AlertDialogBar
+        isOpen={deleteModalOpen}
+        onClose={() => setdeleteModalOpen(false)}
+        onClick={handleDeleteBoard}
+        title="Delete Board"
+        ariaLabel="Delete Board Alert"
+      />
+    </Box>
   );
 };
 
