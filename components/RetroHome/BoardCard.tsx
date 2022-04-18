@@ -109,7 +109,7 @@ const BoardCard = ({ board }: Props) => {
       <Grid>
         <Link href={`board/${board.board_id}`} passHref>
           <a>
-            <Text fontSize="2xl">{board.board_title}</Text>
+            <Text fontSize="md" fontWeight="bold">{board.board_title}</Text>
           </a>
         </Link>
         <Menu>
