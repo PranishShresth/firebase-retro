@@ -1,4 +1,4 @@
-import { Button, Textarea, Stack, IconButton } from "@chakra-ui/react";
+import { Button, Textarea, Stack, IconButton, useColorModeValue } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { v4 as uuidv4 } from "uuid";
@@ -18,7 +18,6 @@ interface Props {
 }
 
 const StyledButton = styled(Button)`
-  background: #f7f7f7 !important;
   border: 1px solid #e6e7e9;
   color: #b7b8ba;
 `;
@@ -30,6 +29,8 @@ function AddItem({ list_id }: Props) {
   const router = useRouter();
   const { user } = useAuthContext();
   const boardId = "" + router.query.boardId;
+  const bg = useColorModeValue('#f7f7f7', 'gray.900')
+
   const {
     board: { items },
   } = useRetroContext();
@@ -82,6 +83,7 @@ function AddItem({ list_id }: Props) {
           leftIcon={<FaPlus />}
           variant="solid"
           width="100%"
+          background={bg}
           onClick={() => {
             setOpen(!open);
           }}

@@ -1,7 +1,7 @@
 import React from "react";
 import { DraggableProvided, DraggableStateSnapshot } from "react-beautiful-dnd";
 import { Box, Stack, Text } from "@chakra-ui/layout";
-import { IconButton, useDisclosure } from "@chakra-ui/react";
+import { IconButton, useColorModeValue, useDisclosure } from "@chakra-ui/react";
 import { FiHeart, FiEdit3, FiTrash2 } from "react-icons/fi";
 import styled from "styled-components";
 import { Item } from "utils/interfaces";
@@ -46,6 +46,7 @@ const StyledIconAction = styled.div<{ hoverColor?: string; color?: string }>`
 `;
 const RetroCard = ({ list_colour, item, provided, snapshot }: Props) => {
   const { isOpen, onClose, onOpen: openEditBox } = useDisclosure();
+  const bg = useColorModeValue('white', "gray.600")
 
   if (isOpen) {
     return (
@@ -61,8 +62,9 @@ const RetroCard = ({ list_colour, item, provided, snapshot }: Props) => {
   return (
     <StyledBox
       list_colour={list_colour}
+
       padding="10px 8px"
-      background={snapshot.isDragging ? "#e8e9ed" : "white"}
+      background={bg}
       ref={provided.innerRef}
       {...provided.draggableProps}
       {...provided.dragHandleProps}
@@ -88,11 +90,11 @@ const RetroCardActions = ({
   openEditBox,
   item_upvotes,
 }: // upvotes,
-{
-  item_id: string;
-  openEditBox: () => void;
-  item_upvotes: string[];
-}) => {
+  {
+    item_id: string;
+    openEditBox: () => void;
+    item_upvotes: string[];
+  }) => {
   const { user } = useAuthContext();
 
   const isUpvoted = user && item_upvotes.includes(user.uid);

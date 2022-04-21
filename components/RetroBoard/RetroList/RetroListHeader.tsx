@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Input } from "@chakra-ui/input";
-import { Box } from "@chakra-ui/react";
+import { Box, useColorModeValue } from "@chakra-ui/react";
 import { Controller, useForm } from "react-hook-form";
 import { doc, updateDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import RetroListMenu from "./RetroListMenu";
 
-const ListTitleWrapper = styled.div`
+const ListTitleWrapper = styled(Box)`
   align-items: center;
   display: flex;
 `;
@@ -55,6 +55,8 @@ export default function RetroListHeader({
       list_title: list_title,
     },
   });
+  const color = useColorModeValue('gray.900', 'white')
+
 
   const [editMode, setEditMode] = useState(false);
 
@@ -94,7 +96,7 @@ export default function RetroListHeader({
         </Box>
       ) : (
         <RetroColumnHeader>
-          <ListTitleWrapper onClick={() => setEditMode(true)}>
+          <ListTitleWrapper onClick={() => setEditMode(true)} color={color}>
             <Square list_colour={list_colour ?? "#000000"} />
             {list_title}
           </ListTitleWrapper>

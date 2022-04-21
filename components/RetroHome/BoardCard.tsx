@@ -12,6 +12,7 @@ import {
   Icon,
   Text,
   useDisclosure,
+  useColorModeValue,
 } from "@chakra-ui/react";
 
 import { FaEllipsisV } from "react-icons/fa";
@@ -44,12 +45,14 @@ const Grid = styled.div`
 
 const BoardCard = ({ board }: Props) => {
   const [deleteModalOpen, setdeleteModalOpen] = useState(false);
+
   const [formattedDate, setFormattedDate] = useState("");
   const {
     isOpen: isEditModalOpen,
     onClose: closeEditBoardModal,
     onOpen: openEditBoardModal,
   } = useDisclosure();
+  const bg = useColorModeValue('white', 'gray.600')
 
   useEffect(() => {
     if (board.createdAt) {
@@ -99,7 +102,7 @@ const BoardCard = ({ board }: Props) => {
 
   return (
     <Box
-      backgroundColor="white"
+      backgroundColor={bg}
       boxShadow="rgb(0 0 0 / 20%) 0px 1px 3px"
       borderTop={`0.5rem solid ${board.board_colour ?? "#000000"}`}
       minHeight="60px"
