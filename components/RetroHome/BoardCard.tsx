@@ -52,7 +52,7 @@ const BoardCard = ({ board }: Props) => {
     onClose: closeEditBoardModal,
     onOpen: openEditBoardModal,
   } = useDisclosure();
-  const bg = useColorModeValue('white', 'gray.600')
+  const bg = useColorModeValue("white", "gray.600");
 
   useEffect(() => {
     if (board.createdAt) {
@@ -102,52 +102,63 @@ const BoardCard = ({ board }: Props) => {
 
   return (
     <Box
-      backgroundColor={bg}
-      boxShadow="rgb(0 0 0 / 20%) 0px 1px 3px"
-      borderTop={`0.5rem solid ${board.board_colour ?? "#000000"}`}
-      minHeight="60px"
-      overflow="hidden"
-      padding="1rem"
+      position="relative"
+      _focus={{ boxShadow: "outline" }}
+      _focusVisible={{ boxShadow: "outline" }}
     >
-      <Grid>
-        <Link href={`board/${board.board_id}`} passHref>
-          <a>
-            <Text fontSize="md" fontWeight="bold">{board.board_title}</Text>
-          </a>
-        </Link>
-        <Menu>
-          <MenuButton
-            background="none !important"
-            borderRadius="sm"
-            transition="all 0.2s"
-            _focus={{ boxShadow: "outline" }}
+      <Link href={`board/${board.board_id}`} passHref>
+        <a>
+          <Box
+            backgroundColor={bg}
+            boxShadow="rgb(0 0 0 / 20%) 0px 1px 3px"
+            borderTop={`0.5rem solid ${board.board_colour ?? "#000000"}`}
+            minHeight="60px"
+            overflow="hidden"
+            padding="1rem"
           >
-            <Icon as={FaEllipsisV} size={16} />
-          </MenuButton>
-          <MenuList>
-            <MenuItem onClick={openEditBoardModal}>Edit</MenuItem>
-            <MenuItem>Archive</MenuItem>
-            <MenuItem onClick={() => setdeleteModalOpen(true)}>Delete</MenuItem>
-          </MenuList>
-        </Menu>
-      </Grid>
-      <DateCreated>
-        <i>Date Created: {formattedDate}</i>
-      </DateCreated>
-      <EditBoard
-        isEditModalOpen={isEditModalOpen}
-        closeEditBoardModal={closeEditBoardModal}
-        openEditBoardModal={openEditBoardModal}
-        board={board}
-      />
+            <Grid>
+              <Text fontSize="md" fontWeight="bold">
+                {board.board_title}
+              </Text>
+            </Grid>
+            <DateCreated>
+              <i>Date Created: {formattedDate}</i>
+            </DateCreated>
+            <EditBoard
+              isEditModalOpen={isEditModalOpen}
+              closeEditBoardModal={closeEditBoardModal}
+              openEditBoardModal={openEditBoardModal}
+              board={board}
+            />
 
-      <AlertDialogBar
-        isOpen={deleteModalOpen}
-        onClose={() => setdeleteModalOpen(false)}
-        onClick={handleDeleteBoard}
-        title="Delete Board"
-        ariaLabel="Delete Board Alert"
-      />
+            <AlertDialogBar
+              isOpen={deleteModalOpen}
+              onClose={() => setdeleteModalOpen(false)}
+              onClick={handleDeleteBoard}
+              title="Delete Board"
+              ariaLabel="Delete Board Alert"
+            />
+          </Box>
+        </a>
+      </Link>
+      <Menu>
+        <MenuButton
+          background="none !important"
+          borderRadius="sm"
+          position="absolute"
+          right="1em"
+          top="1.5em"
+          transition="all 0.2s"
+          _focus={{ boxShadow: "outline" }}
+        >
+          <Icon as={FaEllipsisV} size={16} />
+        </MenuButton>
+        <MenuList>
+          <MenuItem onClick={openEditBoardModal}>Edit</MenuItem>
+          <MenuItem>Archive</MenuItem>
+          <MenuItem onClick={() => setdeleteModalOpen(true)}>Delete</MenuItem>
+        </MenuList>
+      </Menu>
     </Box>
   );
 };

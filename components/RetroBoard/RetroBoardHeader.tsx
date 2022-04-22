@@ -12,7 +12,7 @@ const IconDiv = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #4687fd;
+  background: #2bc0c1;
   width: 36px;
   color: #ffffff;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
