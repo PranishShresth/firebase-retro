@@ -46,7 +46,7 @@ const StyledIconAction = styled.div<{ hoverColor?: string; color?: string }>`
 `;
 const RetroCard = ({ list_colour, item, provided, snapshot }: Props) => {
   const { isOpen, onClose, onOpen: openEditBox } = useDisclosure();
-  const bg = useColorModeValue('white', "gray.600")
+  const bg = useColorModeValue("white", "gray.600");
 
   if (isOpen) {
     return (
@@ -62,7 +62,6 @@ const RetroCard = ({ list_colour, item, provided, snapshot }: Props) => {
   return (
     <StyledBox
       list_colour={list_colour}
-
       padding="10px 8px"
       background={bg}
       ref={provided.innerRef}
@@ -90,11 +89,12 @@ const RetroCardActions = ({
   openEditBox,
   item_upvotes,
 }: // upvotes,
-  {
-    item_id: string;
-    openEditBox: () => void;
-    item_upvotes: string[];
-  }) => {
+{
+  item_id: string;
+  openEditBox: () => void;
+  item_upvotes: string[];
+}) => {
+  const bg = useColorModeValue("black", "gray.600");
   const { user } = useAuthContext();
 
   const isUpvoted = user && item_upvotes.includes(user.uid);
@@ -138,7 +138,7 @@ const RetroCardActions = ({
         <FiTrash2 />
       </StyledIconAction>
       <StyledIconAction
-        color={isUpvoted ? "#F91880" : "#000000"}
+        color={isUpvoted ? "#F91880" : bg}
         hoverColor="#F91880"
         onClick={toggleUpvote}
       >

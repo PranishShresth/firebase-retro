@@ -8,6 +8,7 @@ import {
   Stack,
   IconButton,
   Box,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { AlertDialogBar } from "components/Alert";
 import React from "react";
@@ -32,6 +33,7 @@ interface Props {
   list_id: string;
 }
 const RetroListMenu = ({ list_id }: Props) => {
+  const bg = useColorModeValue("gray.600", "white");
   const {
     isOpen: isDeleteDialogOpen,
     onClose: closeDeleteDialog,
@@ -69,8 +71,9 @@ const RetroListMenu = ({ list_id }: Props) => {
           as={IconButton}
           aria-label="Options"
           icon={<FiMoreVertical />}
+          color={bg}
         ></MenuButton>
-        <MenuList>
+        <MenuList color={bg}>
           {/* <MenuItem>Download</MenuItem> */}
           <MenuItem onClick={openMoveModal}>Move List</MenuItem>
           <MenuItem onClick={openDeleteDialog}>Delete</MenuItem>

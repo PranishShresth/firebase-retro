@@ -1,4 +1,10 @@
-import { Button, Textarea, Stack, IconButton, useColorModeValue } from "@chakra-ui/react";
+import {
+  Button,
+  Textarea,
+  Stack,
+  IconButton,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { v4 as uuidv4 } from "uuid";
@@ -29,7 +35,9 @@ function AddItem({ list_id }: Props) {
   const router = useRouter();
   const { user } = useAuthContext();
   const boardId = "" + router.query.boardId;
-  const bg = useColorModeValue('#f7f7f7', 'gray.900')
+  const bg = useColorModeValue("#f7f7f7", "gray.900");
+  const borderBg = useColorModeValue("gray.200", "gray.600");
+  const textareaBg = useColorModeValue("white", "gray.600");
 
   const {
     board: { items },
@@ -84,6 +92,7 @@ function AddItem({ list_id }: Props) {
           variant="solid"
           width="100%"
           background={bg}
+          borderColor={borderBg}
           onClick={() => {
             setOpen(!open);
           }}
@@ -103,7 +112,7 @@ function AddItem({ list_id }: Props) {
                   placeholder="Add a Item"
                   resize="none"
                   focusBorderColor="blue.500"
-                  background="white"
+                  background={textareaBg}
                 />
               )}
             />

@@ -1,4 +1,10 @@
-import { Button, Textarea, Stack, IconButton } from "@chakra-ui/react";
+import {
+  Button,
+  Textarea,
+  Stack,
+  IconButton,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { firestore } from "configs/firebase/firestore";
 import { doc, updateDoc } from "firebase/firestore";
 import React, { useContext } from "react";
@@ -16,6 +22,7 @@ interface FormValues {
   item_title: string;
 }
 function EditItem({ isOpen, closeEditMode, content, item_id }: Props) {
+  const bg = useColorModeValue("white", "gray.600");
   const {
     handleSubmit,
     control,
@@ -52,7 +59,7 @@ function EditItem({ isOpen, closeEditMode, content, item_id }: Props) {
                   placeholder="Add a Item"
                   resize="none"
                   focusBorderColor="blue.500"
-                  background="white"
+                  background={bg}
                 />
               )}
             />

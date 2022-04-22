@@ -6,6 +6,7 @@ import {
   Button,
   ModalBody,
   ModalCloseButton,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { FiPlusCircle } from "react-icons/fi";
 import styled from "styled-components";
@@ -39,21 +40,23 @@ export const Modal = ({
   createBoard,
   children,
 }: Props) => {
+  const bg = useColorModeValue("white", "gray.600");
+
   return (
     <>
       {createBoard
         ? triggerName && (
             <CreateBoardButton
               onClick={onOpen}
-              background="#ffffff"
-              color="#4886ff"
+              backgroundColor={bg}
+              color="#2bc0c1"
             >
               <FiPlusCircle size={24} />
               <ButtonText>{triggerName}</ButtonText>
             </CreateBoardButton>
           )
         : triggerName && (
-            <Button onClick={onOpen} background="#4886ff" color="white">
+            <Button onClick={onOpen} background="#2bc0c1" color="white">
               {triggerName}
             </Button>
           )}
