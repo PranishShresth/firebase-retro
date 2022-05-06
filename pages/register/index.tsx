@@ -38,7 +38,14 @@ const Register: NextPage = () => {
     control,
     resetField,
     formState: { errors },
-  } = useForm<FormValues>();
+  } = useForm<FormValues>({
+    defaultValues: {
+      email: "",
+      firstName: "",
+      password: "",
+      surname: "",
+    },
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [showSignInPage, setShowSignInPage] = useState(false);
 

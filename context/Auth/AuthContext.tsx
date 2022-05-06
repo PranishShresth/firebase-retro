@@ -1,5 +1,5 @@
 import { signInWithAnonymousCredentials } from "configs/firebase/firebaseClient";
-import { User, UserCredential } from "firebase/auth";
+import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 type AnonymousUser = Pick<User, "uid" | "isAnonymous" | "metadata">;
@@ -29,9 +29,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   //   });
   // }, []);
 
+  useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // updateUser is for setting the user context telling it that there is a user logged in
+        setUser(user);
+      } else {
+        // User is signed out
+        setUser(null);
+      }
+    });
+  }, []);
+
   const updateUser = (data: User) => {
     setUser(data);
   };
+
   return (
     <AuthContext.Provider value={{ updateUser, user }}>
       {children}

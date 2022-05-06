@@ -10,8 +10,6 @@ const withAuth = (Component: any) => {
       return <SignIn />;
     }
 
-    console.log(user);
-
     // If user is logged in, return original component
     return <Component {...props} />;
   };

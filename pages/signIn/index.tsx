@@ -39,7 +39,12 @@ const SignIn: NextPage = () => {
     control,
     resetField,
     formState: { errors },
-  } = useForm<FormValues>();
+  } = useForm<FormValues>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [showBoardsPage, setShowBoardsPage] = useState(false);
 
