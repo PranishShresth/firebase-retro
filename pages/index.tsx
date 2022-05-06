@@ -5,10 +5,10 @@ import { NextPage } from "next";
 import Head from "next/head";
 
 import React from "react";
-
+import withAuth from "utils/withAuth";
 
 const RetroDashboard: NextPage = () => {
-  const bg = useColorModeValue('#F7F7F7', 'gray.900')
+  const bg = useColorModeValue("#F7F7F7", "gray.900");
 
   return (
     <Box background={bg} height="100%">
@@ -21,4 +21,4 @@ const RetroDashboard: NextPage = () => {
   );
 };
 
-export default RetroDashboard;
+export default withAuth(RetroDashboard);

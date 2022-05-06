@@ -9,7 +9,10 @@ interface Auth {
   user: null | AnonymousUser;
 }
 
-const AuthContext = createContext<Auth>({ updateUser: () => null, user: null });
+const AuthContext = createContext<Auth>({
+  updateUser: () => null,
+  user: null,
+});
 
 export const useAuthContext = () => {
   return useContext(AuthContext);

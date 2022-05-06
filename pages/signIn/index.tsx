@@ -7,6 +7,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { useAuthContext } from "context/Auth/AuthContext";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { NextPage } from "next";
 import Head from "next/head";
@@ -31,6 +32,7 @@ interface FormValues {
 }
 
 const SignIn: NextPage = () => {
+  const { updateUser } = useAuthContext();
   const bg = useColorModeValue("#F7F7F7", "gray.900");
   const {
     handleSubmit,
@@ -54,7 +56,7 @@ const SignIn: NextPage = () => {
 
       console.log(userCredential);
       if (userCredential.user.hasOwnProperty("accessToken")) {
-        // updateUser(userCredential.user);
+        updateUser(userCredential.user);
 
         setShowBoardsPage(true);
       }
