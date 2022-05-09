@@ -5,11 +5,13 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 type AnonymousUser = Pick<User, "uid" | "isAnonymous" | "metadata">;
 
 interface Auth {
+  isLoadingUserData: boolean;
   updateUser: (data: User) => void;
   user: null | AnonymousUser;
 }
 
 const AuthContext = createContext<Auth>({
+  isLoadingUserData: true,
   updateUser: () => null,
   user: null,
 });
@@ -20,6 +22,7 @@ export const useAuthContext = () => {
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<AnonymousUser | null>(null);
+  const [isLoadingUserData, setIsLoadingUserData] = useState(true);
   // useEffect(() => {
   //   signInWithAnonymousCredentials().then((authUser: UserCredential) => {
   //     const {
@@ -35,9 +38,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (user) {
         // updateUser is for setting the user context telling it that there is a user logged in
         setUser(user);
+        setIsLoadingUserData(false);
       } else {
         // User is signed out
         setUser(null);
+        setIsLoadingUserData(false);
       }
     });
   }, []);
@@ -47,7 +52,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ updateUser, user }}>
+    <AuthContext.Provider value={{ isLoadingUserData, updateUser, user }}>
       {children}
     </AuthContext.Provider>
   );

@@ -45,7 +45,6 @@ const SignIn: NextPage = () => {
       password: "",
     },
   });
-  const [isLoading, setIsLoading] = useState(false);
   const [showBoardsPage, setShowBoardsPage] = useState(false);
 
   const auth = getAuth();
@@ -65,9 +64,7 @@ const SignIn: NextPage = () => {
 
         setShowBoardsPage(true);
       }
-      setIsLoading(false);
     } catch (error) {
-      setIsLoading(false);
       console.log(error);
     }
   };

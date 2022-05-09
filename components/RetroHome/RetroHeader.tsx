@@ -81,15 +81,17 @@ export const RetroHeader = () => {
     });
   }, [updateUser]);
 
-  if (isLoading) return <div>Loading...</div>;
-
   return (
     <Header backgroundColor={bg}>
       <Container>
         <HeaderBanner>
           <Link href="/">Retro Board</Link>
-          <Button onClick={signOut}>Sign Out</Button>
-          {user.first_name}
+          {!isLoading && (
+            <>
+              <Button onClick={signOut}>Sign Out</Button>
+              {user.first_name}
+            </>
+          )}
           <DarkModeToggle onToggle={toggleColorMode} colorMode={colorMode} />
         </HeaderBanner>
       </Container>
