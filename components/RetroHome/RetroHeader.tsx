@@ -1,4 +1,17 @@
-import { Button, useColorMode, useColorModeValue } from "@chakra-ui/react";
+import {
+  Avatar,
+  Button,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuGroup,
+  MenuItem,
+  MenuList,
+  SkeletonCircle,
+  Stack,
+  useColorMode,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Link from "next/link";
 import styled from "styled-components";
@@ -84,13 +97,25 @@ export const RetroHeader = () => {
       <Container>
         <HeaderBanner>
           <Link href="/">Retro Board</Link>
-          {!isLoading && (
-            <>
-              <Button onClick={signOut}>Sign Out</Button>
-              {user.first_name}
-            </>
-          )}
-          <DarkModeToggle onToggle={toggleColorMode} colorMode={colorMode} />
+          <Stack direction={"row"}>
+            <DarkModeToggle onToggle={toggleColorMode} colorMode={colorMode} />
+            {isLoading ? (
+              <SkeletonCircle size="8" />
+            ) : (
+              <Menu>
+                <MenuButton>
+                  <Avatar
+                    name={`${user.first_name} ${user.surname}`}
+                    size={"sm"}
+                  />
+                </MenuButton>
+                <MenuList>
+                  <MenuItem>Profile</MenuItem>
+                  <MenuItem onClick={signOut}>Sign Out</MenuItem>
+                </MenuList>
+              </Menu>
+            )}
+          </Stack>
         </HeaderBanner>
       </Container>
     </Header>
