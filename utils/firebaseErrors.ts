@@ -236,7 +236,7 @@ export const firebaseErrors = {
     "The user account has been disabled by an administrator.",
   "auth/user-mismatch":
     "The supplied credentials do not correspond to the previously signed in user.",
-  "auth/weak-password": "The password must be 6 characters long or more.",
+  "auth/weak-password": "The password must be at least 6 characters long.",
   "auth/web-storage-unsupported":
     "This browser is not supported or 3rd party cookies and data may be disabled.",
   "auth/wrong-password": "The password is incorrect.",

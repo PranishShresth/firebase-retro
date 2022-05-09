@@ -13,15 +13,35 @@ import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import { NextPage } from "next";
 import Head from "next/head";
+import Link from "next/link";
 import Router from "next/router";
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import styled from "styled-components";
 import { auth } from "configs/firebase/firebaseClient";
+import DualRingLoader from "components/Loader/DualRingLoader";
+import { firebaseErrors } from "utils/firebaseErrors";
 
-const StyledForm = styled.form`
-  margin: 0 auto;
-  max-width: 600px;
+const FormErrorMessage = styled.span`
+  color: #e8575b;
+  font-weight: bold;
+`;
+
+const PageLink = styled(Link)`
+  text-decoration: none;
+`;
+
+const StyledForm = styled.form<{ background: string; boxShadowColour: string }>`
+  background-color: ${({ background }) => background};
+  border-radius: 0.5rem;
+  box-shadow: ${({ boxShadowColour }) => `0 1px 3px 3px ${boxShadowColour}`};
+  box-sizing: border-box;
+  left: 50%;
+  padding: 2rem;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
 `;
 
 interface FormValues {
@@ -34,6 +54,8 @@ interface FormValues {
 const Register: NextPage = () => {
   const { updateUser } = useAuthContext();
   const bg = useColorModeValue("#F7F7F7", "gray.900");
+  const boxShadowColour = useColorModeValue("#e2e6ea", "#171923");
+  const formBg = useColorModeValue("#ffffff", "#4A5568");
   const {
     handleSubmit,
     control,
@@ -47,11 +69,13 @@ const Register: NextPage = () => {
       surname: "",
     },
   });
+  const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showSignInPage, setShowSignInPage] = useState(false);
 
   const handleSignUpUser = async (data: FormValues) => {
     try {
+      setIsLoading(true);
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         data.email,
@@ -73,11 +97,19 @@ const Register: NextPage = () => {
       setShowSignInPage(true);
 
       setIsLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       setIsLoading(false);
-      console.log(error);
+      setError(error.code);
     }
   };
+
+  if (isLoading) {
+    return (
+      <Box backgroundColor={bg} height={"100%"} width={"100%"}>
+        <DualRingLoader />
+      </Box>
+    );
+  }
 
   if (showSignInPage) {
     Router.push("/signIn");
@@ -88,8 +120,17 @@ const Register: NextPage = () => {
       <Head>
         <title>Sign Up</title>
       </Head>
-      <StyledForm onSubmit={handleSubmit(handleSignUpUser)}>
-        <Text fontSize="3xl" textAlign="center">
+      <StyledForm
+        background={formBg}
+        boxShadowColour={boxShadowColour}
+        onSubmit={handleSubmit(handleSignUpUser)}
+      >
+        <Text
+          color={"#2bc0c1"}
+          fontFamily="Commissioner"
+          fontSize="3xl"
+          textAlign="center"
+        >
           Sign Up
         </Text>
         <Stack spacing={3}>
@@ -165,10 +206,24 @@ const Register: NextPage = () => {
               />
             </InputGroup>
           </div>
-
+          {error && (
+            <FormErrorMessage>{firebaseErrors[error]}</FormErrorMessage>
+          )}
+          <span>
+            Already have an account?{" "}
+            <PageLink href="/signIn">
+              <a style={{ color: "#2bc0c1" }}>Sign in!</a>
+            </PageLink>
+          </span>
           <div>
-            <Button marginBottom="12px" type="submit">
-              Login
+            <Button
+              backgroundColor={"#2bc0c1"}
+              color={"#ffffff"}
+              marginBottom="12px"
+              type="submit"
+              width={"100%"}
+            >
+              Sign Up
             </Button>
           </div>
         </Stack>
