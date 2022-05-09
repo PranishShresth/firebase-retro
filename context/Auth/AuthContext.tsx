@@ -1,4 +1,7 @@
-import { signInWithAnonymousCredentials } from "configs/firebase/firebaseClient";
+import {
+  auth,
+  signInWithAnonymousCredentials,
+} from "configs/firebase/firebaseClient";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
@@ -33,7 +36,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // }, []);
 
   useEffect(() => {
-    const auth = getAuth();
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         // updateUser is for setting the user context telling it that there is a user logged in

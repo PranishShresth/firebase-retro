@@ -8,7 +8,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useAuthContext } from "context/Auth/AuthContext";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import { NextPage } from "next";
@@ -17,6 +17,7 @@ import Router from "next/router";
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import styled from "styled-components";
+import { auth } from "configs/firebase/firebaseClient";
 
 const StyledForm = styled.form`
   margin: 0 auto;
@@ -49,11 +50,7 @@ const Register: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showSignInPage, setShowSignInPage] = useState(false);
 
-  const auth = getAuth();
-
   const handleSignUpUser = async (data: FormValues) => {
-    console.log(data);
-
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -61,14 +58,9 @@ const Register: NextPage = () => {
         data.password
       );
 
-      // console.log(user);
-
-      console.log(userCredential);
       updateUser(userCredential.user);
 
       const ref = doc(firestore, "users", userCredential.user.uid);
-
-      console.log("uid", userCredential.user.uid);
 
       await setDoc(ref, {
         first_name: data.firstName,

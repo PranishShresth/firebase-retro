@@ -7,6 +7,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { auth } from "configs/firebase/firebaseClient";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { NextPage } from "next";
@@ -47,8 +48,6 @@ const SignIn: NextPage = () => {
   });
   const [showBoardsPage, setShowBoardsPage] = useState(false);
 
-  const auth = getAuth();
-
   const handleSignInUser = async (data: FormValues) => {
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -56,9 +55,7 @@ const SignIn: NextPage = () => {
         data.email,
         data.password
       );
-      // console.log(user);
 
-      console.log(userCredential);
       if (userCredential.user.hasOwnProperty("accessToken")) {
         updateUser(userCredential.user);
 

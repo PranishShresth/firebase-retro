@@ -10,6 +10,7 @@ import { query, collection, where, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { usersRef } from "utils/firebaseCollection";
 import { useAuthContext } from "context/Auth/AuthContext";
+import { auth } from "configs/firebase/firebaseClient";
 
 const Header = styled(Box).attrs({ className: "header-bar" })`
   color: #2bc0c1;
@@ -37,8 +38,6 @@ export const RetroHeader = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<any>();
 
-  const auth = getAuth();
-
   const signOut = () => {
     auth
       .signOut()
@@ -52,7 +51,6 @@ export const RetroHeader = () => {
   };
 
   useEffect(() => {
-    const auth = getAuth();
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         // User is signed in, see docs for a list of available properties
