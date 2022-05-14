@@ -65,7 +65,6 @@ const SignIn: NextPage = () => {
   });
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [showBoardsPage, setShowBoardsPage] = useState(false);
 
   const handleSignInUser = async (data: FormValues) => {
     try {
@@ -78,10 +77,8 @@ const SignIn: NextPage = () => {
 
       if (userCredential.user.hasOwnProperty("accessToken")) {
         updateUser(userCredential.user);
-
-        setShowBoardsPage(true);
+        Router.push("/");
       }
-      setIsLoading(false);
     } catch (error: any) {
       setIsLoading(false);
       setError(error.code);
@@ -94,10 +91,6 @@ const SignIn: NextPage = () => {
         <DualRingLoader />
       </Box>
     );
-  }
-
-  if (showBoardsPage) {
-    Router.push("/");
   }
 
   return (
