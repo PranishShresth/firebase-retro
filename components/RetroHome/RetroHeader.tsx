@@ -1,10 +1,7 @@
 import {
   Avatar,
-  Button,
   Menu,
   MenuButton,
-  MenuDivider,
-  MenuGroup,
   MenuItem,
   MenuList,
   SkeletonCircle,
@@ -12,16 +9,11 @@ import {
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Link from "next/link";
 import styled from "styled-components";
 import { Box } from "@chakra-ui/react";
-import { firestore } from "configs/firebase/firestore";
 import { DarkModeToggle } from "components/Toggle/Toggle";
 import Router from "next/router";
-import { query, collection, where, getDocs } from "firebase/firestore";
-import { useEffect, useState } from "react";
-import { usersRef } from "utils/firebaseCollection";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { auth } from "configs/firebase/firebaseClient";
 
@@ -45,11 +37,11 @@ const Container = styled.div`
 `;
 
 export const RetroHeader = () => {
-  const { updateUser } = useAuthContext();
+  const { userDetails } = useAuthContext();
   const { colorMode, toggleColorMode } = useColorMode();
   const bg = useColorModeValue("white", "gray.600");
-  const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState<any>();
+
+  const goToProfile = () => Router.push("/profile");
 
   const signOut = () => {
     auth
@@ -63,35 +55,6 @@ export const RetroHeader = () => {
       });
   };
 
-  useEffect(() => {
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
-        const uid = user.uid;
-        // console.log("user", user);
-
-        const userQuery = query(usersRef, where("user_id", "==", uid));
-        const userSnapshot = await getDocs(userQuery);
-
-        const users = userSnapshot.docs.map((user) => {
-          return { ...user.data() };
-        });
-
-        // updateUser is for setting the user context telling it that there is a user logged in
-        updateUser(user);
-        // setUser is local state to get the current logged in user's firstName, surname, etc from the "users" table in firestore
-        setUser(users[0]);
-        console.log("users", users);
-        setIsLoading(false);
-      } else {
-        // User is signed out
-        setUser(null);
-        setIsLoading(false);
-      }
-    });
-  }, [updateUser]);
-
   return (
     <Header backgroundColor={bg}>
       <Container>
@@ -99,21 +62,21 @@ export const RetroHeader = () => {
           <Link href="/">Retro Board</Link>
           <Stack direction={"row"}>
             <DarkModeToggle onToggle={toggleColorMode} colorMode={colorMode} />
-            {isLoading ? (
-              <SkeletonCircle size="8" />
-            ) : (
+            {userDetails ? (
               <Menu>
                 <MenuButton>
                   <Avatar
-                    name={`${user.first_name} ${user.surname}`}
+                    name={`${userDetails?.first_name} ${userDetails?.surname}`}
                     size={"sm"}
                   />
                 </MenuButton>
                 <MenuList>
-                  <MenuItem>Profile</MenuItem>
+                  <MenuItem onClick={goToProfile}>Profile</MenuItem>
                   <MenuItem onClick={signOut}>Sign Out</MenuItem>
                 </MenuList>
               </Menu>
+            ) : (
+              <SkeletonCircle size="8" />
             )}
           </Stack>
         </HeaderBanner>
