@@ -12,6 +12,8 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 
+export const auth = getAuth();
+
 export const signInWithAnonymousCredentials = (): Promise<UserCredential> => {
   return signInAnonymously(getAuth());
 };

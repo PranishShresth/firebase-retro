@@ -5,8 +5,7 @@ import { RetroHeader } from "components/RetroHome";
 import styled from "styled-components";
 import Head from "next/head";
 import { Box, useColorModeValue } from "@chakra-ui/react";
-
-
+import withAuth from "utils/withAuth";
 
 const AppWrapper = styled(Box)`
   display: flex;
@@ -15,7 +14,7 @@ const AppWrapper = styled(Box)`
 `;
 
 const RetroBoard = () => {
-  const bg = useColorModeValue('#F7F7F7', 'gray.900')
+  const bg = useColorModeValue("#F7F7F7", "gray.900");
 
   return (
     <AppWrapper background={bg}>
@@ -30,4 +29,4 @@ const RetroBoard = () => {
   );
 };
 
-export default RetroBoard;
+export default withAuth(RetroBoard);
