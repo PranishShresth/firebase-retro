@@ -14,7 +14,7 @@ const AppWrapper = styled(Box)`
 `;
 
 const RetroBoard = () => {
-  const bg = useColorModeValue("white", "gray.900");
+  const bg = useColorModeValue("#F7F7F7", "gray.900");
 
   return (
     <AppWrapper background={bg}>

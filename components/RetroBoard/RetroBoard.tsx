@@ -66,10 +66,6 @@ export const RetroBoardSingle = () => {
     dispatch,
   } = useRetroContext();
 
-  const [filteredItems, setFilteredItems] = useState(() => {
-    return lists.sort((a, b) => a.list_order - b.list_order);
-  });
-
   const currentListCount = lists.length;
 
   const sortedList = useMemo(() => {

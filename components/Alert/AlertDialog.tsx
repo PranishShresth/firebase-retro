@@ -16,6 +16,7 @@ interface Props {
   ariaLabel: string;
   onClose: () => void;
   onClick: () => void;
+  isLoading?: boolean;
 }
 
 export const AlertDialogBar = ({
@@ -24,6 +25,7 @@ export const AlertDialogBar = ({
   onClose,
   onClick,
   ariaLabel,
+  isLoading,
 }: Props) => {
   const cancelRef = useRef(null);
 
@@ -48,7 +50,12 @@ export const AlertDialogBar = ({
               <Button ref={cancelRef} onClick={onClose}>
                 Cancel
               </Button>
-              <Button colorScheme="red" onClick={onClick} ml={3}>
+              <Button
+                colorScheme="red"
+                onClick={onClick}
+                ml={3}
+                isLoading={!!isLoading}
+              >
                 Delete
               </Button>
             </AlertDialogFooter>
