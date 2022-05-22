@@ -79,7 +79,7 @@ const RetroListMenu = ({ list_id }: Props) => {
             </MenuItemOption>
           </MenuOptionGroup>
           <MenuItem fontSize="sm" onClick={openMoveModal}>
-            Move List...
+            Include column in:
           </MenuItem>
           <MenuItem fontSize="sm" onClick={openDeleteDialog}>
             Delete
@@ -158,8 +158,8 @@ const MoveListContainer = ({
 
       setLoading(false);
       toast({
-        title: "List Moved.",
-        description: `The list has been moved...`,
+        title: "List Added.",
+        description: `The list has been included...`,
         status: "success",
         duration: 4000,
         isClosable: true,
@@ -171,7 +171,7 @@ const MoveListContainer = ({
 
   return (
     <MoveModal
-      modalTitle="Move a List"
+      modalTitle="Include this list in"
       isOpen={isMoveModalOpen}
       onClose={closeMoveModal}
       onOpen={openMoveModal}
@@ -182,7 +182,7 @@ const MoveListContainer = ({
           name="board_id"
           render={({ field }) => (
             <Select placeholder="Lists..." {...field}>
-              {allBoards?.map((board) => (
+              {allBoards.slice(0, 6)?.map((board) => (
                 <option key={board.board_id} value={board.board_id}>
                   {board.board_title}
                 </option>
@@ -193,7 +193,7 @@ const MoveListContainer = ({
 
         <Box onClick={throttle(copyListToAnotherBoard, 4000)}>
           <Button isLoading={loading} isFullWidth={false}>
-            Move List...
+            Add
           </Button>
         </Box>
       </Stack>

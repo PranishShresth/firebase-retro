@@ -63,7 +63,7 @@ export const RetroBoardFilter = () => {
                 render={({ field }) => (
                   <Input
                     {...field}
-                    placeholder="Search board..."
+                    placeholder="Search for an item..."
                     size="lg"
                     height="56px"
                     paddingLeft="36px"

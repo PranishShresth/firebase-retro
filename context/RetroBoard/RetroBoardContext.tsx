@@ -30,6 +30,7 @@ import {
   updateLists,
 } from "./RetroBoardReducer";
 import { Board, Item, List } from "utils/interfaces";
+import { useAuthContext } from "context/Auth/AuthContext";
 
 const RetroBoardContext = createContext<{
   board: RetroBoardState;
@@ -47,12 +48,14 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const boardId = "" + router.query.boardId;
   const [state, dispatch] = useReducer(RetroBoardReducer, initialState);
+  const { userDetails } = useAuthContext();
 
   useEffect(() => {
     (async () => {
       const boardsRef = query(
         collection(firestore, "boards"),
-        orderBy("createdAt", "asc")
+        where("createdBy.user_id", "==", userDetails?.user_id),
+        orderBy("createdAt", "desc")
       );
       const boardSnapshot = await getDocs(boardsRef);
       const boards = boardSnapshot.docs.map((doc) => {
@@ -78,8 +81,7 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
         items: itemsData.docs.map((x) => x.data()) as Item[],
         lists: listsData.docs.map((x) => x.data()) as List[],
       };
-      dispatch(updateBoard(payload))
-
+      dispatch(updateBoard(payload));
     }
     fetchCurrentBoard();
   }, [boardId, dispatch]);
@@ -94,7 +96,7 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
 
     const listsCollectionSnap = onSnapshot(q, (snapshot) => {
       const payload = snapshot.docs.map((doc) => {
-        return doc.data() as List
+        return doc.data() as List;
       });
       dispatch(updateLists(payload));
     });
@@ -110,7 +112,7 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
 
     const itemsCollectionSnap = onSnapshot(q, (snapshot) => {
       const payload = snapshot.docs.map((doc) => {
-        return doc.data() as Item
+        return doc.data() as Item;
       });
       dispatch(updateItems(payload));
     });

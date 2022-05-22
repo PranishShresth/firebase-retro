@@ -42,7 +42,7 @@ const RetroBoardHeader = () => {
         <IconDiv>
           <Icon as={GiNinjaHead} w={6} h="100%" />
         </IconDiv>
-        <Text fontWeight={"500"} fontSize={"1.2rem"}>
+        <Text fontWeight="bold" fontSize={"1.2rem"}>
           {board?.board_title}
         </Text>
       </Stack>
@@ -50,9 +50,9 @@ const RetroBoardHeader = () => {
       <Stack direction="row">
         <RetroBoardFilter />
         <RetroBoardShare boardId={board.board_id} />
-        <Button>
+        {/* <Button>
           <FiSettings />
-        </Button>
+        </Button> */}
         {showListCreation && (
           <Box>
             <AddList />
