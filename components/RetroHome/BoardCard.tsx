@@ -92,11 +92,10 @@ const BoardCard = ({ board }: Props) => {
       // commits the batched delete for both items and boards
       await batch.commit();
 
-      deleteDoc(currentBoardRef);
+      await deleteDoc(currentBoardRef);
+      setdeleteModalOpen(false);
     } catch (err) {
       console.log(err);
-    } finally {
-      setdeleteModalOpen(false);
     }
   };
 

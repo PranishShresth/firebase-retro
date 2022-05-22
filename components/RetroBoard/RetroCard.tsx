@@ -89,11 +89,11 @@ const RetroCardActions = ({
   openEditBox,
   item_upvotes,
 }: // upvotes,
-{
-  item_id: string;
-  openEditBox: () => void;
-  item_upvotes: string[];
-}) => {
+  {
+    item_id: string;
+    openEditBox: () => void;
+    item_upvotes: string[];
+  }) => {
   const bg = useColorModeValue("black", "gray.600");
   const { user } = useAuthContext();
 

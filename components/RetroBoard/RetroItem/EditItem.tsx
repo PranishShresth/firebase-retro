@@ -26,7 +26,6 @@ function EditItem({ isOpen, closeEditMode, content, item_id }: Props) {
   const {
     handleSubmit,
     control,
-    formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
       item_title: content,

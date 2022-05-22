@@ -1,10 +1,7 @@
-import React, { memo, useMemo } from "react";
+import React, { useMemo } from "react";
 import styled from "styled-components";
 import RetroCard from "./RetroCard";
-// import { Item } from "../interfaces";
-// import AddItem from "./Item/AddItem";
 import { Draggable, DroppableProvided } from "react-beautiful-dnd";
-import { Item } from "utils/interfaces";
 import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 import AddItem from "./RetroItem/AddItem";
 
@@ -40,14 +37,17 @@ interface Props {
 
 const RetroColumn = ({ list_colour, list_id, droppableProvided }: Props) => {
   const {
-    board: { items },
+    board: { items, filterPayload },
   } = useRetroContext();
 
   const memoizedListItems = useMemo(() => {
     return items
       .filter((item) => item.list_id === list_id)
+      .filter((item) => item.item_title.includes(filterPayload))
       .sort((a, b) => a.item_order - b.item_order);
-  }, [items, list_id]);
+  }, [items, list_id, filterPayload]);
+
+
 
   return (
     <>

@@ -9,18 +9,14 @@ import {
   IconButton,
   Box,
   useColorModeValue,
+  MenuItemOption,
+  MenuOptionGroup,
 } from "@chakra-ui/react";
 import { AlertDialogBar } from "components/Alert";
-import React from "react";
+import React, { useState } from "react";
 import { useDisclosure } from "@chakra-ui/react";
 import { FiMoreVertical } from "react-icons/fi";
-import {
-  doc,
-  deleteDoc,
-  writeBatch,
-  setDoc,
-  collection,
-} from "firebase/firestore";
+import { doc, deleteDoc, writeBatch, setDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import { Modal as MoveModal } from "components/Modal";
 import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
@@ -74,8 +70,11 @@ const RetroListMenu = ({ list_id }: Props) => {
           color={bg}
         ></MenuButton>
         <MenuList color={bg}>
-          {/* <MenuItem>Download</MenuItem> */}
-          <MenuItem onClick={openMoveModal}>Move List</MenuItem>
+          <MenuOptionGroup defaultValue="asc" title="Order" type="radio">
+            <MenuItemOption value="asc">Ascending</MenuItemOption>
+            <MenuItemOption value="desc">Descending</MenuItemOption>
+          </MenuOptionGroup>
+          <MenuItem onClick={openMoveModal}>Move List...</MenuItem>
           <MenuItem onClick={openDeleteDialog}>Delete</MenuItem>
         </MenuList>
       </Menu>
@@ -113,11 +112,8 @@ const MoveListContainer = ({
   } = useRetroContext();
   const toast = useToast();
 
-  const {
-    getValues,
-    control,
-    formState: { errors },
-  } = useForm<{ board_id: string }>({
+  const [loading, setLoading] = useState(false);
+  const { getValues, control } = useForm<{ board_id: string }>({
     defaultValues: {
       board_id: "",
     },
@@ -132,7 +128,7 @@ const MoveListContainer = ({
 
     try {
       const list_id = uuidV4();
-
+      setLoading(true);
       const batch = writeBatch(firestore);
 
       allItems.forEach((item) => {
@@ -152,9 +148,10 @@ const MoveListContainer = ({
       });
       await batch.commit();
 
+      setLoading(false);
       toast({
         title: "List Moved.",
-        description: `The list has been moved to ${boardId}`,
+        description: `The list has been moved...`,
         status: "success",
         duration: 4000,
         isClosable: true,
@@ -187,7 +184,9 @@ const MoveListContainer = ({
         />
 
         <Box onClick={throttle(copyListToAnotherBoard, 4000)}>
-          <Button isFullWidth={false}>Move List</Button>
+          <Button isLoading={loading} isFullWidth={false}>
+            Move List...
+          </Button>
         </Box>
       </Stack>
     </MoveModal>
