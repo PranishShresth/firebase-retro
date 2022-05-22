@@ -1,13 +1,9 @@
-import {
-  auth,
-} from "configs/firebase/firebaseClient";
+import { auth } from "configs/firebase/firebaseClient";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { query, where, getDocs } from "firebase/firestore";
 import { usersRef } from "utils/firebaseCollection";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { AnonymousUser, Auth, UserDetails } from "utils/interfaces";
-
-
 
 const AuthContext = createContext<Auth>({
   isLoadingUserData: true,

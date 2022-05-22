@@ -1,8 +1,8 @@
 import React from "react";
 import { DraggableProvided, DraggableStateSnapshot } from "react-beautiful-dnd";
 import { Box, Stack, Text } from "@chakra-ui/layout";
-import { IconButton, useColorModeValue, useDisclosure } from "@chakra-ui/react";
-import { FiHeart, FiEdit3, FiTrash2 } from "react-icons/fi";
+import { useColorModeValue, useDisclosure } from "@chakra-ui/react";
+import { FiStar, FiEdit3, FiTrash2 } from "react-icons/fi";
 import styled from "styled-components";
 import { Item } from "utils/interfaces";
 import EditItem from "./RetroItem/EditItem";
@@ -143,7 +143,7 @@ const RetroCardActions = ({
         onClick={toggleUpvote}
       >
         <Stack direction="row" spacing={2}>
-          <FiHeart fill={isUpvoted ? "#F91880" : "#FFFFFF"} />
+          <FiStar fill={isUpvoted ? "#F91880" : "#FFFFFF"} />
           <span style={{ lineHeight: "16px" }}>{item_upvotes.length}</span>
         </Stack>
       </StyledIconAction>
