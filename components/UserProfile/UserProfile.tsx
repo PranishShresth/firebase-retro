@@ -1,6 +1,7 @@
-import { Avatar, Box, Text } from "@chakra-ui/react";
+import { Avatar, Text } from "@chakra-ui/react";
 import { useAuthContext } from "context/Auth/AuthContext";
 import styled from "styled-components";
+import BirthDate from "./BirthDate";
 
 const EditInfoWrapper = styled.div`
   flex: 2;
@@ -40,17 +41,7 @@ const UserProfile = () => {
         </Text>
       </UserInfoWrapper>
       <EditInfoWrapper>
-        <Box
-          backgroundColor={"white"}
-          borderRadius={"lg"}
-          boxShadow={"0 4px 12px 0 rgb(0 0 0 / 5%)"}
-          marginTop={"2rem"}
-          p="6"
-        >
-          <Text fontSize="xl" fontWeight={"bold"}>
-            When is your birthday?
-          </Text>
-        </Box>
+        <BirthDate userDetails={userDetails} />
       </EditInfoWrapper>
     </ProfileWrapper>
   );

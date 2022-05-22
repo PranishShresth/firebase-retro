@@ -9,7 +9,8 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 
 type AnonymousUser = Pick<User, "uid" | "isAnonymous" | "metadata">;
 
-interface UserDetails {
+export interface UserDetails {
+  birthDate?: string;
   created_at: { seconds: number; nanoseconds: number };
   email: string;
   first_name: string;
