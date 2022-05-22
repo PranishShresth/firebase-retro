@@ -31,7 +31,7 @@ export const RetroBoardFilter = () => {
   });
 
   const filterBoardCards = ({ itemFilter }: FormInputs) => {
-    dispatch(setFilterPayload(itemFilter));
+    dispatch(setFilterPayload(itemFilter.toLowerCase()));
     closeFilterModal();
   };
 
@@ -53,10 +53,9 @@ export const RetroBoardFilter = () => {
                 height="100%"
                 padding="0 10px"
                 pointerEvents="none"
-                children={
-                  <Icon as={BiSearch} width={5} height={5} color="teal" />
-                }
-              />
+              >
+                <Icon as={BiSearch} width={5} height={5} color="teal" />
+              </InputLeftElement>
               <Controller
                 control={control}
                 name="itemFilter"

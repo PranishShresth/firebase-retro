@@ -1,6 +1,6 @@
 import { Box, Flex, Input, Button, Text } from "@chakra-ui/react";
 import Cleave from "cleave.js/react";
-import { UserDetails } from "context/Auth/AuthContext";
+import { UserDetails } from "utils/interfaces";
 import { doc, setDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import { useForm, Controller } from "react-hook-form";

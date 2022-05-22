@@ -52,18 +52,20 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     (async () => {
-      const boardsRef = query(
-        collection(firestore, "boards"),
-        where("createdBy.user_id", "==", userDetails?.user_id),
-        orderBy("createdAt", "desc")
-      );
-      const boardSnapshot = await getDocs(boardsRef);
-      const boards = boardSnapshot.docs.map((doc) => {
-        return { ...doc.data() } as Board;
-      });
-      dispatch(updateBoards(boards));
+      if (userDetails) {
+        const boardsRef = query(
+          collection(firestore, "boards"),
+          where("createdBy.user_id", "==", userDetails.user_id),
+          orderBy("createdAt", "desc")
+        );
+        const boardSnapshot = await getDocs(boardsRef);
+        const boards = boardSnapshot.docs.map((doc) => {
+          return { ...doc.data() } as Board;
+        });
+        dispatch(updateBoards(boards));
+      }
     })();
-  }, []);
+  }, [userDetails]);
 
   useEffect(() => {
     async function fetchCurrentBoard() {

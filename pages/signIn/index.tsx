@@ -10,7 +10,7 @@ import {
 import DualRingLoader from "components/Loader/DualRingLoader";
 import { auth } from "configs/firebase/firebaseClient";
 import { useAuthContext } from "context/Auth/AuthContext";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
@@ -55,7 +55,7 @@ const SignIn: NextPage = () => {
   const {
     handleSubmit,
     control,
-    resetField,
+
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
@@ -164,6 +164,7 @@ const SignIn: NextPage = () => {
               marginBottom="12px"
               type="submit"
               width={"100%"}
+              _hover={{ bg: "#2C7A7B" }}
             >
               Login
             </Button>

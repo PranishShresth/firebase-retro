@@ -43,11 +43,9 @@ const RetroColumn = ({ list_colour, list_id, droppableProvided }: Props) => {
   const memoizedListItems = useMemo(() => {
     return items
       .filter((item) => item.list_id === list_id)
-      .filter((item) => item.item_title.includes(filterPayload))
+      .filter((item) => item.item_title.toLowerCase().includes(filterPayload))
       .sort((a, b) => a.item_order - b.item_order);
   }, [items, list_id, filterPayload]);
-
-
 
   return (
     <>

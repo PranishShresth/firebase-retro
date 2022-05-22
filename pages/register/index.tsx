@@ -6,6 +6,7 @@ import {
   Stack,
   Text,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -53,15 +54,11 @@ interface FormValues {
 
 const Register: NextPage = () => {
   const { updateUser } = useAuthContext();
+  const toast = useToast();
   const bg = useColorModeValue("#F7F7F7", "gray.900");
   const boxShadowColour = useColorModeValue("#e2e6ea", "#171923");
   const formBg = useColorModeValue("#ffffff", "#4A5568");
-  const {
-    handleSubmit,
-    control,
-    resetField,
-    formState: { errors },
-  } = useForm<FormValues>({
+  const { handleSubmit, control } = useForm<FormValues>({
     defaultValues: {
       email: "",
       firstName: "",
@@ -81,17 +78,21 @@ const Register: NextPage = () => {
         data.email,
         data.password
       );
-
       updateUser(userCredential.user);
-
       const ref = doc(firestore, "users", userCredential.user.uid);
-
       await setDoc(ref, {
         first_name: data.firstName,
         email: data.email,
         surname: data.surname,
         user_id: userCredential.user.uid,
         created_at: serverTimestamp(),
+      });
+      toast({
+        title: "User successfully created",
+        description: "You can now log in with your credentials",
+        status: "success",
+        duration: 4000,
+        isClosable: true,
       });
 
       setShowSignInPage(true);
@@ -222,6 +223,7 @@ const Register: NextPage = () => {
               marginBottom="12px"
               type="submit"
               width={"100%"}
+              _hover={{ bg: "#2C7A7B" }}
             >
               Sign Up
             </Button>

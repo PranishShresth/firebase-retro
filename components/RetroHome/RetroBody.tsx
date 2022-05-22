@@ -23,8 +23,6 @@ import Skeleton from "components/Loader/Skeleton";
 import { ColourPicker } from "components/ColourPicker";
 import { useAuthContext } from "context/Auth/AuthContext";
 
-
-
 const BoardsContainer = styled.div`
   padding-top: 50px;
   width: 95%;
@@ -43,13 +41,12 @@ const defaultPrefs: Preference = {
   customBackground: false,
   closed: false,
   teamId: "",
-}
-
+};
 
 export const RetroBody = () => {
   const [boards, setBoards] = useState<BoardWithDocId[] | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
-  const { userDetails } = useAuthContext()
+  const { userDetails } = useAuthContext();
   const {
     isOpen: isBoardModalOpen,
     onClose: closeBoardModal,
@@ -68,23 +65,24 @@ export const RetroBody = () => {
     },
   });
 
-
   useEffect(() => {
-    const q = query(
-      collection(firestore, "boards"),
-      where("createdBy.user_id", "==", userDetails?.user_id),
-      orderBy("createdAt", "desc"),
-    );
+    if (userDetails) {
+      const q = query(
+        collection(firestore, "boards"),
+        where("createdBy.user_id", "==", userDetails.user_id),
+        orderBy("createdAt", "desc")
+      );
 
-    const boardsCollectionSnap = onSnapshot(q, (snapshot) => {
-      const payload = snapshot.docs.map((doc) => {
-        return { ...doc.data(), doc_id: doc.id } as BoardWithDocId;
-      })
-      setBoards(payload);
-      setLoading(false);
-    });
-    return boardsCollectionSnap;
-  }, []);
+      const boardsCollectionSnap = onSnapshot(q, (snapshot) => {
+        const payload = snapshot.docs.map((doc) => {
+          return { ...doc.data(), doc_id: doc.id } as BoardWithDocId;
+        });
+        setBoards(payload);
+        setLoading(false);
+      });
+      return boardsCollectionSnap;
+    }
+  }, [userDetails]);
 
   const handleCreateBoard = async (data: BoardFormValues) => {
     try {
@@ -100,7 +98,6 @@ export const RetroBody = () => {
         createdBy: userDetails,
         createdAt: serverTimestamp(),
       });
-
     } catch (err) {
       console.log(err);
     }
@@ -173,10 +170,9 @@ export const RetroBody = () => {
           {loading ? (
             <Skeleton amount={6} height="90px" width="100%" />
           ) : (
-            boards
-              ?.map((board) => {
-                return <BoardCard key={board.board_id} board={board} />;
-              })
+            boards?.map((board) => {
+              return <BoardCard key={board.board_id} board={board} />;
+            })
           )}
         </Grid>
       </BoardsContainer>

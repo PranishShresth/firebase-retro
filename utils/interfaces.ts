@@ -6,6 +6,7 @@ export type PermissionLevel = "public" | "private"
 export type AnonymousUser = Pick<User, "uid" | "isAnonymous" | "metadata">;
 
 export interface UserDetails {
+  birthDate?:string;
   created_at: { seconds: number; nanoseconds: number };
   email: string;
   first_name: string;
