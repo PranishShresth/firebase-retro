@@ -71,11 +71,19 @@ const RetroListMenu = ({ list_id }: Props) => {
         ></MenuButton>
         <MenuList color={bg}>
           <MenuOptionGroup defaultValue="asc" title="Order" type="radio">
-            <MenuItemOption value="asc">Ascending</MenuItemOption>
-            <MenuItemOption value="desc">Descending</MenuItemOption>
+            <MenuItemOption fontSize="sm" value="asc">
+              Ascending
+            </MenuItemOption>
+            <MenuItemOption fontSize="sm" value="desc">
+              Descending
+            </MenuItemOption>
           </MenuOptionGroup>
-          <MenuItem onClick={openMoveModal}>Move List...</MenuItem>
-          <MenuItem onClick={openDeleteDialog}>Delete</MenuItem>
+          <MenuItem fontSize="sm" onClick={openMoveModal}>
+            Move List...
+          </MenuItem>
+          <MenuItem fontSize="sm" onClick={openDeleteDialog}>
+            Delete
+          </MenuItem>
         </MenuList>
       </Menu>
 

@@ -1,7 +1,7 @@
 import { Board, List, Item } from "utils/interfaces";
 
 export interface RetroBoardState {
-  board: Partial<Board>;
+  board:Board;
   lists: List[];
   items: Item[];
   allBoards: Board[];

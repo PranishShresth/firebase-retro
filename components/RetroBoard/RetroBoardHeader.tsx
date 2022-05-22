@@ -2,10 +2,12 @@ import React from "react";
 import { Box, Button, Icon, Stack, Text } from "@chakra-ui/react";
 import { GiNinjaHead } from "react-icons/gi";
 import { FiSettings } from "react-icons/fi";
+import { BiShareAlt } from "react-icons/bi";
 import styled from "styled-components";
 import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 import AddList from "./RetroList/AddList";
 import { RetroBoardFilter } from "./RetroBoardFilter";
+import { RetroBoardShare } from "./RetroBoardShare";
 
 const IconDiv = styled.div`
   display: flex;
@@ -47,6 +49,7 @@ const RetroBoardHeader = () => {
 
       <Stack direction="row">
         <RetroBoardFilter />
+        <RetroBoardShare boardId={board.board_id} />
         <Button>
           <FiSettings />
         </Button>
