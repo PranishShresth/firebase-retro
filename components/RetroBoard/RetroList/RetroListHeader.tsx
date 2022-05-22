@@ -10,6 +10,7 @@ import RetroListMenu from "./RetroListMenu";
 const ListTitleWrapper = styled(Box)`
   align-items: center;
   display: flex;
+  flex: 1;
 `;
 
 const RetroColumnHeader = styled.div`
@@ -19,8 +20,7 @@ const RetroColumnHeader = styled.div`
   color: #58585a;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 0px;
-  margin: 0 4px;
+  margin: 24px 4px;
 `;
 
 const Square = styled.div`
@@ -55,8 +55,7 @@ export default function RetroListHeader({
       list_title: list_title,
     },
   });
-  const color = useColorModeValue('gray.900', 'white')
-
+  const color = useColorModeValue("gray.900", "white");
 
   const [editMode, setEditMode] = useState(false);
 
@@ -88,7 +87,6 @@ export default function RetroListHeader({
                 fontWeight="bold"
                 variant="filled"
                 placeholder="List Title"
-                // onBlur={handleUpdateList}
                 onKeyDown={handleUpdateList}
               />
             )}

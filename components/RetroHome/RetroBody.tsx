@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Grid, Stack } from "@chakra-ui/layout";
 import { useDisclosure } from "@chakra-ui/hooks";
-import { Input, InputGroup, Button, useToast, Box } from "@chakra-ui/react";
+import { Input, InputGroup, Button, Box } from "@chakra-ui/react";
 import BoardCard from "./BoardCard";
 import styled from "styled-components";
 import { Modal as CreateBoardModal } from "components/Modal";
@@ -14,12 +14,16 @@ import {
   orderBy,
   doc,
   setDoc,
+  where,
 } from "firebase/firestore"; // import Loading from "./Loader";
 import { Controller, useForm } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
-import { BoardWithDocId } from "utils/interfaces";
+import { BoardWithDocId, Preference } from "utils/interfaces";
 import Skeleton from "components/Loader/Skeleton";
 import { ColourPicker } from "components/ColourPicker";
+import { useAuthContext } from "context/Auth/AuthContext";
+
+
 
 const BoardsContainer = styled.div`
   padding-top: 50px;
@@ -34,9 +38,18 @@ interface BoardFormValues {
   board_title: string;
 }
 
+const defaultPrefs: Preference = {
+  permissionLevel: "private",
+  customBackground: false,
+  closed: false,
+  teamId: "",
+}
+
+
 export const RetroBody = () => {
   const [boards, setBoards] = useState<BoardWithDocId[] | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
+  const { userDetails } = useAuthContext()
   const {
     isOpen: isBoardModalOpen,
     onClose: closeBoardModal,
@@ -55,16 +68,18 @@ export const RetroBody = () => {
     },
   });
 
+
   useEffect(() => {
     const q = query(
       collection(firestore, "boards"),
-      orderBy("createdAt", "desc")
+      where("createdBy.user_id", "==", userDetails?.user_id),
+      orderBy("createdAt", "desc"),
     );
 
     const boardsCollectionSnap = onSnapshot(q, (snapshot) => {
       const payload = snapshot.docs.map((doc) => {
         return { ...doc.data(), doc_id: doc.id } as BoardWithDocId;
-      });
+      })
       setBoards(payload);
       setLoading(false);
     });
@@ -77,11 +92,15 @@ export const RetroBody = () => {
       reset();
       const doc_id = uuidv4();
       const ref = doc(firestore, "boards", doc_id);
+
       await setDoc(ref, {
         ...data,
         board_id: doc_id,
+        prefs: defaultPrefs,
+        createdBy: userDetails,
         createdAt: serverTimestamp(),
       });
+
     } catch (err) {
       console.log(err);
     }
@@ -152,11 +171,12 @@ export const RetroBody = () => {
             </CreateBoardModal>
           </Box>
           {loading ? (
-            <Skeleton amount={5} height="90px" width="100%" />
+            <Skeleton amount={6} height="90px" width="100%" />
           ) : (
-            boards?.map((board) => {
-              return <BoardCard key={board.board_id} board={board} />;
-            })
+            boards
+              ?.map((board) => {
+                return <BoardCard key={board.board_id} board={board} />;
+              })
           )}
         </Grid>
       </BoardsContainer>

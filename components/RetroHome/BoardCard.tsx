@@ -45,7 +45,7 @@ const Grid = styled.div`
 
 const BoardCard = ({ board }: Props) => {
   const [deleteModalOpen, setdeleteModalOpen] = useState(false);
-
+  const [deleteBoardProgressing, setDeleteBoardProgressing] = useState(false);
   const [formattedDate, setFormattedDate] = useState("");
   const {
     isOpen: isEditModalOpen,
@@ -67,6 +67,7 @@ const BoardCard = ({ board }: Props) => {
 
   const handleDeleteBoard = async () => {
     try {
+      setDeleteBoardProgressing(true);
       const currentBoardRef = doc(firestore, "boards", board.doc_id);
       const batch = writeBatch(firestore);
       const itemsQ = query(
@@ -92,11 +93,11 @@ const BoardCard = ({ board }: Props) => {
       // commits the batched delete for both items and boards
       await batch.commit();
 
-      deleteDoc(currentBoardRef);
+      await deleteDoc(currentBoardRef);
+      setDeleteBoardProgressing(false);
+      setdeleteModalOpen(false);
     } catch (err) {
       console.log(err);
-    } finally {
-      setdeleteModalOpen(false);
     }
   };
 
@@ -135,6 +136,7 @@ const BoardCard = ({ board }: Props) => {
               isOpen={deleteModalOpen}
               onClose={() => setdeleteModalOpen(false)}
               onClick={handleDeleteBoard}
+              isLoading={deleteBoardProgressing}
               title="Delete Board"
               ariaLabel="Delete Board Alert"
             />

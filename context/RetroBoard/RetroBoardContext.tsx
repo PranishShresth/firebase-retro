@@ -23,8 +23,14 @@ import {
   initialState,
   RetroBoardReducer,
   RetroBoardState,
+  updateBoard,
+  updateBoards,
+  updateBoardToPending,
+  updateItems,
+  updateLists,
 } from "./RetroBoardReducer";
-import { Board, List } from "utils/interfaces";
+import { Board, Item, List } from "utils/interfaces";
+import { useAuthContext } from "context/Auth/AuthContext";
 
 const RetroBoardContext = createContext<{
   board: RetroBoardState;
@@ -42,27 +48,26 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const boardId = "" + router.query.boardId;
   const [state, dispatch] = useReducer(RetroBoardReducer, initialState);
+  const { userDetails } = useAuthContext();
 
   useEffect(() => {
     (async () => {
       const boardsRef = query(
         collection(firestore, "boards"),
-        orderBy("createdAt", "asc")
+        where("createdBy.user_id", "==", userDetails?.user_id),
+        orderBy("createdAt", "desc")
       );
       const boardSnapshot = await getDocs(boardsRef);
       const boards = boardSnapshot.docs.map((doc) => {
         return { ...doc.data() } as Board;
       });
-      dispatch({
-        type: "FETCH_BOARDS_FULFILLED",
-        payload: boards,
-      });
+      dispatch(updateBoards(boards));
     })();
   }, []);
 
   useEffect(() => {
     async function fetchCurrentBoard() {
-      dispatch({ type: "FETCH_BOARD_REQUESTED" });
+      dispatch(updateBoardToPending());
       const listsQuery = query(listsRef, where("board_id", "==", boardId));
       const itemsQuery = query(itemsRef, where("board_id", "==", boardId));
       const [listsData, itemsData, boardData] = await Promise.all([
@@ -73,13 +78,10 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
 
       const payload = {
         board: boardData.data() as Board,
-        items: itemsData.docs.map((x) => x.data()),
-        lists: listsData.docs.map((x) => x.data()),
+        items: itemsData.docs.map((x) => x.data()) as Item[],
+        lists: listsData.docs.map((x) => x.data()) as List[],
       };
-      dispatch({
-        type: "FETCH_BOARD_FULFILLED",
-        payload,
-      });
+      dispatch(updateBoard(payload));
     }
     fetchCurrentBoard();
   }, [boardId, dispatch]);
@@ -94,9 +96,9 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
 
     const listsCollectionSnap = onSnapshot(q, (snapshot) => {
       const payload = snapshot.docs.map((doc) => {
-        return { ...doc.data(), doc_id: doc.id } as List & { doc_id: string };
+        return doc.data() as List;
       });
-      dispatch({ type: "FETCH_LISTS_FULFILLED", payload });
+      dispatch(updateLists(payload));
     });
     return listsCollectionSnap;
   }, [boardId]);
@@ -110,9 +112,9 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
 
     const itemsCollectionSnap = onSnapshot(q, (snapshot) => {
       const payload = snapshot.docs.map((doc) => {
-        return { ...doc.data(), doc_id: doc.id } as List & { doc_id: string };
+        return doc.data() as Item;
       });
-      dispatch({ type: "FETCH_ITEMS_FULFILLED", payload });
+      dispatch(updateItems(payload));
     });
     return itemsCollectionSnap;
   }, [boardId]);

@@ -12,9 +12,7 @@ import { v4 as uuidv4 } from "uuid";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import { useAuthContext } from "context/Auth/AuthContext";
-import { darken } from "@chakra-ui/theme-tools";
 import { calculateInitialListPosition } from "utils/dragAndDropUtils";
-import { list } from "@chakra-ui/react";
 import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 import { ColourPicker } from "components/ColourPicker";
 
@@ -35,12 +33,7 @@ const CreateList = () => {
     onClose: closeListModal,
   } = useDisclosure();
 
-  const {
-    handleSubmit,
-    control,
-    resetField,
-    formState: { errors },
-  } = useForm<FormValues>({
+  const { handleSubmit, control, resetField } = useForm<FormValues>({
     defaultValues: {
       list_colour: "#000000",
       list_title: "",

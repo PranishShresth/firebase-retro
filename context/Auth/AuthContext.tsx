@@ -1,30 +1,9 @@
-import {
-  auth,
-  signInWithAnonymousCredentials,
-} from "configs/firebase/firebaseClient";
-import { getAuth, onAuthStateChanged, User } from "firebase/auth";
-import { query, collection, where, getDocs } from "firebase/firestore";
+import { auth } from "configs/firebase/firebaseClient";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { query, where, getDocs } from "firebase/firestore";
 import { usersRef } from "utils/firebaseCollection";
 import React, { createContext, useContext, useEffect, useState } from "react";
-
-type AnonymousUser = Pick<User, "uid" | "isAnonymous" | "metadata">;
-
-export interface UserDetails {
-  birthDate?: string;
-  created_at: { seconds: number; nanoseconds: number };
-  email: string;
-  first_name: string;
-  surname: string;
-  user_id: string;
-}
-
-interface Auth {
-  isLoadingUserData: boolean;
-  updateUser: (data: User) => void;
-  updateUserDetails: (data: UserDetails) => void;
-  user: null | AnonymousUser;
-  userDetails: null | UserDetails;
-}
+import { AnonymousUser, Auth, UserDetails } from "utils/interfaces";
 
 const AuthContext = createContext<Auth>({
   isLoadingUserData: true,

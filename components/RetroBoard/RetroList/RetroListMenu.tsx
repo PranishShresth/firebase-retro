@@ -9,18 +9,14 @@ import {
   IconButton,
   Box,
   useColorModeValue,
+  MenuItemOption,
+  MenuOptionGroup,
 } from "@chakra-ui/react";
 import { AlertDialogBar } from "components/Alert";
-import React from "react";
+import React, { useState } from "react";
 import { useDisclosure } from "@chakra-ui/react";
 import { FiMoreVertical } from "react-icons/fi";
-import {
-  doc,
-  deleteDoc,
-  writeBatch,
-  setDoc,
-  collection,
-} from "firebase/firestore";
+import { doc, deleteDoc, writeBatch, setDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import { Modal as MoveModal } from "components/Modal";
 import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
@@ -74,9 +70,20 @@ const RetroListMenu = ({ list_id }: Props) => {
           color={bg}
         ></MenuButton>
         <MenuList color={bg}>
-          {/* <MenuItem>Download</MenuItem> */}
-          <MenuItem onClick={openMoveModal}>Move List</MenuItem>
-          <MenuItem onClick={openDeleteDialog}>Delete</MenuItem>
+          <MenuOptionGroup defaultValue="asc" title="Order" type="radio">
+            <MenuItemOption fontSize="sm" value="asc">
+              Ascending
+            </MenuItemOption>
+            <MenuItemOption fontSize="sm" value="desc">
+              Descending
+            </MenuItemOption>
+          </MenuOptionGroup>
+          <MenuItem fontSize="sm" onClick={openMoveModal}>
+            Include column in:
+          </MenuItem>
+          <MenuItem fontSize="sm" onClick={openDeleteDialog}>
+            Delete
+          </MenuItem>
         </MenuList>
       </Menu>
 
@@ -113,11 +120,8 @@ const MoveListContainer = ({
   } = useRetroContext();
   const toast = useToast();
 
-  const {
-    getValues,
-    control,
-    formState: { errors },
-  } = useForm<{ board_id: string }>({
+  const [loading, setLoading] = useState(false);
+  const { getValues, control } = useForm<{ board_id: string }>({
     defaultValues: {
       board_id: "",
     },
@@ -132,7 +136,7 @@ const MoveListContainer = ({
 
     try {
       const list_id = uuidV4();
-
+      setLoading(true);
       const batch = writeBatch(firestore);
 
       allItems.forEach((item) => {
@@ -152,9 +156,10 @@ const MoveListContainer = ({
       });
       await batch.commit();
 
+      setLoading(false);
       toast({
-        title: "List Moved.",
-        description: `The list has been moved to ${boardId}`,
+        title: "List Added.",
+        description: `The list has been included...`,
         status: "success",
         duration: 4000,
         isClosable: true,
@@ -166,7 +171,7 @@ const MoveListContainer = ({
 
   return (
     <MoveModal
-      modalTitle="Move a List"
+      modalTitle="Include this list in"
       isOpen={isMoveModalOpen}
       onClose={closeMoveModal}
       onOpen={openMoveModal}
@@ -177,7 +182,7 @@ const MoveListContainer = ({
           name="board_id"
           render={({ field }) => (
             <Select placeholder="Lists..." {...field}>
-              {allBoards?.map((board) => (
+              {allBoards.slice(0, 6)?.map((board) => (
                 <option key={board.board_id} value={board.board_id}>
                   {board.board_title}
                 </option>
@@ -187,7 +192,9 @@ const MoveListContainer = ({
         />
 
         <Box onClick={throttle(copyListToAnotherBoard, 4000)}>
-          <Button isFullWidth={false}>Move List</Button>
+          <Button isLoading={loading} isFullWidth={false}>
+            Add
+          </Button>
         </Box>
       </Stack>
     </MoveModal>

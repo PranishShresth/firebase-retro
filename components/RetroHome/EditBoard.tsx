@@ -5,6 +5,7 @@ import { Modal } from "components/Modal";
 import { firestore } from "configs/firebase/firestore";
 import { doc, updateDoc } from "firebase/firestore";
 import { Board } from "utils/interfaces";
+import { ColourPicker } from "components/ColourPicker";
 
 interface Props {
   isEditModalOpen: boolean;
@@ -16,6 +17,7 @@ interface Props {
 interface FormValues {
   board_title: string;
   board_limit: number;
+  board_color: string
 }
 
 const EditBoard = ({
@@ -32,19 +34,17 @@ const EditBoard = ({
     defaultValues: {
       board_title: board.board_title,
       board_limit: board.board_limit,
+      board_color: board.board_colour
     },
   });
 
   const handleEditBoard = async (data: FormValues) => {
     try {
       const boardRef = doc(firestore, "boards", board.board_id);
-
-
-      await updateDoc(boardRef, {...data});
+      await updateDoc(boardRef, { ...data });
+      closeEditBoardModal();
     } catch (err) {
       console.log(err);
-    } finally {
-      closeEditBoardModal();
     }
   };
 
@@ -79,6 +79,14 @@ const EditBoard = ({
                 )}
               />
             </InputGroup>
+            <div>
+              <span>Colour:</span>
+              <Controller
+                control={control}
+                name="board_color"
+                render={({ field }) => <ColourPicker field={field} />}
+              />
+            </div>
 
             <div>
               <Button type="submit">Update board</Button>

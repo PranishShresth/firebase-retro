@@ -13,9 +13,8 @@ import RetroListHeader from "./RetroList/RetroListHeader";
 import { doc, updateDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import NoPageFound from "components/404page/PageNotFound";
-
 import { RetroBoardSkeleton } from "components/Loader";
-// import NoPageFound from "";
+import { reorderItem } from "context/RetroBoard/RetroBoardReducer";
 
 const ColumnsWrapper = styled.main`
   display: flex;
@@ -61,9 +60,6 @@ const RetroBoardCanvas = styled.div`
   position: relative;
   width: calc(100% - 50px);
 `;
-interface BoardParam {
-  boardId: string;
-}
 export const RetroBoardSingle = () => {
   const {
     board: { items, lists, board, status },
@@ -94,15 +90,15 @@ export const RetroBoardSingle = () => {
       );
 
       const itemRef = doc(firestore, "items", draggableId);
-      dispatch({
-        type: "REORDER_ITEM_REQUESTED",
-        payload: {
+
+      dispatch(
+        reorderItem({
           source: source.droppableId,
           destination: destination.droppableId,
           item_id: draggableId,
           position,
-        },
-      });
+        })
+      );
 
       await updateDoc(itemRef, {
         item_order: position,
