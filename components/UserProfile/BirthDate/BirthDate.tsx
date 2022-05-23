@@ -1,4 +1,11 @@
-import { Box, Flex, Input, Button, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Input,
+  Button,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import Cleave from "cleave.js/react";
 import { UserDetails } from "utils/interfaces";
 import { doc, setDoc } from "firebase/firestore";
@@ -11,6 +18,7 @@ interface FormValues {
 }
 
 const BirthDate = ({ userDetails }: Record<string, UserDetails | null>) => {
+  const bg = useColorModeValue("white", "gray.600");
   const {
     handleSubmit,
     control,
@@ -43,7 +51,7 @@ const BirthDate = ({ userDetails }: Record<string, UserDetails | null>) => {
   return (
     <form onSubmit={handleSubmit(handleUpdatingBirthDate)}>
       <Box
-        backgroundColor={"white"}
+        backgroundColor={bg}
         borderRadius={"lg"}
         boxShadow={"0 4px 12px 0 rgb(0 0 0 / 5%)"}
         marginTop={"2rem"}
