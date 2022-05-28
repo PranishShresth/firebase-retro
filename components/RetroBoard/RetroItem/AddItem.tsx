@@ -33,7 +33,7 @@ interface FormValues {
 }
 function AddItem({ list_id }: Props) {
   const router = useRouter();
-  const { user } = useAuthContext();
+  const { user, userDetails } = useAuthContext();
   const boardId = "" + router.query.boardId;
   const bg = useColorModeValue("#f7f7f7", "gray.900");
   const borderBg = useColorModeValue("gray.200", "gray.600");
@@ -75,6 +75,7 @@ function AddItem({ list_id }: Props) {
         board_id: boardId,
         list_id,
         user_id: user?.uid,
+        createdBy: userDetails,
         item_upvotes: [],
         item_order,
 

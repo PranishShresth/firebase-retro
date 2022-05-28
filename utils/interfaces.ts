@@ -1,12 +1,12 @@
 import { Timestamp } from "firebase/firestore";
 import { User } from "firebase/auth";
 
-export type PermissionLevel = "public" | "private"
+export type PermissionLevel = "public" | "private";
 
 export type AnonymousUser = Pick<User, "uid" | "isAnonymous" | "metadata">;
 
 export interface UserDetails {
-  birthDate?:string;
+  birthDate?: string;
   created_at: { seconds: number; nanoseconds: number };
   email: string;
   first_name: string;
@@ -22,9 +22,8 @@ export interface Auth {
   userDetails: null | UserDetails;
 }
 
-
 export interface Preference {
-  permissionLevel: PermissionLevel
+  permissionLevel: PermissionLevel;
   customBackground: boolean;
   closed: boolean;
   teamId: string;
@@ -37,8 +36,8 @@ export interface Board {
   board_limit: number;
   createdAt: Timestamp;
   updatedAt: Timestamp;
-  prefs: Preference
-  createdBy: UserDetails
+  prefs: Preference;
+  createdBy: UserDetails;
 }
 
 export interface BoardWithDocId extends Board {
@@ -62,6 +61,7 @@ export interface Item {
   board_id: string;
   list_id: string;
   user_id: string;
+  createdBy: UserDetails;
   item_upvotes: string[];
   createdAt: Timestamp;
 }

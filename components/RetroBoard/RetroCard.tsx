@@ -1,10 +1,15 @@
 import React from "react";
 import { DraggableProvided, DraggableStateSnapshot } from "react-beautiful-dnd";
 import { Box, Stack, Text } from "@chakra-ui/layout";
-import { useColorModeValue, useDisclosure } from "@chakra-ui/react";
+import {
+  Avatar,
+  Tooltip,
+  useColorModeValue,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { FiStar, FiEdit3, FiTrash2 } from "react-icons/fi";
 import styled from "styled-components";
-import { Item } from "utils/interfaces";
+import { Item, UserDetails } from "utils/interfaces";
 import EditItem from "./RetroItem/EditItem";
 import { firestore } from "configs/firebase/firestore";
 import {
@@ -75,6 +80,7 @@ const RetroCard = ({ list_colour, item, provided, snapshot }: Props) => {
       </ContentDiv>
       <Stack direction="row-reverse">
         <RetroCardActions
+          createdBy={item?.createdBy}
           item_id={item.item_id}
           openEditBox={openEditBox}
           item_upvotes={item.item_upvotes}
@@ -85,15 +91,17 @@ const RetroCard = ({ list_colour, item, provided, snapshot }: Props) => {
 };
 
 const RetroCardActions = ({
+  createdBy,
   item_id,
   openEditBox,
   item_upvotes,
 }: // upvotes,
-  {
-    item_id: string;
-    openEditBox: () => void;
-    item_upvotes: string[];
-  }) => {
+{
+  createdBy: UserDetails | undefined;
+  item_id: string;
+  openEditBox: () => void;
+  item_upvotes: string[];
+}) => {
   const bg = useColorModeValue("black", "gray.600");
   const { user } = useAuthContext();
 
@@ -127,10 +135,25 @@ const RetroCardActions = ({
     <Box
       display="flex"
       gridGap="15px"
-      padding="5px 0"
+      padding="5px 0 0 0"
       justifyContent="center"
       alignItems="center"
     >
+      {createdBy && (
+        <div>
+          <Tooltip
+            bg="gray.300"
+            color="black"
+            hasArrow
+            label={`${createdBy.first_name} ${createdBy.surname}`}
+          >
+            <Avatar
+              size="xs"
+              name={`${createdBy.first_name} ${createdBy.surname}`}
+            />
+          </Tooltip>
+        </div>
+      )}
       <StyledIconAction onClick={openEditBox}>
         <FiEdit3 />
       </StyledIconAction>
