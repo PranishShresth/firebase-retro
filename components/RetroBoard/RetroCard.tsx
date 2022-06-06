@@ -20,6 +20,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { useAuthContext } from "context/Auth/AuthContext";
+import { AlertDialogBar } from "components/Alert";
 interface Props {
   list_colour: string;
   item: Item;
@@ -104,7 +105,13 @@ const RetroCardActions = ({
 }) => {
   const bg = useColorModeValue("black", "gray.600");
   const { user } = useAuthContext();
-
+  const {
+    isOpen: isDeleteDialogOpen,
+    onClose: closeDeleteDialog,
+    onOpen: openDeleteDialog,
+  } = useDisclosure();
+  const allowEditAndDelete = user?.uid === createdBy?.user_id;
+  const lightOrDarkStarBg = useColorModeValue("#F91880", "#FBBD08");
   const isUpvoted = user && item_upvotes.includes(user.uid);
 
   const deleteItem = async () => {
@@ -132,45 +139,59 @@ const RetroCardActions = ({
   };
 
   return (
-    <Box
-      display="flex"
-      gridGap="15px"
-      padding="5px 0 0 0"
-      justifyContent="center"
-      alignItems="center"
-    >
-      {createdBy && (
-        <div>
-          <Tooltip
-            bg="gray.300"
-            color="black"
-            hasArrow
-            label={`${createdBy.first_name} ${createdBy.surname}`}
-          >
-            <Avatar
-              size="xs"
-              name={`${createdBy.first_name} ${createdBy.surname}`}
-            />
-          </Tooltip>
-        </div>
-      )}
-      <StyledIconAction onClick={openEditBox}>
-        <FiEdit3 />
-      </StyledIconAction>
-      <StyledIconAction onClick={deleteItem}>
-        <FiTrash2 />
-      </StyledIconAction>
-      <StyledIconAction
-        color={isUpvoted ? "#F91880" : bg}
-        hoverColor="#F91880"
-        onClick={toggleUpvote}
+    <>
+      <Box
+        display="flex"
+        gridGap="15px"
+        padding="5px 0 0 0"
+        justifyContent="center"
+        alignItems="center"
       >
-        <Stack direction="row" spacing={2}>
-          <FiStar fill={isUpvoted ? "#F91880" : "#FFFFFF"} />
-          <span style={{ lineHeight: "16px" }}>{item_upvotes.length}</span>
-        </Stack>
-      </StyledIconAction>
-    </Box>
+        {createdBy && (
+          <div>
+            <Tooltip
+              bg="gray.300"
+              color="black"
+              hasArrow
+              label={`${createdBy.first_name} ${createdBy.surname}`}
+            >
+              <Avatar
+                size="xs"
+                name={`${createdBy.first_name} ${createdBy.surname}`}
+              />
+            </Tooltip>
+          </div>
+        )}
+        {allowEditAndDelete && (
+          <>
+            <StyledIconAction onClick={openEditBox}>
+              <FiEdit3 />
+            </StyledIconAction>
+            <StyledIconAction onClick={openDeleteDialog}>
+              <FiTrash2 />
+            </StyledIconAction>
+          </>
+        )}
+
+        <StyledIconAction
+          color={isUpvoted ? lightOrDarkStarBg : bg}
+          hoverColor={lightOrDarkStarBg}
+          onClick={toggleUpvote}
+        >
+          <Stack direction="row" spacing={2}>
+            <FiStar fill={isUpvoted ? lightOrDarkStarBg : "#FFFFFF"} />
+            <span style={{ lineHeight: "16px" }}>{item_upvotes.length}</span>
+          </Stack>
+        </StyledIconAction>
+      </Box>
+      <AlertDialogBar
+        isOpen={isDeleteDialogOpen}
+        onClose={closeDeleteDialog}
+        onClick={deleteItem}
+        title="Delete Card"
+        ariaLabel="Delete Card Dialogue"
+      />
+    </>
   );
 };
 export default RetroCard;
