@@ -15,9 +15,8 @@ interface Props {
 }
 
 interface FormValues {
-  board_title: string;
-  board_limit: number;
-  board_color: string
+  boardTitle: string;
+  boardColor: string;
 }
 
 const EditBoard = ({
@@ -32,15 +31,14 @@ const EditBoard = ({
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
-      board_title: board.board_title,
-      board_limit: board.board_limit,
-      board_color: board.board_colour
+      boardTitle: board.boardTitle,
+      boardColor: board.boardColour,
     },
   });
 
   const handleEditBoard = async (data: FormValues) => {
     try {
-      const boardRef = doc(firestore, "boards", board.board_id);
+      const boardRef = doc(firestore, "boards", board.boardId);
       await updateDoc(boardRef, { ...data });
       closeEditBoardModal();
     } catch (err) {
@@ -61,29 +59,16 @@ const EditBoard = ({
             <InputGroup>
               <Controller
                 control={control}
-                name="board_title"
+                name="boardTitle"
                 render={({ field }) => <Input {...field} />}
               />
             </InputGroup>
-            <InputGroup>
-              <Controller
-                control={control}
-                name="board_limit"
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    type="number"
-                    // value={board.board_limit}
-                    placeholder="Number of cards"
-                  />
-                )}
-              />
-            </InputGroup>
+
             <div>
               <span>Colour:</span>
               <Controller
                 control={control}
-                name="board_color"
+                name="boardColor"
                 render={({ field }) => <ColourPicker field={field} />}
               />
             </div>

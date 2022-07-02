@@ -24,8 +24,8 @@ const RetroColumnHeader = styled.div`
 `;
 
 const Square = styled.div`
-  background-color: ${({ list_colour }: { list_colour: string }) =>
-    list_colour};
+  background-color: ${({ $listColour }: { $listColour: string }) =>
+    $listColour};
   border-radius: 4px;
   height: 16px;
   margin-right: 8px;
@@ -33,18 +33,18 @@ const Square = styled.div`
 `;
 
 interface Props {
-  list_colour: string | undefined;
-  list_id: string;
-  list_title: string;
+  listColour: string | undefined;
+  listId: string;
+  listTitle: string;
 }
 
 interface FormValues {
-  list_title: string;
+  listTitle: string;
 }
 export default function RetroListHeader({
-  list_colour,
-  list_id,
-  list_title,
+  listColour: listColour,
+  listId,
+  listTitle,
 }: Props) {
   const {
     getValues,
@@ -52,7 +52,7 @@ export default function RetroListHeader({
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
-      list_title: list_title,
+      listTitle: listTitle,
     },
   });
   const color = useColorModeValue("gray.900", "white");
@@ -63,10 +63,10 @@ export default function RetroListHeader({
     const { key } = ev as React.KeyboardEvent<HTMLInputElement>;
     if (key === "Enter") {
       try {
-        const list_title = getValues("list_title");
-        const listRef = doc(firestore, "lists", list_id);
+        const listTitle = getValues("listTitle");
+        const listRef = doc(firestore, "lists", listId);
         setEditMode(false);
-        await updateDoc(listRef, { list_title });
+        await updateDoc(listRef, { listTitle });
       } catch (err) {
         console.log(err);
       }
@@ -79,7 +79,7 @@ export default function RetroListHeader({
         <Box padding="24px 0">
           <Controller
             control={control}
-            name="list_title"
+            name="listTitle"
             render={({ field }) => (
               <Input
                 {...field}
@@ -95,10 +95,10 @@ export default function RetroListHeader({
       ) : (
         <RetroColumnHeader>
           <ListTitleWrapper onClick={() => setEditMode(true)} color={color}>
-            <Square list_colour={list_colour ?? "#000000"} />
-            {list_title}
+            <Square $listColour={listColour ?? "#000000"} />
+            {listTitle}
           </ListTitleWrapper>
-          <RetroListMenu list_id={list_id} />
+          <RetroListMenu listId={listId} />
         </RetroColumnHeader>
       )}
     </>

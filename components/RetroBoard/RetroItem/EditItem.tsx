@@ -14,27 +14,24 @@ import { IoMdClose } from "react-icons/io";
 interface Props {
   isOpen: boolean;
   content: string;
-  item_id: string;
+  itemId: string;
   closeEditMode: () => void;
 }
 
 interface FormValues {
-  item_title: string;
+  itemTitle: string;
 }
-function EditItem({ isOpen, closeEditMode, content, item_id }: Props) {
+function EditItem({ isOpen, closeEditMode, content, itemId }: Props) {
   const bg = useColorModeValue("white", "gray.600");
-  const {
-    handleSubmit,
-    control,
-  } = useForm<FormValues>({
+  const { handleSubmit, control } = useForm<FormValues>({
     defaultValues: {
-      item_title: content,
+      itemTitle: content,
     },
   });
 
   const handleEditingItem = async (data: FormValues) => {
     try {
-      const itemRef = doc(firestore, "items", item_id);
+      const itemRef = doc(firestore, "items", itemId);
       await updateDoc(itemRef, { ...data });
       closeEditMode();
     } catch (err) {
@@ -51,7 +48,7 @@ function EditItem({ isOpen, closeEditMode, content, item_id }: Props) {
           <Stack spacing={2}>
             <Controller
               control={control}
-              name="item_title"
+              name="itemTitle"
               render={({ field }) => (
                 <Textarea
                   {...field}

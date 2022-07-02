@@ -45,7 +45,7 @@ const BirthDate = ({ userDetails }: Record<string, UserDetails | null>) => {
     try {
       if (userDetails) {
         setIsLoading(true);
-        const ref = doc(firestore, "users", userDetails.user_id);
+        const ref = doc(firestore, "users", userDetails.userId);
 
         await setDoc(ref, {
           ...userDetails,

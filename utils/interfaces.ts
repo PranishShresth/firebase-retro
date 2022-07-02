@@ -7,11 +7,22 @@ export type AnonymousUser = Pick<User, "uid" | "isAnonymous" | "metadata">;
 
 export interface UserDetails {
   birthDate?: string;
-  created_at: { seconds: number; nanoseconds: number };
+  createdAt: { seconds: number; nanoseconds: number };
   email: string;
-  first_name: string;
-  surname: string;
-  user_id: string;
+  firstName: string;
+  lastName: string;
+  userId: string;
+}
+
+
+interface Workspace{
+  workspaceId:string;
+  boards: Board[]
+  workspaceTitle:string;
+  workspaceDescription:string;
+  createdAt: Timestamp;
+  updatedAt:Timestamp;
+
 }
 
 export interface Auth {
@@ -26,14 +37,13 @@ export interface Preference {
   permissionLevel: PermissionLevel;
   customBackground: boolean;
   closed: boolean;
-  teamId: string;
+
 }
 
 export interface Board {
-  board_colour: string;
-  board_id: string;
-  board_title: string;
-  board_limit: number;
+  boardColour: string;
+  boardId: string;
+  boardTitle: string;
   createdAt: Timestamp;
   updatedAt: Timestamp;
   prefs: Preference;
@@ -45,27 +55,25 @@ export interface BoardWithDocId extends Board {
 }
 
 export interface List {
-  list_colour: string;
-  list_id: string;
-  list_order: number;
-  list_title: string;
-  board_id: string;
-  user_id: string;
+  listColour: string;
+  listId: string;
+  listOrder: number;
+  listTitle: string;
+  boardId: string;
   createdAt: Timestamp;
 }
 
 export interface Item {
-  item_id: string;
-  item_title: string;
-  item_order: number;
-  board_id: string;
-  list_id: string;
-  user_id: string;
+  itemId: string;
+  itemTitle: string;
+  itemOrder: number;
+  boardId: string;
+  listId: string;
   createdBy: UserDetails;
-  item_upvotes: string[];
+  itemUpvotes: string[];
   createdAt: Timestamp;
 }
 
 export interface Upvotes {
-  user_id: string;
+  userId: string;
 }

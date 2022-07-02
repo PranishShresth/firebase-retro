@@ -17,8 +17,8 @@ import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 import { ColourPicker } from "components/ColourPicker";
 
 interface FormValues {
-  list_colour: string;
-  list_title: string;
+  listColour: string;
+  listTitle: string;
 }
 const CreateList = () => {
   const router = useRouter();
@@ -35,28 +35,27 @@ const CreateList = () => {
 
   const { handleSubmit, control, resetField } = useForm<FormValues>({
     defaultValues: {
-      list_colour: "#000000",
-      list_title: "",
+      listColour: "#000000",
+      listTitle: "",
     },
   });
 
   const handleCreateList = async (data: FormValues) => {
-    if (data.list_title.length < 1) {
+    if (data.listTitle.length < 1) {
       return;
     }
     const doc_id = uuidv4();
     try {
-      const list_order = calculateInitialListPosition(lists);
+      const listOrder = calculateInitialListPosition(lists);
       const ref = doc(firestore, "lists", doc_id);
       await setDoc(ref, {
         ...data,
-        list_id: doc_id,
-        user_id: user?.uid,
-        board_id: boardId,
-        list_order,
+        listId: doc_id,
+        boardId: boardId,
+        listOrder,
         createdAt: serverTimestamp(),
       });
-      resetField("list_title");
+      resetField("listTitle");
       closeListModal();
     } catch (err) {
       console.log(err);
@@ -79,7 +78,7 @@ const CreateList = () => {
               <InputGroup marginTop="4px">
                 <Controller
                   control={control}
-                  name="list_title"
+                  name="listTitle"
                   render={({ field }) => (
                     <Input
                       {...field}
@@ -96,7 +95,7 @@ const CreateList = () => {
               <span>Colour:</span>
               <Controller
                 control={control}
-                name="list_colour"
+                name="listColour"
                 render={({ field }) => <ColourPicker field={field} />}
               />
             </div>

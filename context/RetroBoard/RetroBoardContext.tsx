@@ -55,7 +55,7 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
       if (userDetails) {
         const boardsRef = query(
           collection(firestore, "boards"),
-          where("createdBy.user_id", "==", userDetails.user_id),
+          where("createdBy.userId", "==", userDetails.userId),
           orderBy("createdAt", "desc")
         );
         const boardSnapshot = await getDocs(boardsRef);
@@ -70,8 +70,8 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     async function fetchCurrentBoard() {
       dispatch(updateBoardToPending());
-      const listsQuery = query(listsRef, where("board_id", "==", boardId));
-      const itemsQuery = query(itemsRef, where("board_id", "==", boardId));
+      const listsQuery = query(listsRef, where("boardId", "==", boardId));
+      const itemsQuery = query(itemsRef, where("boardId", "==", boardId));
       const [listsData, itemsData, boardData] = await Promise.all([
         getDocs(listsQuery) ?? [],
         getDocs(itemsQuery) ?? [],
@@ -93,7 +93,7 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const q = query(
       collection(firestore, "lists"),
-      where("board_id", "==", boardId)
+      where("boardId", "==", boardId)
     );
 
     const listsCollectionSnap = onSnapshot(q, (snapshot) => {
@@ -109,7 +109,7 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const q = query(
       collection(firestore, "items"),
-      where("board_id", "==", boardId)
+      where("boardId", "==", boardId)
     );
 
     const itemsCollectionSnap = onSnapshot(q, (snapshot) => {

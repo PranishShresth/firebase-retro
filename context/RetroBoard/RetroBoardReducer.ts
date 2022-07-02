@@ -25,7 +25,7 @@ export const initialState = {
 interface Reorder_Item_Payload {
   source: string;
   destination: string;
-  item_id: string;
+  itemId: string;
   position: number;
 }
 
@@ -81,16 +81,16 @@ export function RetroBoardReducer(
       return { ...state, items: action.payload, status: "fulfilled" };
     }
     case REORDER_ITEM_REQUESTED: {
-      const { source, destination, item_id, position } = action.payload;
+      const { source, destination, itemId, position } = action.payload;
       const items = [...state.items];
-      const itemIdx = state.items.findIndex((s) => s.item_id === item_id);
+      const itemIdx = state.items.findIndex((s) => s.itemId === itemId);
       const item = items[itemIdx];
       if (source === destination) {
-        item.item_order = position;
+        item.itemOrder = position;
       } else {
         const item = state.items[itemIdx];
-        item.item_order = position;
-        item.list_id = destination;
+        item.itemOrder = position;
+        item.listId = destination;
       }
       return { ...state, items: items };
     }

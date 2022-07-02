@@ -31,16 +31,14 @@ const BoardsContainer = styled.div`
 `;
 
 interface BoardFormValues {
-  board_colour: string;
-  board_limit: number;
-  board_title: string;
+  boardColour: string;
+  boardTitle: string;
 }
 
 const defaultPrefs: Preference = {
   permissionLevel: "private",
   customBackground: false,
   closed: false,
-  teamId: "",
 };
 
 export const RetroBody = () => {
@@ -61,7 +59,7 @@ export const RetroBody = () => {
     formState: { errors },
   } = useForm<BoardFormValues>({
     defaultValues: {
-      board_colour: "#000000",
+      boardColour: "#000000",
     },
   });
 
@@ -69,7 +67,7 @@ export const RetroBody = () => {
     if (userDetails) {
       const q = query(
         collection(firestore, "boards"),
-        where("createdBy.user_id", "==", userDetails.user_id),
+        where("createdBy.userId", "==", userDetails.userId),
         orderBy("createdAt", "desc")
       );
 
@@ -93,7 +91,7 @@ export const RetroBody = () => {
 
       await setDoc(ref, {
         ...data,
-        board_id: doc_id,
+        boardId: doc_id,
         prefs: defaultPrefs,
         createdBy: userDetails,
         createdAt: serverTimestamp(),
@@ -135,26 +133,16 @@ export const RetroBody = () => {
                         placeholder="Board Title"
                         required
                         type="text"
-                        {...register("board_title")}
+                        {...register("boardTitle")}
                       />
                     </InputGroup>
                   </div>
-                  <div>
-                    <span>Number of cards:</span>
-                    <InputGroup marginTop="4px">
-                      <Input
-                        placeholder="Number of cards"
-                        required
-                        type="number"
-                        {...register("board_limit")}
-                      />
-                    </InputGroup>
-                  </div>
+
                   <div>
                     <span>Colour:</span>
                     <Controller
                       control={control}
-                      name="board_colour"
+                      name="boardColour"
                       render={({ field }) => <ColourPicker field={field} />}
                     />
                   </div>
@@ -171,7 +159,7 @@ export const RetroBody = () => {
             <Skeleton amount={6} height="90px" width="100%" />
           ) : (
             boards?.map((board) => {
-              return <BoardCard key={board.board_id} board={board} />;
+              return <BoardCard key={board.boardId} board={board} />;
             })
           )}
         </Grid>

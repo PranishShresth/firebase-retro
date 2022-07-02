@@ -22,7 +22,7 @@ import {
 import { useAuthContext } from "context/Auth/AuthContext";
 import { AlertDialogBar } from "components/Alert";
 interface Props {
-  list_colour: string;
+  listColour: string;
   item: Item;
   children?: React.ReactChild;
   provided: DraggableProvided;
@@ -31,7 +31,7 @@ interface Props {
 
 const StyledBox = styled(Box)`
   border-left: 5px solid
-    ${({ list_colour }: { list_colour: string }) => list_colour};
+    ${({ $listColour }: { $listColour: string }) => $listColour};
   box-shadow: rgb(60 64 67 / 30%) 0px 1px 2px 0px,
     rgb(60 64 67 / 15%) 0px 1px 3px 1px;
   margin: 4px 4px 8px 4px;
@@ -50,15 +50,15 @@ const StyledIconAction = styled.div<{ hoverColor?: string; color?: string }>`
     color: ${(props) => props.hoverColor};
   }
 `;
-const RetroCard = ({ list_colour, item, provided, snapshot }: Props) => {
+const RetroCard = ({ listColour, item, provided, snapshot }: Props) => {
   const { isOpen, onClose, onOpen: openEditBox } = useDisclosure();
   const bg = useColorModeValue("white", "gray.600");
 
   if (isOpen) {
     return (
       <EditItem
-        item_id={item.item_id}
-        content={item.item_title}
+        itemId={item.itemId}
+        content={item.itemTitle}
         isOpen={isOpen}
         closeEditMode={onClose}
       />
@@ -67,7 +67,7 @@ const RetroCard = ({ list_colour, item, provided, snapshot }: Props) => {
 
   return (
     <StyledBox
-      list_colour={list_colour}
+      $listColour={listColour}
       padding="10px 8px"
       background={bg}
       ref={provided.innerRef}
@@ -76,15 +76,15 @@ const RetroCard = ({ list_colour, item, provided, snapshot }: Props) => {
     >
       <ContentDiv>
         <Text overflowWrap="anywhere" fontWeight="normal" fontSize="15px">
-          {item.item_title}
+          {item.itemTitle}
         </Text>
       </ContentDiv>
       <Stack direction="row-reverse">
         <RetroCardActions
           createdBy={item?.createdBy}
-          item_id={item.item_id}
+          item_id={item.itemId}
           openEditBox={openEditBox}
-          item_upvotes={item.item_upvotes}
+          itemUpvotes={item.itemUpvotes}
         />
       </Stack>
     </StyledBox>
@@ -95,7 +95,7 @@ const RetroCardActions = ({
   createdBy,
   item_id,
   openEditBox,
-  item_upvotes,
+  itemUpvotes,
 }: // upvotes,
 {
   createdBy: UserDetails | undefined;
@@ -110,9 +110,9 @@ const RetroCardActions = ({
     onClose: closeDeleteDialog,
     onOpen: openDeleteDialog,
   } = useDisclosure();
-  const allowEditAndDelete = user?.uid === createdBy?.user_id;
+  const allowEditAndDelete = user?.uid === createdBy?.userId;
   const lightOrDarkStarBg = useColorModeValue("#F91880", "#FBBD08");
-  const isUpvoted = user && item_upvotes.includes(user.uid);
+  const isUpvoted = user && itemUpvotes.includes(user.uid);
 
   const deleteItem = async () => {
     try {
@@ -126,13 +126,13 @@ const RetroCardActions = ({
   const toggleUpvote = async () => {
     if (user) {
       const itemRef = doc(firestore, "items", item_id);
-      if (!item_upvotes.includes(user?.uid)) {
+      if (!itemUpvotes.includes(user?.uid)) {
         await updateDoc(itemRef, {
-          item_upvotes: arrayUnion(user?.uid),
+          itemUpvotes: arrayUnion(user?.uid),
         });
       } else {
         await updateDoc(itemRef, {
-          item_upvotes: arrayRemove(user?.uid),
+          itemUpvotes: arrayRemove(user?.uid),
         });
       }
     }
@@ -153,11 +153,11 @@ const RetroCardActions = ({
               bg="gray.300"
               color="black"
               hasArrow
-              label={`${createdBy.first_name} ${createdBy.surname}`}
+              label={`${createdBy.firstName} ${createdBy.lastName}`}
             >
               <Avatar
                 size="xs"
-                name={`${createdBy.first_name} ${createdBy.surname}`}
+                name={`${createdBy.firstName} ${createdBy.lastName}`}
               />
             </Tooltip>
           </div>
@@ -180,7 +180,7 @@ const RetroCardActions = ({
         >
           <Stack direction="row" spacing={2}>
             <FiStar fill={isUpvoted ? lightOrDarkStarBg : "#FFFFFF"} />
-            <span style={{ lineHeight: "16px" }}>{item_upvotes.length}</span>
+            <span style={{ lineHeight: "16px" }}>{itemUpvotes.length}</span>
           </Stack>
         </StyledIconAction>
       </Box>

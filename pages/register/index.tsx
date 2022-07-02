@@ -49,7 +49,7 @@ interface FormValues {
   email: string;
   firstName: string;
   password: string;
-  surname: string;
+  lastName: string;
 }
 
 const Register: NextPage = () => {
@@ -63,7 +63,7 @@ const Register: NextPage = () => {
       email: "",
       firstName: "",
       password: "",
-      surname: "",
+      lastName: "",
     },
   });
   const [error, setError] = useState(null);
@@ -81,11 +81,11 @@ const Register: NextPage = () => {
       updateUser(userCredential.user);
       const ref = doc(firestore, "users", userCredential.user.uid);
       await setDoc(ref, {
-        first_name: data.firstName,
+        firstName: data.firstName,
         email: data.email,
-        surname: data.surname,
-        user_id: userCredential.user.uid,
-        created_at: serverTimestamp(),
+        lastName: data.lastName,
+        userId: userCredential.user.uid,
+        createdAt: serverTimestamp(),
       });
       toast({
         title: "User successfully created",
@@ -154,15 +154,15 @@ const Register: NextPage = () => {
             </InputGroup>
           </div>
           <div>
-            <span>Surname:</span>
+            <span>lastName:</span>
             <InputGroup marginTop="4px">
               <Controller
                 control={control}
-                name="surname"
+                name="lastName"
                 render={({ field }) => (
                   <Input
                     {...field}
-                    placeholder="Surname"
+                    placeholder="lastName"
                     required
                     type="text"
                     value={field.value}

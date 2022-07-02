@@ -33,11 +33,11 @@ const UserProfile = () => {
     <ProfileWrapper>
       <UserInfoWrapper>
         <Avatar
-          name={`${userDetails?.first_name} ${userDetails?.surname}`}
+          name={`${userDetails?.firstName} ${userDetails?.lastName}`}
           size={"2xl"}
         />
         <Text fontSize="4xl" marginTop="1rem">
-          {userDetails?.first_name} {userDetails?.surname}
+          {userDetails?.firstName} {userDetails?.lastName}
         </Text>
       </UserInfoWrapper>
       <EditInfoWrapper>

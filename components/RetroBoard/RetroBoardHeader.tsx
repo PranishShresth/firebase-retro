@@ -25,9 +25,6 @@ const RetroBoardHeader = () => {
   const {
     board: { board, lists },
   } = useRetroContext();
-  const currentListCount = lists && lists?.length;
-  const boardLimit = board?.board_limit;
-  const showListCreation = boardLimit && boardLimit > currentListCount;
 
   return (
     <Stack
@@ -43,21 +40,16 @@ const RetroBoardHeader = () => {
           <Icon as={GiNinjaHead} w={6} h="100%" />
         </IconDiv>
         <Text fontWeight="bold" fontSize={"1.2rem"}>
-          {board?.board_title}
+          {board?.boardTitle}
         </Text>
       </Stack>
 
       <Stack direction="row">
         <RetroBoardFilter />
-        <RetroBoardShare boardId={board.board_id} />
-        {/* <Button>
-          <FiSettings />
-        </Button> */}
-        {showListCreation && (
-          <Box>
-            <AddList />
-          </Box>
-        )}
+        <RetroBoardShare boardId={board.boardId} />
+        <Box>
+          <AddList />
+        </Box>
       </Stack>
     </Stack>
   );

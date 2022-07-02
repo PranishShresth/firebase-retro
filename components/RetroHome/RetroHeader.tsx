@@ -66,7 +66,7 @@ export const RetroHeader = () => {
               <Menu>
                 <MenuButton>
                   <Avatar
-                    name={`${userDetails?.first_name} ${userDetails?.surname}`}
+                    name={`${userDetails?.firstName} ${userDetails?.lastName}`}
                     size={"sm"}
                   />
                 </MenuButton>

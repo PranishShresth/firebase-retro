@@ -26,9 +26,9 @@ import { useToast } from "@chakra-ui/react";
 import { throttle } from "lodash-es";
 
 interface Props {
-  list_id: string;
+  listId: string;
 }
-const RetroListMenu = ({ list_id }: Props) => {
+const RetroListMenu = ({ listId }: Props) => {
   const bg = useColorModeValue("gray.600", "white");
   const {
     isOpen: isDeleteDialogOpen,
@@ -46,11 +46,11 @@ const RetroListMenu = ({ list_id }: Props) => {
 
   const deleteList = async () => {
     try {
-      const listRef = doc(firestore, "lists", list_id);
+      const listRef = doc(firestore, "lists", listId);
       const batch = writeBatch(firestore);
-      const allListItems = items.filter((item) => item.list_id === list_id);
+      const allListItems = items.filter((item) => item.listId === listId);
       allListItems.forEach((item) => {
-        const ref = doc(firestore, "items", item.item_id);
+        const ref = doc(firestore, "items", item.itemId);
         batch.delete(ref);
       });
       await batch.commit();
@@ -91,7 +91,7 @@ const RetroListMenu = ({ list_id }: Props) => {
         isMoveModalOpen={isMoveModalOpen}
         closeMoveModal={closeMoveModal}
         openMoveModal={openMoveModal}
-        list_id={list_id}
+        listId={listId}
       />
       <AlertDialogBar
         isOpen={isDeleteDialogOpen}
@@ -108,12 +108,12 @@ const MoveListContainer = ({
   isMoveModalOpen,
   closeMoveModal,
   openMoveModal,
-  list_id,
+  listId,
 }: {
   isMoveModalOpen: boolean;
   closeMoveModal: () => void;
   openMoveModal: () => void;
-  list_id: string;
+  listId: string;
 }) => {
   const {
     board: { allBoards, items, lists },
@@ -121,21 +121,21 @@ const MoveListContainer = ({
   const toast = useToast();
 
   const [loading, setLoading] = useState(false);
-  const { getValues, control } = useForm<{ board_id: string }>({
+  const { getValues, control } = useForm<{ boardId: string }>({
     defaultValues: {
-      board_id: "",
+      boardId: "",
     },
   });
 
   const copyListToAnotherBoard = async () => {
-    const boardId = getValues("board_id");
+    const boardId = getValues("boardId");
     if (boardId === "") return;
-    const allItems = items.filter((item) => item.list_id === list_id);
-    const list = lists.find((list) => list.list_id === list_id);
+    const allItems = items.filter((item) => item.listId === listId);
+    const list = lists.find((list) => list.listId === listId);
     if (!list) return;
 
     try {
-      const list_id = uuidV4();
+      const listId = uuidV4();
       setLoading(true);
       const batch = writeBatch(firestore);
 
@@ -143,16 +143,16 @@ const MoveListContainer = ({
         const i_id = uuidV4();
         batch.set(doc(firestore, "items", i_id), {
           ...item,
-          board_id: boardId,
-          item_id: i_id,
-          list_id: list_id,
+          boardId: boardId,
+          itemId: i_id,
+          listId: listId,
         });
       });
 
-      await setDoc(doc(firestore, "lists", list_id), {
+      await setDoc(doc(firestore, "lists", listId), {
         ...list,
-        board_id: boardId,
-        list_id: list_id,
+        boardId: boardId,
+        listId: listId,
       });
       await batch.commit();
 
@@ -179,12 +179,12 @@ const MoveListContainer = ({
       <Stack direction="column" spacing={5}>
         <Controller
           control={control}
-          name="board_id"
+          name="boardId"
           render={({ field }) => (
             <Select placeholder="Lists..." {...field}>
               {allBoards.slice(0, 6)?.map((board) => (
-                <option key={board.board_id} value={board.board_id}>
-                  {board.board_title}
+                <option key={board.boardId} value={board.boardId}>
+                  {board.boardTitle}
                 </option>
               ))}
             </Select>

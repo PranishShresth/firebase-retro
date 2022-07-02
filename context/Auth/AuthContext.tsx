@@ -21,14 +21,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<AnonymousUser | null>(null);
   const [userDetails, setUserDetails] = useState<any>(null);
   const [isLoadingUserData, setIsLoadingUserData] = useState(true);
-  // useEffect(() => {
-  //   signInWithAnonymousCredentials().then((authUser: UserCredential) => {
-  //     const {
-  //       user: { isAnonymous, metadata, uid },
-  //     } = authUser;
-  //     setUser({ isAnonymous, metadata, uid });
-  //   });
-  // }, []);
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
@@ -36,7 +28,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
         const uid = user.uid;
-        const userQuery = query(usersRef, where("user_id", "==", uid));
+        const userQuery = query(usersRef, where("userId", "==", uid));
         const userSnapshot = await getDocs(userQuery);
         const users = userSnapshot.docs.map((user) => {
           return { ...user.data() };
