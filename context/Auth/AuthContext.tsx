@@ -1,7 +1,7 @@
 import { auth } from "configs/firebase/firebaseClient";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { query, where, getDocs } from "firebase/firestore";
-import { usersRef } from "utils/firebaseCollection";
+import { usersCollection } from "utils/firebaseCollection";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { AnonymousUser, Auth, UserDetails } from "utils/interfaces";
 
@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
         const uid = user.uid;
-        const userQuery = query(usersRef, where("userId", "==", uid));
+        const userQuery = query(usersCollection, where("userId", "==", uid));
         const userSnapshot = await getDocs(userQuery);
         const users = userSnapshot.docs.map((user) => {
           return { ...user.data() };

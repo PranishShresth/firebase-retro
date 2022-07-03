@@ -10,7 +10,13 @@ import {
 } from "@chakra-ui/react";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import {
+  doc,
+  DocumentData,
+  DocumentReference,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import { NextPage } from "next";
 import Head from "next/head";
@@ -22,6 +28,9 @@ import styled from "styled-components";
 import { auth } from "configs/firebase/firebaseClient";
 import DualRingLoader from "components/Loader/DualRingLoader";
 import { firebaseErrors } from "utils/firebaseErrors";
+import { Collection } from "utils/firebaseCollection";
+import { uuidV4 } from "utils/uuidV4";
+import { Workspace } from "utils/interfaces";
 
 const FormErrorMessage = styled.span`
   color: #e8575b;
@@ -70,23 +79,43 @@ const Register: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showSignInPage, setShowSignInPage] = useState(false);
 
-  const handleSignUpUser = async (data: FormValues) => {
+  const handleUserCreation = async (data: FormValues): Promise<void> => {
     try {
-      setIsLoading(true);
+      const workspaceId = uuidV4();
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         data.email,
         data.password
       );
       updateUser(userCredential.user);
-      const ref = doc(firestore, "users", userCredential.user.uid);
-      await setDoc(ref, {
+      const userRef = doc(firestore, Collection.Users, userCredential.user.uid);
+      const workspaceRef = doc(firestore, Collection.Workspaces, workspaceId);
+
+      await setDoc(userRef, {
         firstName: data.firstName,
         email: data.email,
         lastName: data.lastName,
         userId: userCredential.user.uid,
+        workspaces: [workspaceId],
         createdAt: serverTimestamp(),
       });
+
+      setDoc(workspaceRef, {
+        workspaceDescription: "",
+        workspaceId,
+        workspaceTitle: "My Workspace",
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleSignUpUser = async (data: FormValues) => {
+    try {
+      setIsLoading(true);
+      await handleUserCreation(data);
       toast({
         title: "User successfully created",
         description: "You can now log in with your credentials",

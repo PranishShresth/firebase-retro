@@ -5,19 +5,21 @@ export type PermissionLevel = "public" | "private";
 
 export type AnonymousUser = Pick<User, "uid" | "isAnonymous" | "metadata">;
 
+type WorkspacesIds = string[]
+
 export interface UserDetails {
   birthDate?: string;
   createdAt: { seconds: number; nanoseconds: number };
   email: string;
   firstName: string;
+  workspaces: WorkspacesIds
   lastName: string;
   userId: string;
 }
 
 
-interface Workspace{
+export interface Workspace{
   workspaceId:string;
-  boards: Board[]
   workspaceTitle:string;
   workspaceDescription:string;
   createdAt: Timestamp;
@@ -44,6 +46,7 @@ export interface Board {
   boardColour: string;
   boardId: string;
   boardTitle: string;
+  workspaceId: string;
   createdAt: Timestamp;
   updatedAt: Timestamp;
   prefs: Preference;

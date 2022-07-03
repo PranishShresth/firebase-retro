@@ -45,6 +45,7 @@ export const RetroBody = () => {
   const [boards, setBoards] = useState<BoardWithDocId[] | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
   const { userDetails } = useAuthContext();
+
   const {
     isOpen: isBoardModalOpen,
     onClose: closeBoardModal,

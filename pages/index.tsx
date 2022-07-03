@@ -1,6 +1,6 @@
 import { Box, useColorModeValue } from "@chakra-ui/react";
 import { RetroHeader, RetroBody } from "components/RetroHome";
-
+import { RetroWorkspace } from "components/RetroWorkspace";
 import { NextPage } from "next";
 import Head from "next/head";
 
@@ -16,7 +16,7 @@ const RetroDashboard: NextPage = () => {
         <title>Retro Board</title>
       </Head>
       <RetroHeader />
-      <RetroBody />
+      <RetroWorkspace />
     </Box>
   );
 };
