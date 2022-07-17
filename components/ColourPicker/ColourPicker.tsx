@@ -34,7 +34,7 @@ const CustomColourInput = styled.div<{ colour: string }>`
   }
 `;
 
-enum Colours {
+export enum Colours {
   fireOpal = "#E8575B",
   mangoTango = "#F78645",
   mikadoYellow = "#FBBD08",
