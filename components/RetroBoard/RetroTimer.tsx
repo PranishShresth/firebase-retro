@@ -1,15 +1,24 @@
-import { Badge, Box, Button, Flex, IconButton } from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  Button,
+  Flex,
+  IconButton,
+  Tooltip,
+  useToast,
+} from "@chakra-ui/react";
 import { useInterval } from "hooks/useInterval";
 
 import { firestore } from "configs/firebase/firestore";
 import { zonedTimeToUtc } from "date-fns-tz";
 import { useState } from "react";
-import { Colours } from "../ColourPicker";
 import { Board } from "utils/interfaces";
 import { FIVE_MINUTES_IN_SECONDS } from "components/RetroHome/RetroBody";
 import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { BsStopCircle } from "react-icons/bs";
+import { Colours } from "../ColourPicker";
+import { useAuthContext } from "context/Auth/AuthContext";
 interface RetroTimerProps {
   board: Board;
 }
@@ -38,12 +47,17 @@ const padTo2Digits = (num: number) => {
 };
 
 export const RetroTimer = ({ board }: RetroTimerProps) => {
+  const { user } = useAuthContext();
   const [timeLeft, setTimeLeft] = useState<string | null>(null);
+  const toast = useToast();
+  const allowStartStopTimer = user?.uid === board?.createdBy?.user_id;
   const hasTimerStarted = !!board?.timer?.startAt;
 
-  console.log(hasTimerStarted);
-
-  const icon = hasTimerStarted ? <BsStopCircle /> : <AiOutlineClockCircle />;
+  const icon = hasTimerStarted ? (
+    <BsStopCircle fill={Colours.fireOpal} />
+  ) : (
+    <AiOutlineClockCircle />
+  );
   const handleStartTimer = async () => {
     const ref = doc(firestore, "boards", board.board_id);
     try {
@@ -90,6 +104,14 @@ export const RetroTimer = ({ board }: RetroTimerProps) => {
               startAt: null,
             },
           });
+
+          toast({
+            title: "Time's Up!",
+            description: "Retro will start shortly...",
+            status: "warning",
+            duration: 4000,
+            isClosable: true,
+          });
         }
         setTimeLeft(`${padTo2Digits(minutes)}:${padTo2Digits(seconds)}`);
       }
@@ -103,12 +125,24 @@ export const RetroTimer = ({ board }: RetroTimerProps) => {
     <Flex alignItems={"center"} justifyContent="space-between">
       {hasTimerStarted && (
         <Box marginRight={"1rem"}>
-          <Badge colorScheme="red">{timeLeft}</Badge>
+          <Badge colorScheme="red" fontSize="lg">
+            {timeLeft}
+          </Badge>
         </Box>
       )}
-      <Box>
-        <IconButton onClick={onClick} aria-label={"timer"} icon={icon} />
-      </Box>
+
+      {allowStartStopTimer && (
+        <Tooltip
+          bg="gray.300"
+          color="black"
+          hasArrow
+          label={hasTimerStarted ? "Reset Timer" : "Start Timer"}
+        >
+          <Box>
+            <IconButton onClick={onClick} aria-label={"timer"} icon={icon} />
+          </Box>
+        </Tooltip>
+      )}
     </Flex>
   );
 };
