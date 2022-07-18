@@ -38,6 +38,10 @@ export interface Board {
   updatedAt: Timestamp;
   prefs: Preference;
   createdBy: UserDetails;
+  timer: {
+    seconds: number;
+    startAt: Timestamp | null;
+  };
 }
 
 export interface BoardWithDocId extends Board {

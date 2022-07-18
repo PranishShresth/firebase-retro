@@ -1,14 +1,13 @@
 import { Board, List, Item } from "utils/interfaces";
 
 export interface RetroBoardState {
-  board:Board;
+  board: Board;
   lists: List[];
   items: Item[];
   allBoards: Board[];
   status: string;
-  filterPayload: string
+  filterPayload: string;
 }
-
 
 export const initialState = {
   board: {},
@@ -16,11 +15,8 @@ export const initialState = {
   lists: [],
   items: [],
   status: "",
-  filterPayload: ""
+  filterPayload: "",
 } as unknown as RetroBoardState;
-
-
-
 
 interface Reorder_Item_Payload {
   source: string;
@@ -29,41 +25,28 @@ interface Reorder_Item_Payload {
   position: number;
 }
 
+const FETCH_BOARD_REQUESTED = "FETCH_BOARD_REQUESTED";
+const FETCH_BOARD_FULFILLED = "FETCH_BOARD_FULFILLED";
+const FETCH_BOARDS_FULFILLED = "FETCH_BOARDS_FULFILLED";
+const FETCH_ITEMS_FULFILLED = "FETCH_ITEMS_FULFILLED";
+const FETCH_LISTS_FULFILLED = "FETCH_LISTS_FULFILLED";
+const REORDER_ITEM_REQUESTED = "REORDER_ITEM_REQUESTED";
+const SET_FILTER_ITEM_PAYLOAD = "SET_FILTER_ITEM_PAYLOAD";
 
+type BoardPayload = { items?: Item[]; lists?: List[]; board?: Board };
 
+export type ActionTypes =
+  | {
+      type: typeof FETCH_BOARD_REQUESTED;
+    }
+  | { type: typeof FETCH_BOARDS_FULFILLED; payload: Board[] }
+  | { type: typeof FETCH_ITEMS_FULFILLED; payload: Item[] }
+  | { type: typeof FETCH_LISTS_FULFILLED; payload: List[] }
+  | { type: typeof REORDER_ITEM_REQUESTED; payload: Reorder_Item_Payload }
+  | { type: typeof FETCH_BOARD_FULFILLED; payload: BoardPayload }
+  | { type: typeof SET_FILTER_ITEM_PAYLOAD; payload: string };
 
-const FETCH_BOARD_REQUESTED = "FETCH_BOARD_REQUESTED"
-const FETCH_BOARD_FULFILLED = "FETCH_BOARD_FULFILLED"
-const FETCH_BOARDS_FULFILLED = "FETCH_BOARDS_FULFILLED"
-const FETCH_ITEMS_FULFILLED = "FETCH_ITEMS_FULFILLED"
-const FETCH_LISTS_FULFILLED = "FETCH_LISTS_FULFILLED"
-const REORDER_ITEM_REQUESTED = "REORDER_ITEM_REQUESTED"
-const SET_FILTER_ITEM_PAYLOAD = "SET_FILTER_ITEM_PAYLOAD"
-
-
-
-type BoardPayload = { items: Item[]; lists: List[]; board: Board }
-
-
-export type ActionTypes = {
-  type: typeof FETCH_BOARD_REQUESTED,
-
-} | { type: typeof FETCH_BOARDS_FULFILLED, payload: Board[] }
-  | { type: typeof FETCH_ITEMS_FULFILLED, payload: Item[] }
-  | { type: typeof FETCH_LISTS_FULFILLED, payload: List[] }
-  | { type: typeof REORDER_ITEM_REQUESTED, payload: Reorder_Item_Payload }
-  | { type: typeof FETCH_BOARD_FULFILLED, payload: BoardPayload }
-  | { type: typeof SET_FILTER_ITEM_PAYLOAD, payload: string }
-
-
-
-
-
-
-export function RetroBoardReducer(
-  state: RetroBoardState,
-  action: ActionTypes
-) {
+export function RetroBoardReducer(state: RetroBoardState, action: ActionTypes) {
   switch (action.type) {
     case FETCH_BOARD_REQUESTED: {
       return { ...state, status: "pending" };
@@ -95,47 +78,43 @@ export function RetroBoardReducer(
       return { ...state, items: items };
     }
     case SET_FILTER_ITEM_PAYLOAD: {
-      return { ...state, filterPayload: action.payload }
+      return { ...state, filterPayload: action.payload };
     }
     default:
       return state;
   }
 }
 
-
-
-
 export const updateBoards = (payload: Board[]): ActionTypes => ({
   type: FETCH_BOARDS_FULFILLED,
-  payload
-})
-
+  payload,
+});
 
 export const updateBoard = (payload: BoardPayload): ActionTypes => ({
   type: FETCH_BOARD_FULFILLED,
-  payload
-})
+  payload,
+});
 
 export const reorderItem = (payload: Reorder_Item_Payload): ActionTypes => ({
   type: REORDER_ITEM_REQUESTED,
-  payload
-})
+  payload,
+});
 
 export const updateLists = (payload: List[]): ActionTypes => ({
   type: FETCH_LISTS_FULFILLED,
-  payload
-})
+  payload,
+});
 
 export const updateItems = (payload: Item[]): ActionTypes => ({
   type: FETCH_ITEMS_FULFILLED,
-  payload
-})
+  payload,
+});
 
 export const updateBoardToPending = (): ActionTypes => ({
   type: FETCH_BOARD_REQUESTED,
-})
+});
 
 export const setFilterPayload = (filterString: string): ActionTypes => ({
   type: SET_FILTER_ITEM_PAYLOAD,
-  payload: filterString
-})
+  payload: filterString,
+});
