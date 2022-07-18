@@ -41,6 +41,8 @@ const defaultPrefs: Preference = {
   closed: false,
 };
 
+export const FIVE_MINUTES_IN_SECONDS = 300;
+
 export const RetroBody = () => {
   const [boards, setBoards] = useState<BoardWithDocId[] | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
@@ -96,6 +98,10 @@ export const RetroBody = () => {
         prefs: defaultPrefs,
         createdBy: userDetails,
         createdAt: serverTimestamp(),
+        timer: {
+          seconds: FIVE_MINUTES_IN_SECONDS,
+          startAt: null,
+        },
       });
     } catch (err) {
       console.log(err);

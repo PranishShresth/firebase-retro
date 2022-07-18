@@ -8,6 +8,7 @@ import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 import AddList from "./RetroList/AddList";
 import { RetroBoardFilter } from "./RetroBoardFilter";
 import { RetroBoardShare } from "./RetroBoardShare";
+import { RetroTimer } from "./RetroTimer";
 
 const IconDiv = styled.div`
   display: flex;
@@ -45,6 +46,7 @@ const RetroBoardHeader = () => {
       </Stack>
 
       <Stack direction="row">
+        <RetroTimer board={board} />
         <RetroBoardFilter />
         <RetroBoardShare boardId={board.boardId} />
         <Box>
