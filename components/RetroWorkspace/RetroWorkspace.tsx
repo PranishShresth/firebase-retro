@@ -9,12 +9,12 @@ import { Collection } from "utils/firebaseCollection";
 import { Workspace } from "utils/interfaces";
 
 export const RetroWorkspace = () => {
-  const { userDetails } = useAuthContext();
+  const { member } = useAuthContext();
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
 
   useEffect(() => {
-    if (userDetails) {
-      const workspaces = userDetails.workspaces;
+    if (member) {
+      const workspaces = member.workspaces;
       const promises = workspaces.map((id) =>
         getDoc(doc(firestore, Collection.Workspaces, id))
       );
@@ -22,7 +22,7 @@ export const RetroWorkspace = () => {
         setWorkspaces(workspace.map((_) => _.data() as Workspace));
       });
     }
-  }, [userDetails]);
+  }, [member]);
 
   return workspaces.map(({ workspaceId, workspaceTitle }) => (
     <Box key={workspaceId} padding="2rem">

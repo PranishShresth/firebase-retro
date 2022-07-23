@@ -9,8 +9,6 @@ import React, {
 import { useRouter } from "next/router";
 import {
   collection,
-  doc,
-  getDoc,
   getDocs,
   onSnapshot,
   orderBy,
@@ -48,14 +46,14 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const boardId = "" + router.query.boardId;
   const [state, dispatch] = useReducer(RetroBoardReducer, initialState);
-  const { userDetails } = useAuthContext();
+  const { member } = useAuthContext();
 
   useEffect(() => {
     (async () => {
-      if (userDetails) {
+      if (member) {
         const boardsRef = query(
           collection(firestore, "boards"),
-          where("createdBy.userId", "==", userDetails.userId),
+          where("createdBy.userId", "==", member.userId),
           orderBy("createdAt", "desc")
         );
         const boardSnapshot = await getDocs(boardsRef);
@@ -65,7 +63,7 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
         dispatch(updateBoards(boards));
       }
     })();
-  }, [userDetails]);
+  }, [member]);
 
   useEffect(() => {
     dispatch(updateBoardToPending());

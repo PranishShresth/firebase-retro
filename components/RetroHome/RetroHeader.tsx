@@ -38,7 +38,7 @@ const Container = styled.div`
 `;
 
 export const RetroHeader = () => {
-  const { userDetails } = useAuthContext();
+  const { member } = useAuthContext();
   const { colorMode, toggleColorMode } = useColorMode();
   const bg = useColorModeValue("white", "gray.600");
 
@@ -64,11 +64,11 @@ export const RetroHeader = () => {
           <Button>Create Workspace</Button>
           <Stack direction={"row"}>
             <DarkModeToggle onToggle={toggleColorMode} colorMode={colorMode} />
-            {userDetails ? (
+            {member ? (
               <Menu>
                 <MenuButton>
                   <Avatar
-                    name={`${userDetails?.firstName} ${userDetails?.lastName}`}
+                    name={`${member?.firstName} ${member?.lastName}`}
                     size={"sm"}
                   />
                 </MenuButton>

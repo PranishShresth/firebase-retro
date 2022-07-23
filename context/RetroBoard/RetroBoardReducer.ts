@@ -1,7 +1,8 @@
-import { Board, List, Item } from "utils/interfaces";
+import { Board, List, Item, Workspace } from "utils/interfaces";
 
 export interface RetroBoardState {
   board: Board;
+  workspace: Workspace;
   lists: List[];
   items: Item[];
   allBoards: Board[];
@@ -13,6 +14,7 @@ export const initialState = {
   board: {},
   allBoards: [],
   lists: [],
+  workspace: {},
   items: [],
   status: "",
   filterPayload: "",
@@ -27,6 +29,8 @@ interface Reorder_Item_Payload {
 
 const FETCH_BOARD_REQUESTED = "FETCH_BOARD_REQUESTED";
 const FETCH_BOARD_FULFILLED = "FETCH_BOARD_FULFILLED";
+const FETCH_WORKSPACE_REQUESTED = "FETCH_WORKSPACE_REQUESTED"
+const FETCH_WORKSPACE_FULFILLED = "FETCH_WORKSPACE_FULFILLED"
 const FETCH_BOARDS_FULFILLED = "FETCH_BOARDS_FULFILLED";
 const FETCH_ITEMS_FULFILLED = "FETCH_ITEMS_FULFILLED";
 const FETCH_LISTS_FULFILLED = "FETCH_LISTS_FULFILLED";
@@ -41,6 +45,8 @@ export type ActionTypes =
     }
   | { type: typeof FETCH_BOARDS_FULFILLED; payload: Board[] }
   | { type: typeof FETCH_ITEMS_FULFILLED; payload: Item[] }
+  | { type: typeof FETCH_WORKSPACE_FULFILLED; payload: Workspace }
+  // | { type: typeof FETCH_WORKSPACE_REQUESTED; payload: Item[] }
   | { type: typeof FETCH_LISTS_FULFILLED; payload: List[] }
   | { type: typeof REORDER_ITEM_REQUESTED; payload: Reorder_Item_Payload }
   | { type: typeof FETCH_BOARD_FULFILLED; payload: BoardPayload }

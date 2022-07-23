@@ -36,7 +36,7 @@ interface BoardFormValues {
 
 const defaultPrefs: Preference = {
   permissionLevel: "private",
-  customBackground: false,
+  timer: null,
   closed: false,
 };
 
@@ -45,7 +45,7 @@ export const FIVE_MINUTES_IN_SECONDS = 300;
 export const RetroBody = () => {
   const [boards, setBoards] = useState<BoardWithDocId[] | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
-  const { userDetails } = useAuthContext();
+  const { member } = useAuthContext();
 
   const {
     isOpen: isBoardModalOpen,
@@ -66,10 +66,10 @@ export const RetroBody = () => {
   });
 
   useEffect(() => {
-    if (userDetails) {
+    if (member) {
       const q = query(
         collection(firestore, "boards"),
-        where("createdBy.userId", "==", userDetails.userId),
+        where("createdBy.userId", "==", member.userId),
         orderBy("createdAt", "desc")
       );
 
@@ -82,7 +82,7 @@ export const RetroBody = () => {
       });
       return boardsCollectionSnap;
     }
-  }, [userDetails]);
+  }, [member]);
 
   const handleCreateBoard = async (data: BoardFormValues) => {
     try {
@@ -95,7 +95,7 @@ export const RetroBody = () => {
         ...data,
         boardId: doc_id,
         prefs: defaultPrefs,
-        createdBy: userDetails,
+        createdBy: member,
         createdAt: serverTimestamp(),
         timer: {
           seconds: FIVE_MINUTES_IN_SECONDS,
