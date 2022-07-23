@@ -1,3 +1,5 @@
+import { Box, Button, Flex, Heading } from "@chakra-ui/react";
+import { RetroBody } from "components/RetroHome";
 import { firestore } from "configs/firebase/firestore";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { getDoc, doc } from "firebase/firestore";
@@ -22,5 +24,16 @@ export const RetroWorkspace = () => {
     }
   }, [userDetails]);
 
-  return <div>{workspaces.map((x) => x.workspaceTitle)}</div>;
+  return workspaces.map(({ workspaceId, workspaceTitle }) => (
+    <Box key={workspaceId} padding="2rem">
+      <Flex alignItems="center" justifyContent="space-between">
+        <Heading as="h4" size="md">
+          {workspaceTitle}
+        </Heading>
+        <Button>Invite</Button>
+      </Flex>
+
+      <RetroBody />
+    </Box>
+  ));
 };

@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Button,
   Menu,
   MenuButton,
   MenuItem,
@@ -60,6 +61,7 @@ export const RetroHeader = () => {
       <Container>
         <HeaderBanner>
           <Link href="/">Retro Board</Link>
+          <Button>Create Workspace</Button>
           <Stack direction={"row"}>
             <DarkModeToggle onToggle={toggleColorMode} colorMode={colorMode} />
             {userDetails ? (
