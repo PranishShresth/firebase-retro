@@ -22,7 +22,6 @@ interface FormValues {
 }
 const CreateList = () => {
   const router = useRouter();
-  const { user } = useAuthContext();
   const {
     board: { lists },
   } = useRetroContext();

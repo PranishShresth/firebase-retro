@@ -9,8 +9,8 @@ export enum Collection {
     Items = "items",
     Users = "users",
     Workspaces = "workspaces"
-    
 }
+
 export const boardsCollection = collection(firestore, Collection.Boards);
 export const listsCollection = collection(firestore, Collection.Lists);
 export const itemsCollection = collection(firestore, Collection.Items);

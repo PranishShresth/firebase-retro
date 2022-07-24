@@ -42,7 +42,7 @@ const defaultPrefs: Preference = {
 
 export const FIVE_MINUTES_IN_SECONDS = 300;
 
-export const RetroBody = () => {
+export const RetroBody = ({ workspaceId }: { workspaceId: string }) => {
   const [boards, setBoards] = useState<BoardWithDocId[] | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
   const { member } = useAuthContext();
@@ -69,7 +69,7 @@ export const RetroBody = () => {
     if (member) {
       const q = query(
         collection(firestore, "boards"),
-        where("createdBy.userId", "==", member.userId),
+        where("workspaceId", "==", workspaceId),
         orderBy("createdAt", "desc")
       );
 
@@ -82,7 +82,7 @@ export const RetroBody = () => {
       });
       return boardsCollectionSnap;
     }
-  }, [member]);
+  }, [member, workspaceId]);
 
   const handleCreateBoard = async (data: BoardFormValues) => {
     try {
@@ -90,18 +90,17 @@ export const RetroBody = () => {
       reset();
       const doc_id = uuidv4();
       const ref = doc(firestore, "boards", doc_id);
-
       await setDoc(ref, {
         ...data,
         boardId: doc_id,
         prefs: defaultPrefs,
-        createdBy: member,
+        userId: member?.userId,
+        members: [member],
+        workspaceId,
         createdAt: serverTimestamp(),
-        timer: {
-          seconds: FIVE_MINUTES_IN_SECONDS,
-          startAt: null,
-        },
+        updatedAt: serverTimestamp(),
       });
+      console.log(data);
     } catch (err) {
       console.log(err);
     }

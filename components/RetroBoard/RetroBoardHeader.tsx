@@ -46,7 +46,7 @@ const RetroBoardHeader = () => {
       </Stack>
 
       <Stack direction="row">
-        <RetroTimer board={board} />
+        {/* <RetroTimer board={board} /> */}
         <RetroBoardFilter />
         <RetroBoardShare boardId={board.boardId} />
         <Box>

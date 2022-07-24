@@ -45,31 +45,15 @@ export const useRetroContext = () => {
 export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const boardId = "" + router.query.boardId;
-  const [state, dispatch] = useReducer(RetroBoardReducer, initialState);
   const { member } = useAuthContext();
-
-  useEffect(() => {
-    (async () => {
-      if (member) {
-        const boardsRef = query(
-          collection(firestore, "boards"),
-          where("createdBy.userId", "==", member.userId),
-          orderBy("createdAt", "desc")
-        );
-        const boardSnapshot = await getDocs(boardsRef);
-        const boards = boardSnapshot.docs.map((doc) => {
-          return { ...doc.data() } as Board;
-        });
-        dispatch(updateBoards(boards));
-      }
-    })();
-  }, [member]);
+  const [state, dispatch] = useReducer(RetroBoardReducer, initialState);
 
   useEffect(() => {
     dispatch(updateBoardToPending());
     const q = query(
       collection(firestore, "boards"),
-      where("board_id", "==", boardId)
+      where("boardId", "==", boardId),
+      where("members", "array-contains", member)
     );
 
     const boardCollectionSnap = onSnapshot(q, (snapshot) => {
@@ -79,7 +63,7 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
       dispatch(updateBoard({ board: payload[0] }));
     });
     return boardCollectionSnap;
-  }, [boardId, dispatch]);
+  }, [boardId, dispatch, member]);
 
   // lists subscription
   useEffect(() => {

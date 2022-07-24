@@ -50,8 +50,9 @@ export const RetroTimer = ({ board }: RetroTimerProps) => {
   const { user } = useAuthContext();
   const [timeLeft, setTimeLeft] = useState<string | null>(null);
   const toast = useToast();
-  const allowStartStopTimer = user?.uid === board?.createdBy?.user_id;
-  const hasTimerStarted = !!board?.timer?.startAt;
+  const allowStartStopTimer = user?.uid === board.userId;
+
+  const hasTimerStarted = !!board?.prefs.timer?.startAt;
 
   const icon = hasTimerStarted ? (
     <BsStopCircle fill={Colours.fireOpal} />
@@ -59,7 +60,7 @@ export const RetroTimer = ({ board }: RetroTimerProps) => {
     <AiOutlineClockCircle />
   );
   const handleStartTimer = async () => {
-    const ref = doc(firestore, "boards", board.board_id);
+    const ref = doc(firestore, "boards", board.boardId);
     try {
       await updateDoc(ref, {
         timer: {
@@ -73,7 +74,7 @@ export const RetroTimer = ({ board }: RetroTimerProps) => {
   };
 
   const handleResetTimer = async () => {
-    const ref = doc(firestore, "boards", board.board_id);
+    const ref = doc(firestore, "boards", board.boardId);
 
     try {
       await updateDoc(ref, {
@@ -89,12 +90,14 @@ export const RetroTimer = ({ board }: RetroTimerProps) => {
 
   const clear = useInterval(
     () => {
-      if (board.timer?.startAt) {
-        const ref = doc(firestore, "boards", board.board_id);
+      if (board.prefs.timer?.startAt) {
+        const ref = doc(firestore, "boards", board.boardId);
 
         const endTime = new Date(
-          board.timer.startAt.seconds * 1000 + FIVE_MINUTES_IN_SECONDS * 1000
+          board.prefs.timer.startAt.seconds * 1000 +
+            FIVE_MINUTES_IN_SECONDS * 1000
         ).toUTCString();
+
         const { minutes, seconds, total } = getTimeRemaining(endTime);
 
         if (total <= 0) {
@@ -117,7 +120,7 @@ export const RetroTimer = ({ board }: RetroTimerProps) => {
       }
     },
     1000,
-    [board.timer?.startAt]
+    [board.prefs.timer?.startAt]
   );
   const onClick = hasTimerStarted ? handleResetTimer : handleStartTimer;
 

@@ -1,5 +1,7 @@
 import { Box, Button, Flex, Heading } from "@chakra-ui/react";
+import { RetroMemberSelectModal } from "components/Modals/RetroMemberSelectModal";
 import { RetroBody } from "components/RetroHome";
+import UserSelect from "components/UserSelect";
 import { firestore } from "configs/firebase/firestore";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { getDoc, doc } from "firebase/firestore";
@@ -30,10 +32,10 @@ export const RetroWorkspace = () => {
         <Heading as="h4" size="md">
           {workspaceTitle}
         </Heading>
-        <Button>Invite</Button>
+        <RetroMemberSelectModal workspaceId={workspaceId} />
       </Flex>
 
-      <RetroBody />
+      <RetroBody workspaceId={workspaceId} />
     </Box>
   ));
 };

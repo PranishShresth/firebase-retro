@@ -25,11 +25,7 @@ const EditBoard = ({
   openEditBoardModal,
   board,
 }: Props) => {
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm<FormValues>({
+  const { handleSubmit, control, formState } = useForm<FormValues>({
     defaultValues: {
       boardTitle: board.boardTitle,
       boardColor: board.boardColour,

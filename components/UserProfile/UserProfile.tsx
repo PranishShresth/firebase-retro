@@ -29,15 +29,14 @@ const UserInfoWrapper = styled.div`
 const UserProfile = () => {
   const { member } = useAuthContext();
 
+  const fullName = `${member?.firstName} ${member?.lastName}`;
+
   return (
     <ProfileWrapper>
       <UserInfoWrapper>
-        <Avatar
-          name={`${member?.firstName} ${member?.lastName}`}
-          size={"2xl"}
-        />
+        <Avatar name={fullName} size={"2xl"} />
         <Text fontSize="4xl" marginTop="1rem">
-          {member?.firstName} {member?.lastName}
+          {fullName}
         </Text>
       </UserInfoWrapper>
       <EditInfoWrapper>
