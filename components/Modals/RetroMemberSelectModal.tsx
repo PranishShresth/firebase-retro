@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import UserSelect from "components/UserSelect";
 import { firestore } from "configs/firebase/firestore";
+import { useAuthContext } from "context/Auth/AuthContext";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -26,6 +27,7 @@ export const RetroMemberSelectModal = ({
 }: {
   workspaceId: string;
 }) => {
+  const { member } = useAuthContext();
   const {
     isOpen,
     onClose: closeMemberSelect,
@@ -68,6 +70,7 @@ export const RetroMemberSelectModal = ({
         .flat();
       await Promise.all(allInvitees);
       setLoading(false);
+      closeMemberSelect();
 
       toast({
         title: "Invited!",

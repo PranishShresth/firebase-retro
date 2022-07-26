@@ -17,6 +17,7 @@ import { DarkModeToggle } from "components/Toggle/Toggle";
 import Router from "next/router";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { auth } from "configs/firebase/firebaseClient";
+import { RetroWorkspaceCreateModal } from "components/Modals/RetroWorkspaceCreateModal";
 
 const Header = styled(Box).attrs({ className: "header-bar" })`
   color: #2bc0c1;
@@ -61,7 +62,7 @@ export const RetroHeader = () => {
       <Container>
         <HeaderBanner>
           <Link href="/">Retro Board</Link>
-          <Button>Create Workspace</Button>
+          <RetroWorkspaceCreateModal />
           <Stack direction={"row"}>
             <DarkModeToggle onToggle={toggleColorMode} colorMode={colorMode} />
             {member ? (
