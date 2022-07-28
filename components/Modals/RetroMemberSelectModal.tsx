@@ -37,7 +37,7 @@ export const RetroMemberSelectModal = ({
     onClose: closeMemberSelect,
     onOpen: openMemberSelect,
   } = useDisclosure();
-  const { control, handleSubmit, formState } = useForm<FormData>({
+  const { control, handleSubmit, formState, reset } = useForm<FormData>({
     defaultValues: {
       members: [],
     },
@@ -77,6 +77,7 @@ export const RetroMemberSelectModal = ({
       await Promise.all(allInvitees);
       setLoading(false);
       closeMemberSelect();
+      reset();
 
       toast({
         title: "Invited!",
