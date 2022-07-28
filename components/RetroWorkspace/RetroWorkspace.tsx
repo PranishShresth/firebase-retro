@@ -1,5 +1,6 @@
 import { Box, Button, Flex, Heading } from "@chakra-ui/react";
 import { RetroMemberSelectModal } from "components/Modals/RetroMemberSelectModal";
+import { RetroWorkspaceCreateModal } from "components/Modals/RetroWorkspaceCreateModal";
 import { RetroBody } from "components/RetroHome";
 import UserSelect from "components/UserSelect";
 import { firestore } from "configs/firebase/firestore";
@@ -14,6 +15,10 @@ export const RetroWorkspace = () => {
   const { member } = useAuthContext();
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
 
+  const updateWorkspace = (workspace: Workspace) => {
+    setWorkspaces((prev) => [...prev, workspace]);
+  };
+
   useEffect(() => {
     if (member) {
       const workspaces = member.workspaces;
@@ -26,16 +31,25 @@ export const RetroWorkspace = () => {
     }
   }, [member]);
 
-  return workspaces.map(({ workspaceId, workspaceTitle }) => (
-    <Box key={workspaceId} padding="2rem">
-      <Flex alignItems="center" justifyContent="space-between">
-        <Heading as="h4" size="md">
-          {workspaceTitle}
-        </Heading>
-        <RetroMemberSelectModal workspaceId={workspaceId} />
-      </Flex>
+  return (
+    <>
+      <RetroWorkspaceCreateModal updateWorkspace={updateWorkspace} />
+      {workspaces.map(({ workspaceId, workspaceTitle, userId, members }) => (
+        <Box key={workspaceId} padding="2rem">
+          <Flex alignItems="center" justifyContent="space-between">
+            <Heading as="h4" size="md">
+              {workspaceTitle}
+            </Heading>
+            <RetroMemberSelectModal
+              workspaceId={workspaceId}
+              userId={userId}
+              members={members}
+            />
+          </Flex>
 
-      <RetroBody workspaceId={workspaceId} />
-    </Box>
-  ));
+          <RetroBody workspaceId={workspaceId} />
+        </Box>
+      ))}
+    </>
+  );
 };

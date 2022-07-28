@@ -23,9 +23,13 @@ interface FormData {
   members: Member[];
 }
 export const RetroMemberSelectModal = ({
+  members,
   workspaceId,
+  userId,
 }: {
+  members: Member[];
   workspaceId: string;
+  userId: string;
 }) => {
   const { member } = useAuthContext();
   const {
@@ -40,6 +44,8 @@ export const RetroMemberSelectModal = ({
   });
   const [loading, setLoading] = useState(false);
   const toast = useToast();
+
+  const allowInvites = member?.userId === userId;
 
   //TODO: Fix typing on any
   const inviteMembers = async (data: any) => {
@@ -86,7 +92,7 @@ export const RetroMemberSelectModal = ({
   };
   return (
     <>
-      <Button onClick={openMemberSelect}>Invite</Button>
+      {allowInvites && <Button onClick={openMemberSelect}>Invite</Button>}
       <Modal isOpen={isOpen} onClose={closeMemberSelect}>
         <ModalOverlay />
         <ModalContent>
@@ -100,7 +106,9 @@ export const RetroMemberSelectModal = ({
                 <Controller
                   control={control}
                   name="members"
-                  render={({ field }) => <UserSelect field={field} />}
+                  render={({ field }) => (
+                    <UserSelect field={field} members={members} />
+                  )}
                 />
                 <div>
                   <Button

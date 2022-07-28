@@ -91,12 +91,16 @@ const Register: NextPage = () => {
       const userRef = doc(firestore, Collection.Users, userCredential.user.uid);
       const workspaceRef = doc(firestore, Collection.Workspaces, workspaceId);
 
-      await setDoc(userRef, {
+      const member = {
         firstName: data.firstName,
         email: data.email,
         lastName: data.lastName,
         userId: userCredential.user.uid,
         workspaces: [workspaceId],
+      };
+
+      await setDoc(userRef, {
+        ...member,
         createdAt: serverTimestamp(),
       });
 
@@ -104,6 +108,8 @@ const Register: NextPage = () => {
         workspaceDescription: "",
         workspaceId,
         workspaceTitle: "My Workspace",
+        userId: userCredential.user.uid,
+        members: [member],
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       });
@@ -183,7 +189,7 @@ const Register: NextPage = () => {
             </InputGroup>
           </div>
           <div>
-            <span>lastName:</span>
+            <span>Last Name:</span>
             <InputGroup marginTop="4px">
               <Controller
                 control={control}

@@ -1,19 +1,26 @@
 import { useColorModeValue } from "@chakra-ui/react";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { getDocs, query, where } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ControllerRenderProps, FieldValues } from "react-hook-form";
 import Select, { components, OptionProps, StylesConfig } from "react-select";
 import { usersCollection } from "utils/firebaseCollection";
 import { Member } from "utils/interfaces";
 
-const UserSelect = ({ field }: FieldValues) => {
+const UserSelect = ({
+  field,
+  members,
+}: {
+  field: FieldValues;
+  members: Member[];
+}) => {
   const { member } = useAuthContext();
   const inputBg = useColorModeValue("#f7f7f7", "gray.700");
   const optionsBg = useColorModeValue("#ffffff", "#2d3748");
   const optionColourBg = useColorModeValue("#000000", "#ffffff");
   const optionHoverBg = useColorModeValue("#ffffff14", "#cbd5e0");
   const [options, setOptions] = useState<any>([]);
+  // const selectInputRef = useRef();
 
   const colourStyles: StylesConfig<any> = {
     control: (styles) => ({ ...styles, backgroundColor: inputBg }),
@@ -46,6 +53,10 @@ const UserSelect = ({ field }: FieldValues) => {
     // singleValue: (styles, { data }) => ({ ...styles, ...dot(data.color) }),
   };
 
+  // const onClear = () => {
+  //   selectInputRef.current && selectInputRef.current.select.clearValue();
+  // };
+
   useEffect(() => {
     const getUsers = async () => {
       const userQuery = query(
@@ -54,24 +65,28 @@ const UserSelect = ({ field }: FieldValues) => {
       );
       const userSnapshot = await getDocs(userQuery);
 
-      const users = userSnapshot.docs.map((user) => {
-        const member = user.data();
-        const label = `${member.firstName} ${member.lastName}`;
-        return {
-          label,
-          value: member,
-          subLabel: member.email,
-        };
-      });
+      const users = userSnapshot.docs
+        .map((user) => {
+          const member = user.data();
+          const label = `${member.firstName} ${member.lastName}`;
+          return {
+            label,
+            value: member,
+            id: member.userId,
+            subLabel: member.email,
+          };
+        })
+        .filter((user) => !members.some((member) => member.userId === user.id));
       setOptions(users);
     };
 
     getUsers();
-  }, [member?.userId]);
+  }, [member?.userId, members]);
 
   return (
     <Select
       {...field}
+      // ref={selectInputRef}
       isMulti
       options={options}
       styles={colourStyles}

@@ -17,12 +17,14 @@ import { useAuthContext } from "context/Auth/AuthContext";
 import {
   arrayUnion,
   doc,
+  getDoc,
   serverTimestamp,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import { Collection } from "utils/firebaseCollection";
+import { Workspace } from "utils/interfaces";
 import { uuidV4 } from "utils/uuidV4";
 
 interface WorkspaceFormValues {
@@ -30,7 +32,11 @@ interface WorkspaceFormValues {
   workspaceName: string;
 }
 
-export const RetroWorkspaceCreateModal = () => {
+export const RetroWorkspaceCreateModal = ({
+  updateWorkspace,
+}: {
+  updateWorkspace: (workspace: Workspace) => void;
+}) => {
   const { member } = useAuthContext();
   const {
     isOpen,
@@ -62,9 +68,17 @@ export const RetroWorkspaceCreateModal = () => {
           workspaceDescription: data.description,
           workspaceId,
           workspaceTitle: data.workspaceName,
+          userId: member.userId,
+          members: [member],
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
         });
+
+        const updatedWorkspace = (await (
+          await getDoc(doc(firestore, Collection.Workspaces, workspaceId))
+        ).data()) as Workspace;
+
+        updateWorkspace(updatedWorkspace);
         closeWorkspaceCreate();
         reset();
 

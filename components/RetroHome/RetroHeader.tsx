@@ -62,7 +62,7 @@ export const RetroHeader = () => {
       <Container>
         <HeaderBanner>
           <Link href="/">Retro Board</Link>
-          <RetroWorkspaceCreateModal />
+
           <Stack direction={"row"}>
             <DarkModeToggle onToggle={toggleColorMode} colorMode={colorMode} />
             {member ? (
