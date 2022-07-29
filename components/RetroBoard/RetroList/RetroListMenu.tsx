@@ -81,7 +81,7 @@ const RetroListMenu = ({ listId }: Props) => {
           <MenuItem fontSize="sm" onClick={openMoveModal}>
             Include column in:
           </MenuItem>
-          <MenuItem fontSize="sm" onClick={openDeleteDialog}>
+          <MenuItem color="#E53E3E" fontSize="sm" onClick={openDeleteDialog}>
             Delete
           </MenuItem>
         </MenuList>

@@ -77,9 +77,17 @@ export const RetroWorkspaceActions = ({
           <Icon as={FaEllipsisV} size={16} />
         </MenuButton>
         <MenuList>
-          <MenuItem onClick={() => console.log("edit")}>Edit</MenuItem>
-          <MenuItem>Archive</MenuItem>
-          <MenuItem onClick={() => console.log("delete")}>Delete</MenuItem>
+          {allowInvites ? (
+            <>
+              <MenuItem onClick={() => console.log("edit")}>Edit</MenuItem>
+              <MenuItem>Archive</MenuItem>
+              <MenuItem color="#E53E3E" onClick={() => console.log("delete")}>
+                Delete
+              </MenuItem>
+            </>
+          ) : (
+            <MenuItem color="#E53E3E">Leave</MenuItem>
+          )}
         </MenuList>
       </Menu>
     </Flex>
