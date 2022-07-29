@@ -24,9 +24,9 @@ import { ColourPicker } from "components/ColourPicker";
 import { useAuthContext } from "context/Auth/AuthContext";
 
 const BoardsContainer = styled.div`
-  padding-top: 2rem;
-  width: 100%;
   max-width: 1600px;
+  padding-top: 1rem;
+  width: 100%;
 `;
 
 interface BoardFormValues {
