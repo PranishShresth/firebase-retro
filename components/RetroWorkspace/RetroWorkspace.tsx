@@ -60,7 +60,6 @@ export const RetroWorkspace = () => {
               members={members}
             />
           </Flex>
-
           <RetroBody workspaceId={workspaceId} />
         </Box>
       ))}

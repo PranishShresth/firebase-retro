@@ -9,15 +9,30 @@ import {
   Button,
   Stack,
   useToast,
+  Flex,
+  Box,
+  Avatar,
+  Tooltip,
 } from "@chakra-ui/react";
 import UserSelect from "components/UserSelect";
 import { firestore } from "configs/firebase/firestore";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import Link from "next/link";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import styled from "styled-components";
 import { Collection } from "utils/firebaseCollection";
 import { Member } from "utils/interfaces";
+
+const MEMBER_ICON_LIMIT = 3;
+
+const StyledLink = styled.a`
+  color: #2bc0c1;
+  font-size: 14px;
+  margin: 0 8px;
+  text-decoration: underline;
+`;
 
 interface FormData {
   members: Member[];
@@ -92,8 +107,34 @@ export const RetroMemberSelectModal = ({
     }
   };
   return (
-    <>
-      {allowInvites && <Button onClick={openMemberSelect}>Invite</Button>}
+    <Box>
+      <Flex alignItems="center">
+        {members.slice(0, MEMBER_ICON_LIMIT).map((member) => {
+          const label = `${member.firstName} ${member.lastName}`;
+          return (
+            <Tooltip
+              bg="gray.300"
+              color="black"
+              hasArrow
+              key={member.userId}
+              label={label}
+            >
+              <Avatar name={label} size="sm" marginRight="4px" />
+            </Tooltip>
+          );
+        })}
+        {members.length > MEMBER_ICON_LIMIT && (
+          <Link href="javascript:void(0)" passHref>
+            <StyledLink>View all</StyledLink>
+          </Link>
+        )}
+        {allowInvites && (
+          <Button marginLeft="8px" onClick={openMemberSelect}>
+            Invite
+          </Button>
+        )}
+      </Flex>
+
       <Modal isOpen={isOpen} onClose={closeMemberSelect}>
         <ModalOverlay />
         <ModalContent>
@@ -126,6 +167,6 @@ export const RetroMemberSelectModal = ({
           </ModalBody>
         </ModalContent>
       </Modal>
-    </>
+    </Box>
   );
 };
