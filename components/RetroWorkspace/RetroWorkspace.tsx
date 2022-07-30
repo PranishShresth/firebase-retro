@@ -23,6 +23,7 @@ const StyledFlex = styled(Flex)`
 const Wrapper = styled.div`
   margin: 0 auto;
   max-width: 1600px;
+  padding: 1rem;
 `;
 
 export const RetroWorkspace = () => {
@@ -71,7 +72,7 @@ export const RetroWorkspace = () => {
                 borderRadius="8px"
                 boxShadow="0 4px 12px 0 rgb(0 0 0 / 5%)"
                 key={workspaceId}
-                margin="2rem"
+                margin="1.5rem"
                 padding="1rem"
               >
                 <Flex alignItems="center" justifyContent="space-between">
