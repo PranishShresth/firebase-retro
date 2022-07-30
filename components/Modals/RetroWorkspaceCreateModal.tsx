@@ -1,4 +1,5 @@
 import {
+  Box,
   Input,
   InputGroup,
   Modal,
@@ -98,7 +99,9 @@ export const RetroWorkspaceCreateModal = ({
 
   return (
     <>
-      <Button onClick={openWorkspaceCreate}>Create Workspace</Button>
+      <Box>
+        <Button onClick={openWorkspaceCreate}>Create Workspace</Button>
+      </Box>
       <Modal isOpen={isOpen} onClose={closeWorkspaceCreate}>
         <ModalOverlay />
         <ModalContent>

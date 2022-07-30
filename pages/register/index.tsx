@@ -81,7 +81,7 @@ const Register: NextPage = () => {
 
   const handleUserCreation = async (data: FormValues): Promise<void> => {
     try {
-      const workspaceId = uuidV4();
+      // const workspaceId = uuidV4();
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         data.email,
@@ -89,14 +89,15 @@ const Register: NextPage = () => {
       );
       updateUser(userCredential.user);
       const userRef = doc(firestore, Collection.Users, userCredential.user.uid);
-      const workspaceRef = doc(firestore, Collection.Workspaces, workspaceId);
+      // const workspaceRef = doc(firestore, Collection.Workspaces, workspaceId);
 
       const member = {
         firstName: data.firstName,
         email: data.email,
         lastName: data.lastName,
         userId: userCredential.user.uid,
-        workspaces: [workspaceId],
+        workspaces: [],
+        // workspaces: [workspaceId],
       };
 
       await setDoc(userRef, {
@@ -104,15 +105,15 @@ const Register: NextPage = () => {
         createdAt: serverTimestamp(),
       });
 
-      setDoc(workspaceRef, {
-        workspaceDescription: "",
-        workspaceId,
-        workspaceTitle: "My Workspace",
-        userId: userCredential.user.uid,
-        members: [member],
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      });
+      // setDoc(workspaceRef, {
+      //   workspaceDescription: "",
+      //   workspaceId,
+      //   workspaceTitle: "My Workspace",
+      //   userId: userCredential.user.uid,
+      //   members: [member],
+      //   createdAt: serverTimestamp(),
+      //   updatedAt: serverTimestamp(),
+      // });
     } catch (err) {
       console.log(err);
     }
