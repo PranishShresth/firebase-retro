@@ -97,6 +97,7 @@ export const RetroMemberSelectModal = ({
         members={members}
         openMemberSelect={openMemberSelect}
         userId={userId}
+        workspaceId={workspaceId}
       />
 
       <Modal isOpen={isOpen} onClose={closeMemberSelect}>
