@@ -11,6 +11,7 @@ import {
   useToast,
   Box,
 } from "@chakra-ui/react";
+import { darken } from "@chakra-ui/theme-tools";
 import { RetroWorkspaceActions } from "components/RetroWorkspace/RetroWorkspaceActions";
 import UserSelect from "components/UserSelect";
 import { firestore } from "configs/firebase/firestore";
@@ -18,6 +19,7 @@ import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { AiOutlineUserAdd } from "react-icons/ai";
 
 import { Collection } from "utils/firebaseCollection";
 import { Member } from "utils/interfaces";
@@ -39,13 +41,15 @@ export const RetroMemberSelectModal = ({
     onClose: closeMemberSelect,
     onOpen: openMemberSelect,
   } = useDisclosure();
-  const { control, handleSubmit, formState, reset } = useForm<FormData>({
+  const { control, handleSubmit, formState, reset, watch } = useForm<FormData>({
     defaultValues: {
       members: [],
     },
   });
   const [loading, setLoading] = useState(false);
   const toast = useToast();
+  const watchMembers = watch("members");
+  const disabledForm = watchMembers.length === 0;
 
   //TODO: Fix typing on any
   const inviteMembers = async (data: any) => {
@@ -119,12 +123,22 @@ export const RetroMemberSelectModal = ({
                 />
                 <div>
                   <Button
-                    colorScheme="teal"
+                    backgroundColor={"#00B5AD"}
+                    color={"white"}
+                    disabled={disabledForm}
+                    _hover={{
+                      backgroundColor: disabledForm
+                        ? "#00B5AD"
+                        : darken("#00B5AD", 8),
+                    }}
                     isLoading={loading}
                     marginBottom="12px"
+                    marginTop="16px"
                     type="submit"
+                    width="100%"
                   >
-                    Invite
+                    Invite&nbsp;
+                    <AiOutlineUserAdd />
                   </Button>
                 </div>
               </Stack>

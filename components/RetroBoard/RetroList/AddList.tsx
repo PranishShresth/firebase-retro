@@ -1,20 +1,19 @@
 import React, { useContext } from "react";
-import { useDispatch } from "react-redux";
-import styled from "styled-components";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Input, InputGroup } from "@chakra-ui/input";
 import { Stack } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/button";
+import { darken } from "@chakra-ui/theme-tools";
 import { Controller, useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { Modal } from "components/Modal";
 import { v4 as uuidv4 } from "uuid";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
-import { useAuthContext } from "context/Auth/AuthContext";
 import { calculateInitialListPosition } from "utils/dragAndDropUtils";
 import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 import { ColourPicker } from "components/ColourPicker";
+import { AiOutlineUnorderedList } from "react-icons/ai";
 
 interface FormValues {
   listColour: string;
@@ -32,11 +31,17 @@ const CreateList = () => {
     onClose: closeListModal,
   } = useDisclosure();
 
-  const { handleSubmit, control, resetField } = useForm<FormValues>({
+  const {
+    handleSubmit,
+    control,
+    resetField,
+    formState: { isDirty, isValid },
+  } = useForm<FormValues>({
     defaultValues: {
       listColour: "#000000",
       listTitle: "",
     },
+    mode: "onChange",
   });
 
   const handleCreateList = async (data: FormValues) => {
@@ -87,6 +92,7 @@ const CreateList = () => {
                       value={field.value}
                     />
                   )}
+                  rules={{ required: true }}
                 />
               </InputGroup>
             </div>
@@ -99,8 +105,18 @@ const CreateList = () => {
               />
             </div>
             <div>
-              <Button marginBottom="12px" type="submit">
-                Create List
+              <Button
+                background="#00B5AD"
+                color="white"
+                disabled={!isDirty || !isValid}
+                _hover={{ backgroundColor: darken("#00B5AD", 8) }}
+                marginBottom="12px"
+                marginTop="16px"
+                width="100%"
+                type="submit"
+              >
+                Create List&nbsp;
+                <AiOutlineUnorderedList />
               </Button>
             </div>
           </Stack>

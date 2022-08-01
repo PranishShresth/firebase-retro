@@ -9,6 +9,7 @@ import {
   MenuList,
   Tooltip,
 } from "@chakra-ui/react";
+import { darken } from "@chakra-ui/theme-tools";
 import { AlertDialogBar } from "components/Alert";
 import { firestore } from "configs/firebase/firestore";
 import { useAuthContext } from "context/Auth/AuthContext";
@@ -23,6 +24,7 @@ import {
 } from "firebase/firestore";
 import Link from "next/link";
 import { useState } from "react";
+import { AiOutlineUserAdd } from "react-icons/ai";
 import { FaEllipsisV } from "react-icons/fa";
 import styled from "styled-components";
 import { Collection } from "utils/firebaseCollection";
@@ -135,8 +137,15 @@ export const RetroWorkspaceActions = ({
         </Link>
       )}
       {allowInvites && (
-        <Button marginLeft="8px" onClick={pushOpenMemberSelect}>
-          Invite
+        <Button
+          backgroundColor={"#00B5AD"}
+          color={"white"}
+          marginLeft="8px"
+          onClick={pushOpenMemberSelect}
+          _hover={{ backgroundColor: darken("#00B5AD", 8) }}
+        >
+          Invite&nbsp;
+          <AiOutlineUserAdd />
         </Button>
       )}
       <AlertDialogBar

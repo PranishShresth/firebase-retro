@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Grid, Stack } from "@chakra-ui/layout";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Input, InputGroup, Button, Box } from "@chakra-ui/react";
+import { darken } from "@chakra-ui/theme-tools";
 import BoardCard from "./BoardCard";
 import styled from "styled-components";
 import { Modal as CreateBoardModal } from "components/Modal";
@@ -22,6 +23,7 @@ import { BoardWithDocId, Preference } from "utils/interfaces";
 import Skeleton from "components/Loader/Skeleton";
 import { ColourPicker } from "components/ColourPicker";
 import { useAuthContext } from "context/Auth/AuthContext";
+import { FaChalkboard } from "react-icons/fa";
 
 const BoardsContainer = styled.div`
   max-width: 1600px;
@@ -58,11 +60,12 @@ export const RetroBody = ({ workspaceId }: { workspaceId: string }) => {
     handleSubmit,
     register,
     reset,
-    formState: { errors },
+    formState: { errors, isDirty, isValid },
   } = useForm<BoardFormValues>({
     defaultValues: {
       boardColour: "#000000",
     },
+    mode: "onChange",
   });
 
   useEffect(() => {
@@ -138,7 +141,7 @@ export const RetroBody = ({ workspaceId }: { workspaceId: string }) => {
                         placeholder="Board Title"
                         required
                         type="text"
-                        {...register("boardTitle")}
+                        {...register("boardTitle", { required: true })}
                       />
                     </InputGroup>
                   </div>
@@ -152,8 +155,18 @@ export const RetroBody = ({ workspaceId }: { workspaceId: string }) => {
                     />
                   </div>
                   <div>
-                    <Button marginBottom="12px" type="submit">
-                      Create Board
+                    <Button
+                      backgroundColor={"#00B5AD"}
+                      color={"white"}
+                      disabled={!isDirty || !isValid}
+                      _hover={{ backgroundColor: darken("#00B5AD", 8) }}
+                      marginBottom="12px"
+                      marginTop="16px"
+                      type="submit"
+                      width="100%"
+                    >
+                      Create Board&nbsp;
+                      <FaChalkboard />
                     </Button>
                   </div>
                 </Stack>

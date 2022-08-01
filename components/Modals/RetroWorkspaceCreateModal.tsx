@@ -13,6 +13,7 @@ import {
   Stack,
   useToast,
 } from "@chakra-ui/react";
+import { darken } from "@chakra-ui/theme-tools";
 import { firestore } from "configs/firebase/firestore";
 import { useAuthContext } from "context/Auth/AuthContext";
 import {
@@ -24,6 +25,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { useForm } from "react-hook-form";
+import { FiSend } from "react-icons/fi";
 import { Collection } from "utils/firebaseCollection";
 import { Workspace } from "utils/interfaces";
 import { uuidV4 } from "utils/uuidV4";
@@ -50,8 +52,8 @@ export const RetroWorkspaceCreateModal = ({
     handleSubmit,
     register,
     reset,
-    formState: { errors },
-  } = useForm<WorkspaceFormValues>({});
+    formState: { errors, isDirty, isValid },
+  } = useForm<WorkspaceFormValues>({ mode: "onChange" });
   const toast = useToast();
 
   const handleCreateWorkspace = async (data: WorkspaceFormValues) => {
@@ -100,7 +102,15 @@ export const RetroWorkspaceCreateModal = ({
   return (
     <>
       <Box>
-        <Button onClick={openWorkspaceCreate}>Create Workspace</Button>
+        <Button
+          backgroundColor={"#00B5AD"}
+          color={"white"}
+          onClick={openWorkspaceCreate}
+          _hover={{ backgroundColor: darken("#00B5AD", 8) }}
+        >
+          Create Workspace&nbsp;
+          <FiSend />
+        </Button>
       </Box>
       <Modal isOpen={isOpen} onClose={closeWorkspaceCreate}>
         <ModalOverlay />
@@ -117,7 +127,7 @@ export const RetroWorkspaceCreateModal = ({
                       placeholder="Workspace Name"
                       required
                       type="text"
-                      {...register("workspaceName")}
+                      {...register("workspaceName", { required: true })}
                     />
                   </InputGroup>
                 </div>
@@ -128,13 +138,23 @@ export const RetroWorkspaceCreateModal = ({
                       placeholder="Description"
                       required
                       type="text"
-                      {...register("description")}
+                      {...register("description", { required: true })}
                     />
                   </InputGroup>
                 </div>
                 <div>
-                  <Button marginBottom="12px" type="submit">
-                    Create Workspace
+                  <Button
+                    backgroundColor={"#00B5AD"}
+                    color={"white"}
+                    disabled={!isDirty || !isValid}
+                    marginBottom="12px"
+                    marginTop="16px"
+                    type="submit"
+                    width="100%"
+                    _hover={{ backgroundColor: darken("#00B5AD", 8) }}
+                  >
+                    Create Workspace&nbsp;
+                    <FiSend />
                   </Button>
                 </div>
               </Stack>
