@@ -5,16 +5,16 @@ import SignIn from "pages/signIn";
 
 const withAuth = (Component: any) => {
   const Auth = (props: any) => {
-    const { user, isLoadingUserData } = useAuthContext();
+    const { user, isLoading } = useAuthContext();
     const bg = useColorModeValue("#F7F7F7", "gray.900");
-
-    if (isLoadingUserData) {
+    if (isLoading) {
       return (
         <Box backgroundColor={bg} height={"100%"} width={"100%"}>
           <DualRingLoader />
         </Box>
       );
     }
+
     // If user is not logged in, return login component
     if (!user) {
       return <SignIn />;

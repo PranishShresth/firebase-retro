@@ -46,7 +46,7 @@ export interface Workspace {
 }
 
 export interface Auth {
-  isLoadingUserData: boolean;
+  isLoading: boolean;
   updateUser: (data: User) => void;
   updateMember: (data: Member) => void;
   user: null | AnonymousUser;

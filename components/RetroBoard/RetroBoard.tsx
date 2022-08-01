@@ -15,6 +15,7 @@ import { firestore } from "configs/firebase/firestore";
 import NoPageFound from "components/404page/PageNotFound";
 import { RetroBoardSkeleton } from "components/Loader";
 import { reorderItem } from "context/RetroBoard/RetroBoardReducer";
+import { isEmpty } from "lodash-es";
 
 const ColumnsWrapper = styled.main`
   display: flex;
@@ -108,11 +109,12 @@ export const RetroBoardSingle = () => {
     [items, dispatch]
   );
 
+  console.log(status);
   if (status == "pending") {
     return <RetroBoardSkeleton />;
   }
 
-  if (!board) {
+  if (isEmpty(board)) {
     return <NoPageFound />;
   }
 

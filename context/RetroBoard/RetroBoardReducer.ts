@@ -16,7 +16,7 @@ export const initialState = {
   lists: [],
   workspace: {},
   items: [],
-  status: "",
+  status: "pending",
   filterPayload: "",
 } as unknown as RetroBoardState;
 
@@ -64,10 +64,10 @@ export function RetroBoardReducer(state: RetroBoardState, action: ActionTypes) {
       return { ...state, ...action.payload, status: "fulfilled" };
     }
     case FETCH_LISTS_FULFILLED: {
-      return { ...state, lists: action.payload, status: "fulfilled" };
+      return { ...state, lists: action.payload };
     }
     case FETCH_ITEMS_FULFILLED: {
-      return { ...state, items: action.payload, status: "fulfilled" };
+      return { ...state, items: action.payload };
     }
     case REORDER_ITEM_REQUESTED: {
       const { source, destination, itemId, position } = action.payload;

@@ -7,7 +7,7 @@ import { AnonymousUser, Auth, Member } from "utils/interfaces";
 import { firestore } from "configs/firebase/firestore";
 
 const AuthContext = createContext<Auth>({
-  isLoadingUserData: true,
+  isLoading: true,
   member: null,
   updateUser: () => null,
   updateMember: () => null,
@@ -21,7 +21,7 @@ export const useAuthContext = () => {
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<AnonymousUser | null>(null);
   const [member, setMember] = useState<Member | null>(null);
-  const [isLoadingUserData, setIsLoadingUserData] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
@@ -37,7 +37,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           setUser(null);
           setMember(null);
         }
-        setIsLoadingUserData(false);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
       }
     });
   }, []);
@@ -53,7 +55,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <AuthContext.Provider
       value={{
-        isLoadingUserData,
+        isLoading,
         member,
         updateUser,
         updateMember,
