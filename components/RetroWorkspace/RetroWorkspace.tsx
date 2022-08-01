@@ -1,4 +1,5 @@
 import { Box, Flex, Heading, useColorModeValue } from "@chakra-ui/react";
+import DualRingLoader from "components/Loader/DualRingLoader";
 import { RetroMemberSelectModal } from "components/Modals/RetroMemberSelectModal";
 import { RetroWorkspaceCreateModal } from "components/Modals/RetroWorkspaceCreateModal";
 import NoWorkspaces from "components/NoWorkspaces/NoWorkspaces";
@@ -52,7 +53,11 @@ export const RetroWorkspace = () => {
   }, [member]);
 
   if (isLoading) {
-    return <div>Loading....</div>;
+    return (
+      <Box height={"100%"} width={"100%"}>
+        <DualRingLoader />
+      </Box>
+    );
   }
 
   return (
