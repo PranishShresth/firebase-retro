@@ -85,9 +85,10 @@ export const RetroWorkspace = () => {
                     {workspaceTitle}
                   </Heading>
                   <RetroMemberSelectModal
-                    workspaceId={workspaceId}
-                    userId={userId}
                     members={members}
+                    userId={userId}
+                    workspaceId={workspaceId}
+                    workspaceTitle={workspaceTitle}
                   />
                 </Flex>
                 <RetroBody workspaceId={workspaceId} />

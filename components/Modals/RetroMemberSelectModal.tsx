@@ -29,12 +29,14 @@ interface FormData {
 }
 export const RetroMemberSelectModal = ({
   members,
-  workspaceId,
   userId,
+  workspaceId,
+  workspaceTitle,
 }: {
   members: Member[];
-  workspaceId: string;
   userId: string;
+  workspaceId: string;
+  workspaceTitle: string;
 }) => {
   const {
     isOpen,
@@ -102,6 +104,7 @@ export const RetroMemberSelectModal = ({
         openMemberSelect={openMemberSelect}
         userId={userId}
         workspaceId={workspaceId}
+        workspaceTitle={workspaceTitle}
       />
 
       <Modal isOpen={isOpen} onClose={closeMemberSelect}>

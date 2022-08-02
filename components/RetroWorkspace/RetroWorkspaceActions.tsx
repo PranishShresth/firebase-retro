@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Box,
   Button,
   Flex,
   Icon,
@@ -11,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { darken } from "@chakra-ui/theme-tools";
 import { AlertDialogBar } from "components/Alert";
+import { ViewMembersModal } from "components/Modals/ViewMembersModal";
 import { firestore } from "configs/firebase/firestore";
 import { useAuthContext } from "context/Auth/AuthContext";
 import {
@@ -22,37 +24,30 @@ import {
   getDocs,
   writeBatch,
 } from "firebase/firestore";
-import Link from "next/link";
 import { useState } from "react";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { FaEllipsisV } from "react-icons/fa";
-import styled from "styled-components";
 import { Collection } from "utils/firebaseCollection";
 import { Member } from "utils/interfaces";
 
 const MEMBER_ICON_LIMIT = 3;
-
-const StyledLink = styled.a`
-  color: #2bc0c1;
-  font-size: 14px;
-  margin: 0 8px;
-  text-decoration: underline;
-`;
-
 interface RetroWorkspaceActionsProps {
   members: Member[];
   openMemberSelect: () => void;
   userId: string;
   workspaceId: string;
+  workspaceTitle: string;
 }
 export const RetroWorkspaceActions = ({
   members,
   openMemberSelect: pushOpenMemberSelect,
   userId,
   workspaceId,
+  workspaceTitle,
 }: RetroWorkspaceActionsProps) => {
   const { member } = useAuthContext();
   const [deleteModalOpen, setdeleteModalOpen] = useState(false);
+  const [membersModalOpen, setMembersModalOpen] = useState(false);
   const [deleteWorkspaceProgressing, setDeleteWorkspaceProgressing] =
     useState(false);
   const allowInvites = member?.userId === userId;
@@ -132,9 +127,20 @@ export const RetroWorkspaceActions = ({
           );
         })}
       {members && members.length > MEMBER_ICON_LIMIT && (
-        <Link href="javascript:void(0)" passHref>
-          <StyledLink>View all</StyledLink>
-        </Link>
+        <Box
+          alignItems="center"
+          backgroundColor="#cccccc"
+          borderRadius="50%"
+          display="flex"
+          height="2rem"
+          justifyContent="center"
+          marginRight="4px"
+          width="2rem"
+        >
+          <Box color="#1a202c" fontSize="calc(2rem / 2.5)">
+            +{members.length - MEMBER_ICON_LIMIT}
+          </Box>
+        </Box>
       )}
       {allowInvites && (
         <Button
@@ -156,6 +162,12 @@ export const RetroWorkspaceActions = ({
         title="Delete Workspace"
         ariaLabel="Delete Workspace Alert"
       />
+      <ViewMembersModal
+        isOpen={membersModalOpen}
+        members={members}
+        onClose={() => setMembersModalOpen(false)}
+        workspaceTitle={workspaceTitle}
+      />
       <Menu>
         <MenuButton
           background="none !important"
@@ -174,6 +186,9 @@ export const RetroWorkspaceActions = ({
             <>
               <MenuItem onClick={() => console.log("edit")}>Edit</MenuItem>
               <MenuItem>Archive</MenuItem>
+              <MenuItem onClick={() => setMembersModalOpen(true)}>
+                View Members
+              </MenuItem>
               <MenuItem
                 color="#E53E3E"
                 onClick={() => setdeleteModalOpen(true)}
