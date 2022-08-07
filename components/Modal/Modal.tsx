@@ -8,6 +8,8 @@ import {
   ModalCloseButton,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { darken } from "@chakra-ui/theme-tools";
+import { AiOutlineUnorderedList } from "react-icons/ai";
 import { FiPlusCircle } from "react-icons/fi";
 import styled from "styled-components";
 
@@ -46,20 +48,26 @@ export const Modal = ({
     <>
       {createBoard
         ? triggerName && (
-          <CreateBoardButton
-            onClick={onOpen}
-            backgroundColor={bg}
-            color="#2bc0c1"
-          >
-            <FiPlusCircle size={24} />
-            <ButtonText>{triggerName}</ButtonText>
-          </CreateBoardButton>
-        )
+            <CreateBoardButton
+              onClick={onOpen}
+              backgroundColor={bg}
+              color="#2bc0c1"
+            >
+              <FiPlusCircle size={24} />
+              <ButtonText>{triggerName}</ButtonText>
+            </CreateBoardButton>
+          )
         : triggerName && (
-          <Button onClick={onOpen} background="#2bc0c1" color="white">
-            {triggerName}
-          </Button>
-        )}
+            <Button
+              onClick={onOpen}
+              background="#00B5AD"
+              color="white"
+              _hover={{ backgroundColor: darken("#00B5AD", 8) }}
+            >
+              {triggerName}&nbsp;
+              <AiOutlineUnorderedList />
+            </Button>
+          )}
 
       <ChakraModal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

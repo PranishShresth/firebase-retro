@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import styled, { css } from "styled-components";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import {
@@ -15,6 +15,7 @@ import { firestore } from "configs/firebase/firestore";
 import NoPageFound from "components/404page/PageNotFound";
 import { RetroBoardSkeleton } from "components/Loader";
 import { reorderItem } from "context/RetroBoard/RetroBoardReducer";
+import { isEmpty } from "lodash-es";
 
 const ColumnsWrapper = styled.main`
   display: flex;
@@ -69,7 +70,7 @@ export const RetroBoardSingle = () => {
   const currentListCount = lists.length;
 
   const sortedList = useMemo(() => {
-    return lists.sort((a, b) => a.list_order - b.list_order);
+    return lists.sort((a, b) => a.listOrder - b.listOrder);
   }, [lists]);
 
   const onDragStart = useCallback(() => {
@@ -95,24 +96,25 @@ export const RetroBoardSingle = () => {
         reorderItem({
           source: source.droppableId,
           destination: destination.droppableId,
-          item_id: draggableId,
+          itemId: draggableId,
           position,
         })
       );
 
       await updateDoc(itemRef, {
-        item_order: position,
-        list_id: destination.droppableId,
+        itemOrder: position,
+        listId: destination.droppableId,
       });
     },
     [items, dispatch]
   );
 
+  console.log(status);
   if (status == "pending") {
     return <RetroBoardSkeleton />;
   }
 
-  if (!board) {
+  if (isEmpty(board)) {
     return <NoPageFound />;
   }
 
@@ -124,19 +126,19 @@ export const RetroBoardSingle = () => {
           <ColumnsWrapper>
             {sortedList?.map((list) => {
               return (
-                <FlexBox key={list.list_id} $listCount={currentListCount}>
+                <FlexBox key={list.listId} $listCount={currentListCount}>
                   <RetroColumnWrapper $listCount={currentListCount}>
                     <RetroListHeader
-                      list_colour={list?.list_colour}
-                      list_id={list.list_id}
-                      list_title={list.list_title}
+                      listColour={list?.listColour}
+                      listId={list.listId}
+                      listTitle={list.listTitle}
                     />
-                    <Droppable droppableId={list.list_id} key={list.list_id}>
+                    <Droppable droppableId={list.listId} key={list.listId}>
                       {(provided) => (
                         <RetroColumn
                           droppableProvided={provided}
-                          list_colour={list?.list_colour}
-                          list_id={list.list_id}
+                          listColour={list?.listColour}
+                          listId={list.listId}
                         />
                       )}
                     </Droppable>

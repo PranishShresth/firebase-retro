@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Button,
   Menu,
   MenuButton,
   MenuItem,
@@ -16,6 +17,7 @@ import { DarkModeToggle } from "components/Toggle/Toggle";
 import Router from "next/router";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { auth } from "configs/firebase/firebaseClient";
+import { RetroWorkspaceCreateModal } from "components/Modals/RetroWorkspaceCreateModal";
 
 const Header = styled(Box).attrs({ className: "header-bar" })`
   color: #2bc0c1;
@@ -37,7 +39,7 @@ const Container = styled.div`
 `;
 
 export const RetroHeader = () => {
-  const { userDetails } = useAuthContext();
+  const { member } = useAuthContext();
   const { colorMode, toggleColorMode } = useColorMode();
   const bg = useColorModeValue("white", "gray.600");
 
@@ -60,13 +62,14 @@ export const RetroHeader = () => {
       <Container>
         <HeaderBanner>
           <Link href="/">Retro Board</Link>
+
           <Stack direction={"row"}>
             <DarkModeToggle onToggle={toggleColorMode} colorMode={colorMode} />
-            {userDetails ? (
+            {member ? (
               <Menu>
                 <MenuButton>
                   <Avatar
-                    name={`${userDetails?.first_name} ${userDetails?.surname}`}
+                    name={`${member?.firstName} ${member?.lastName}`}
                     size={"sm"}
                   />
                 </MenuButton>

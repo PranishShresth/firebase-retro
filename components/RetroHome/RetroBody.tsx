@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Grid, Stack } from "@chakra-ui/layout";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Input, InputGroup, Button, Box } from "@chakra-ui/react";
+import { darken } from "@chakra-ui/theme-tools";
 import BoardCard from "./BoardCard";
 import styled from "styled-components";
 import { Modal as CreateBoardModal } from "components/Modal";
@@ -22,33 +23,32 @@ import { BoardWithDocId, Preference } from "utils/interfaces";
 import Skeleton from "components/Loader/Skeleton";
 import { ColourPicker } from "components/ColourPicker";
 import { useAuthContext } from "context/Auth/AuthContext";
+import { FaChalkboard } from "react-icons/fa";
 
 const BoardsContainer = styled.div`
-  padding-top: 50px;
-  width: 95%;
-  margin: 0 auto;
   max-width: 1600px;
+  padding-top: 1rem;
+  width: 100%;
 `;
 
 interface BoardFormValues {
-  board_colour: string;
-  board_limit: number;
-  board_title: string;
+  boardColour: string;
+  boardTitle: string;
 }
 
 const defaultPrefs: Preference = {
   permissionLevel: "private",
-  customBackground: false,
+  timer: null,
   closed: false,
-  teamId: "",
 };
 
 export const FIVE_MINUTES_IN_SECONDS = 300;
 
-export const RetroBody = () => {
+export const RetroBody = ({ workspaceId }: { workspaceId: string }) => {
   const [boards, setBoards] = useState<BoardWithDocId[] | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
-  const { userDetails } = useAuthContext();
+  const { member } = useAuthContext();
+
   const {
     isOpen: isBoardModalOpen,
     onClose: closeBoardModal,
@@ -60,18 +60,19 @@ export const RetroBody = () => {
     handleSubmit,
     register,
     reset,
-    formState: { errors },
+    formState: { errors, isDirty, isValid },
   } = useForm<BoardFormValues>({
     defaultValues: {
-      board_colour: "#000000",
+      boardColour: "#000000",
     },
+    mode: "onChange",
   });
 
   useEffect(() => {
-    if (userDetails) {
+    if (member) {
       const q = query(
         collection(firestore, "boards"),
-        where("createdBy.user_id", "==", userDetails.user_id),
+        where("workspaceId", "==", workspaceId),
         orderBy("createdAt", "desc")
       );
 
@@ -84,7 +85,7 @@ export const RetroBody = () => {
       });
       return boardsCollectionSnap;
     }
-  }, [userDetails]);
+  }, [member, workspaceId]);
 
   const handleCreateBoard = async (data: BoardFormValues) => {
     try {
@@ -92,18 +93,17 @@ export const RetroBody = () => {
       reset();
       const doc_id = uuidv4();
       const ref = doc(firestore, "boards", doc_id);
-
       await setDoc(ref, {
         ...data,
-        board_id: doc_id,
+        boardId: doc_id,
         prefs: defaultPrefs,
-        createdBy: userDetails,
+        userId: member?.userId,
+        members: [member],
+        workspaceId,
         createdAt: serverTimestamp(),
-        timer: {
-          seconds: FIVE_MINUTES_IN_SECONDS,
-          startAt: null,
-        },
+        updatedAt: serverTimestamp(),
       });
+      console.log(data);
     } catch (err) {
       console.log(err);
     }
@@ -141,32 +141,32 @@ export const RetroBody = () => {
                         placeholder="Board Title"
                         required
                         type="text"
-                        {...register("board_title")}
+                        {...register("boardTitle", { required: true })}
                       />
                     </InputGroup>
                   </div>
-                  <div>
-                    <span>Number of cards:</span>
-                    <InputGroup marginTop="4px">
-                      <Input
-                        placeholder="Number of cards"
-                        required
-                        type="number"
-                        {...register("board_limit")}
-                      />
-                    </InputGroup>
-                  </div>
+
                   <div>
                     <span>Colour:</span>
                     <Controller
                       control={control}
-                      name="board_colour"
+                      name="boardColour"
                       render={({ field }) => <ColourPicker field={field} />}
                     />
                   </div>
                   <div>
-                    <Button marginBottom="12px" type="submit">
-                      Create Board
+                    <Button
+                      backgroundColor={"#00B5AD"}
+                      color={"white"}
+                      disabled={!isDirty || !isValid}
+                      _hover={{ backgroundColor: darken("#00B5AD", 8) }}
+                      marginBottom="12px"
+                      marginTop="16px"
+                      type="submit"
+                      width="100%"
+                    >
+                      Create Board&nbsp;
+                      <FaChalkboard />
                     </Button>
                   </div>
                 </Stack>
@@ -177,7 +177,7 @@ export const RetroBody = () => {
             <Skeleton amount={6} height="90px" width="100%" />
           ) : (
             boards?.map((board) => {
-              return <BoardCard key={board.board_id} board={board} />;
+              return <BoardCard key={board.boardId} board={board} />;
             })
           )}
         </Grid>

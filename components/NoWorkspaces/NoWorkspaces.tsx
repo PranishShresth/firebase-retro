@@ -8,33 +8,34 @@ const StyledDiv = styled.div`
   flex: 1;
   height: 100%;
   justify-self: center;
-  max-height: 400px;
+  max-height: 600px;
   max-width: 400px;
   position: relative;
   width: 100%;
 `;
 
-const NoPageFound = () => {
+const NoWorkspaces = () => {
   return (
     <Flex
       alignItems="center"
       flexDirection="column"
       height="100%"
       justifyContent="center"
+      marginBottom="2rem"
     >
       <StyledDiv>
         <img
-          src="/404.png"
-          alt="404 page not found"
+          src="/noWorkspaces.png"
+          alt="No workspaces, why not create one?"
           width="100%"
           height="50%"
         />
       </StyledDiv>
       <Text color="#cccccc" fontSize="2rem" fontWeight="bold">
-        Oops! Page not found.
+        No workspaces here, why not create one?
       </Text>
     </Flex>
   );
 };
 
-export default NoPageFound;
+export default NoWorkspaces;

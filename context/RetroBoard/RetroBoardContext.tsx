@@ -5,19 +5,15 @@ import React, {
   useReducer,
   useContext,
   ReactNode,
+  useState,
 } from "react";
 import { useRouter } from "next/router";
+import { onSnapshot, query, doc, where, getDoc } from "firebase/firestore";
 import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  onSnapshot,
-  orderBy,
-  query,
-  where,
-} from "firebase/firestore";
-import { itemsRef, listsRef } from "utils/firebaseCollection";
+  Collection,
+  itemsCollection,
+  listsCollection,
+} from "utils/firebaseCollection";
 import { firestore } from "configs/firebase/firestore";
 import {
   initialState,
@@ -29,7 +25,7 @@ import {
   updateItems,
   updateLists,
 } from "./RetroBoardReducer";
-import { Board, Item, List } from "utils/interfaces";
+import { Board, Item, List, Member, Workspace } from "utils/interfaces";
 import { useAuthContext } from "context/Auth/AuthContext";
 
 const RetroBoardContext = createContext<{
@@ -47,48 +43,44 @@ export const useRetroContext = () => {
 export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const boardId = "" + router.query.boardId;
+  const { member } = useAuthContext();
   const [state, dispatch] = useReducer(RetroBoardReducer, initialState);
-  const { userDetails } = useAuthContext();
+  const [workspaceId, setWorkspaceId] = useState<string | null>(null);
+  const [members, setMembers] = useState<Member[] | null>(null);
 
   useEffect(() => {
-    (async () => {
-      if (userDetails) {
-        const boardsRef = query(
-          collection(firestore, "boards"),
-          where("createdBy.user_id", "==", userDetails.user_id),
-          orderBy("createdAt", "desc")
-        );
-        const boardSnapshot = await getDocs(boardsRef);
-        const boards = boardSnapshot.docs.map((doc) => {
-          return { ...doc.data() } as Board;
-        });
-        dispatch(updateBoards(boards));
+    const boardSnap = onSnapshot(
+      doc(firestore, Collection.Boards, boardId),
+      (snapshot) => {
+        const board = snapshot.data() as Board;
+        setWorkspaceId(board.workspaceId);
+        if (members) {
+          dispatch(updateBoard({ board: { ...board, members: members } }));
+        }
       }
-    })();
-  }, [userDetails]);
-
-  useEffect(() => {
-    dispatch(updateBoardToPending());
-    const q = query(
-      collection(firestore, "boards"),
-      where("board_id", "==", boardId)
     );
 
-    const boardCollectionSnap = onSnapshot(q, (snapshot) => {
-      const payload = snapshot.docs.map((doc) => {
-        return doc.data() as Board;
+    return boardSnap;
+  }, [boardId, dispatch, member, members]);
+
+  useEffect(() => {
+    if (workspaceId && member) {
+      const q = doc(firestore, Collection.Workspaces, workspaceId);
+      getDoc(q).then((snap) => {
+        const { members } = snap.data() as Workspace;
+        const isMember = members.find((m) => m.userId === member.userId);
+        if (isMember) {
+          return setMembers(members);
+        }
+        dispatch(updateBoard({ board: {} as Board }));
+        setMembers(null);
       });
-      dispatch(updateBoard({ board: payload[0] }));
-    });
-    return boardCollectionSnap;
-  }, [boardId, dispatch]);
+    }
+  }, [workspaceId, member]);
 
   // lists subscription
   useEffect(() => {
-    const q = query(
-      collection(firestore, "lists"),
-      where("board_id", "==", boardId)
-    );
+    const q = query(listsCollection, where("boardId", "==", boardId));
 
     const listsCollectionSnap = onSnapshot(q, (snapshot) => {
       const payload = snapshot.docs.map((doc) => {
@@ -101,10 +93,7 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
 
   // items subscription
   useEffect(() => {
-    const q = query(
-      collection(firestore, "items"),
-      where("board_id", "==", boardId)
-    );
+    const q = query(itemsCollection, where("boardId", "==", boardId));
 
     const itemsCollectionSnap = onSnapshot(q, (snapshot) => {
       const payload = snapshot.docs.map((doc) => {

@@ -29,12 +29,12 @@ export const calculateItemPosition = (
   if (!prevItem && !nextItem) {
     position = 1;
   } else if (!prevItem) {
-    position = nextItem.item_order - 1;
+    position = nextItem.itemOrder - 1;
   } else if (!nextItem) {
-    position = prevItem.item_order + 1;
+    position = prevItem.itemOrder + 1;
   } else {
     position =
-      prevItem.item_order + (nextItem.item_order - prevItem.item_order) / 2;
+      prevItem.itemOrder + (nextItem.itemOrder - prevItem.itemOrder) / 2;
   }
   return position;
 };
@@ -55,8 +55,9 @@ const insertItemIntoArray = (
   item: Item | undefined,
   index: number
 ) => {
+  if(!item) return []
   const arrClone = [...arr];
-  arrClone.splice(index, 0, item!);
+  arrClone.splice(index, 0, item);
   return arrClone;
 };
 
@@ -68,9 +69,9 @@ const getPrevAndNextItem = (
 ) => {
   const isSameList = destination?.droppableId === source.droppableId;
 
-  const destItems = items.filter((i) => i.list_id === destination?.droppableId);
+  const destItems = items.filter((i) => i.listId === destination?.droppableId);
 
-  const droppedItem = items.find((i) => i.item_id === droppedItemId);
+  const droppedItem = items.find((i) => i.itemId === droppedItemId);
 
   const destSortedItems = getSortedItems(destItems);
   const afterDropDestinationItems = isSameList
@@ -85,11 +86,11 @@ const getPrevAndNextItem = (
 
 function getSortedItems(items: Item[] | undefined) {
   if (!items) return [];
-  return [...items].sort((a, b) => a.item_order - b.item_order);
+  return [...items].sort((a, b) => a.itemOrder - b.itemOrder);
 }
 
 export const calculateInitialItemPosition = (items: Item[]): number => {
-  const itemPositions = items.map(({ item_order }) => item_order);
+  const itemPositions = items.map(({ itemOrder }) => itemOrder);
   if (itemPositions.length > 0) {
     return Math.max(...itemPositions) + 1;
   }
@@ -97,7 +98,7 @@ export const calculateInitialItemPosition = (items: Item[]): number => {
 };
 
 export const calculateInitialListPosition = (lists: List[]): number => {
-  const listPositions = lists.map(({ list_order }) => list_order);
+  const listPositions = lists.map(({ listOrder }) => listOrder);
   if (listPositions.length > 0) {
     return Math.max(...listPositions) + 1;
   }

@@ -1,16 +1,17 @@
 import { auth } from "configs/firebase/firebaseClient";
 import { onAuthStateChanged, User } from "firebase/auth";
-import { query, where, getDocs } from "firebase/firestore";
-import { usersRef } from "utils/firebaseCollection";
+import { getDoc, doc } from "firebase/firestore";
+
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { AnonymousUser, Auth, UserDetails } from "utils/interfaces";
+import { AnonymousUser, Auth, Member } from "utils/interfaces";
+import { firestore } from "configs/firebase/firestore";
 
 const AuthContext = createContext<Auth>({
-  isLoadingUserData: true,
+  isLoading: true,
+  member: null,
   updateUser: () => null,
-  updateUserDetails: () => null,
+  updateMember: () => null,
   user: null,
-  userDetails: null,
 });
 
 export const useAuthContext = () => {
@@ -19,16 +20,8 @@ export const useAuthContext = () => {
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<AnonymousUser | null>(null);
-  const [userDetails, setUserDetails] = useState<any>(null);
-  const [isLoadingUserData, setIsLoadingUserData] = useState(true);
-  // useEffect(() => {
-  //   signInWithAnonymousCredentials().then((authUser: UserCredential) => {
-  //     const {
-  //       user: { isAnonymous, metadata, uid },
-  //     } = authUser;
-  //     setUser({ isAnonymous, metadata, uid });
-  //   });
-  // }, []);
+  const [member, setMember] = useState<Member | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
@@ -36,22 +29,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
         const uid = user.uid;
-        const userQuery = query(usersRef, where("user_id", "==", uid));
-        const userSnapshot = await getDocs(userQuery);
-        const users = userSnapshot.docs.map((user) => {
-          return { ...user.data() };
-        });
-
-        // setUser is for setting the user context telling it that there is a user logged in
-        setUser(user);
-        // setUserDetails is for getting the current logged in user's firstName, surname, etc from the "users" table in firestore
-        setUserDetails(users[0]);
-        setIsLoadingUserData(false);
+        const member = await getDoc(doc(firestore, "users", uid));
+        if (member.exists()) {
+          setMember(member.data() as Member);
+          setUser(user);
+        } else {
+          setUser(null);
+          setMember(null);
+        }
+        setIsLoading(false);
       } else {
-        // User is signed out
-        setUser(null);
-        setUserDetails(null);
-        setIsLoadingUserData(false);
+        setIsLoading(false);
       }
     });
   }, []);
@@ -60,18 +48,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setUser(data);
   };
 
-  const updateUserDetails = (data: UserDetails) => {
-    setUserDetails(data);
+  const updateMember = (data: Member) => {
+    setMember(data);
   };
 
   return (
     <AuthContext.Provider
       value={{
-        isLoadingUserData,
+        isLoading,
+        member,
         updateUser,
-        updateUserDetails,
+        updateMember,
         user,
-        userDetails,
       }}
     >
       {children}

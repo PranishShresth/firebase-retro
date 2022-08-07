@@ -29,23 +29,23 @@ const BottomListButton = styled.div`
 `;
 
 interface Props {
-  list_colour: string;
-  list_id: string;
+  listColour: string;
+  listId: string;
   children?: React.ReactNode;
   droppableProvided?: DroppableProvided;
 }
 
-const RetroColumn = ({ list_colour, list_id, droppableProvided }: Props) => {
+const RetroColumn = ({ listColour, listId, droppableProvided }: Props) => {
   const {
     board: { items, filterPayload },
   } = useRetroContext();
 
   const memoizedListItems = useMemo(() => {
     return items
-      .filter((item) => item.list_id === list_id)
-      .filter((item) => item.item_title.toLowerCase().includes(filterPayload))
-      .sort((a, b) => a.item_order - b.item_order);
-  }, [items, list_id, filterPayload]);
+      .filter((item) => item.listId === listId)
+      .filter((item) => item.itemTitle.toLowerCase().includes(filterPayload))
+      .sort((a, b) => a.itemOrder - b.itemOrder);
+  }, [items, listId, filterPayload]);
 
   return (
     <>
@@ -53,13 +53,13 @@ const RetroColumn = ({ list_colour, list_id, droppableProvided }: Props) => {
         {memoizedListItems.map((item, index) => {
           return (
             <Draggable
-              draggableId={item.item_id}
+              draggableId={item.itemId}
               index={index}
-              key={item.item_id}
+              key={item.itemId}
             >
               {(provided, snapshot) => (
                 <RetroCard
-                  list_colour={list_colour}
+                  listColour={listColour}
                   provided={provided}
                   snapshot={snapshot}
                   item={item}
@@ -72,7 +72,7 @@ const RetroColumn = ({ list_colour, list_id, droppableProvided }: Props) => {
         {droppableProvided?.placeholder}
       </RetroCardContainer>
       <BottomListButton>
-        <AddItem list_id={list_id} />
+        <AddItem listId={listId} />
       </BottomListButton>
     </>
   );

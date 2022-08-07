@@ -4,6 +4,9 @@ const nextConfig = {
     return [{ source: "/", destination: "/index.html" }];
   },
   reactStrictMode: true,
+  compiler: {
+    styledComponents: true,
+  },
 };
 
 module.exports = nextConfig;

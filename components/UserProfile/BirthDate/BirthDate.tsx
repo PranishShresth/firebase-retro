@@ -8,7 +8,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import Cleave from "cleave.js/react";
-import { UserDetails } from "utils/interfaces";
+import { Member } from "utils/interfaces";
 import { doc, setDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import { useForm, Controller } from "react-hook-form";
@@ -26,7 +26,7 @@ const FormErrorMessage = styled.span`
   top: 4px;
 `;
 
-const BirthDate = ({ userDetails }: Record<string, UserDetails | null>) => {
+const BirthDate = ({ member }: Record<string, Member | null>) => {
   const bg = useColorModeValue("white", "gray.600");
   const {
     handleSubmit,
@@ -35,7 +35,7 @@ const BirthDate = ({ userDetails }: Record<string, UserDetails | null>) => {
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
-      birthDate: userDetails?.birthDate ?? "",
+      birthDate: member?.birthDate ?? "",
     },
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -43,12 +43,12 @@ const BirthDate = ({ userDetails }: Record<string, UserDetails | null>) => {
 
   const handleUpdatingBirthDate = async (data: FormValues) => {
     try {
-      if (userDetails) {
+      if (member) {
         setIsLoading(true);
-        const ref = doc(firestore, "users", userDetails.user_id);
+        const ref = doc(firestore, "users", member.userId);
 
         await setDoc(ref, {
-          ...userDetails,
+          ...member,
           birthDate: data.birthDate,
         });
         toast({

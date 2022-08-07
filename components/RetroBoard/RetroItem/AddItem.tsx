@@ -20,7 +20,7 @@ import { useAuthContext } from "context/Auth/AuthContext";
 import { IoMdClose } from "react-icons/io";
 
 interface Props {
-  list_id: string;
+  listId: string;
 }
 
 const StyledButton = styled(Button)`
@@ -29,11 +29,11 @@ const StyledButton = styled(Button)`
 `;
 
 interface FormValues {
-  item_title: string;
+  itemTitle: string;
 }
-function AddItem({ list_id }: Props) {
+function AddItem({ listId }: Props) {
   const router = useRouter();
-  const { user, userDetails } = useAuthContext();
+  const { member, user } = useAuthContext();
   const boardId = "" + router.query.boardId;
   const bg = useColorModeValue("#f7f7f7", "gray.900");
   const borderBg = useColorModeValue("gray.200", "gray.600");
@@ -43,14 +43,9 @@ function AddItem({ list_id }: Props) {
     board: { items },
   } = useRetroContext();
 
-  const {
-    handleSubmit,
-    control,
-    resetField,
-    formState: { errors },
-  } = useForm<FormValues>({
+  const { handleSubmit, control, resetField } = useForm<FormValues>({
     defaultValues: {
-      item_title: "",
+      itemTitle: "",
     },
   });
 
@@ -59,26 +54,25 @@ function AddItem({ list_id }: Props) {
   const close = () => setOpen(false);
 
   const handleAddingItem = async (data: FormValues) => {
-    if (data.item_title === "") {
+    if (data.itemTitle === "") {
       return;
     }
     const doc_id = uuidv4();
     try {
-      const item_order = calculateInitialItemPosition(items);
+      const itemOrder = calculateInitialItemPosition(items);
       const ref = doc(firestore, "items", doc_id);
 
-      resetField("item_title");
+      resetField("itemTitle");
 
       await setDoc(ref, {
         ...data,
-        item_id: doc_id,
-        board_id: boardId,
-        list_id,
-        user_id: user?.uid,
-        createdBy: userDetails,
-        item_upvotes: [],
-        item_order,
-
+        itemId: doc_id,
+        boardId: boardId,
+        listId,
+        userId: user?.uid,
+        createdBy: member,
+        itemUpvotes: [],
+        itemOrder,
         createdAt: serverTimestamp(),
       });
     } catch (err) {
@@ -106,7 +100,7 @@ function AddItem({ list_id }: Props) {
           <Stack spacing={2}>
             <Controller
               control={control}
-              name="item_title"
+              name="itemTitle"
               render={({ field }) => (
                 <Textarea
                   {...field}

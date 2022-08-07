@@ -72,11 +72,11 @@ const BoardCard = ({ board }: Props) => {
       const batch = writeBatch(firestore);
       const itemsQ = query(
         collection(firestore, "items"),
-        where("board_id", "==", board.board_id)
+        where("boardId", "==", board.boardId)
       );
       const listsQ = query(
         collection(firestore, "lists"),
-        where("board_id", "==", board.board_id)
+        where("boardId", "==", board.boardId)
       );
       const [items, lists] = await Promise.all([
         getDocs(itemsQ),
@@ -107,19 +107,19 @@ const BoardCard = ({ board }: Props) => {
       _focus={{ boxShadow: "outline" }}
       _focusVisible={{ boxShadow: "outline" }}
     >
-      <Link href={`board/${board.board_id}`} passHref>
+      <Link href={`board/${board.boardId}`} passHref>
         <a>
           <Box
             backgroundColor={bg}
             boxShadow="rgb(0 0 0 / 20%) 0px 1px 3px"
-            borderTop={`0.5rem solid ${board.board_colour ?? "#000000"}`}
+            borderTop={`0.5rem solid ${board.boardColour ?? "#000000"}`}
             minHeight="60px"
             overflow="hidden"
             padding="1rem"
           >
             <Grid>
               <Text fontSize="md" fontWeight="bold">
-                {board.board_title}
+                {board.boardTitle}
               </Text>
             </Grid>
             <DateCreated>
@@ -158,7 +158,9 @@ const BoardCard = ({ board }: Props) => {
         <MenuList>
           <MenuItem onClick={openEditBoardModal}>Edit</MenuItem>
           <MenuItem>Archive</MenuItem>
-          <MenuItem onClick={() => setdeleteModalOpen(true)}>Delete</MenuItem>
+          <MenuItem color="#E53E3E" onClick={() => setdeleteModalOpen(true)}>
+            Delete
+          </MenuItem>
         </MenuList>
       </Menu>
     </Box>

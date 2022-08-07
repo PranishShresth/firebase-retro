@@ -1,28 +1,26 @@
 import React, { useContext } from "react";
-import { useDispatch } from "react-redux";
-import styled from "styled-components";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Input, InputGroup } from "@chakra-ui/input";
 import { Stack } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/button";
+import { darken } from "@chakra-ui/theme-tools";
 import { Controller, useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { Modal } from "components/Modal";
 import { v4 as uuidv4 } from "uuid";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
-import { useAuthContext } from "context/Auth/AuthContext";
 import { calculateInitialListPosition } from "utils/dragAndDropUtils";
 import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 import { ColourPicker } from "components/ColourPicker";
+import { AiOutlineUnorderedList } from "react-icons/ai";
 
 interface FormValues {
-  list_colour: string;
-  list_title: string;
+  listColour: string;
+  listTitle: string;
 }
 const CreateList = () => {
   const router = useRouter();
-  const { user } = useAuthContext();
   const {
     board: { lists },
   } = useRetroContext();
@@ -33,30 +31,35 @@ const CreateList = () => {
     onClose: closeListModal,
   } = useDisclosure();
 
-  const { handleSubmit, control, resetField } = useForm<FormValues>({
+  const {
+    handleSubmit,
+    control,
+    resetField,
+    formState: { isDirty, isValid },
+  } = useForm<FormValues>({
     defaultValues: {
-      list_colour: "#000000",
-      list_title: "",
+      listColour: "#000000",
+      listTitle: "",
     },
+    mode: "onChange",
   });
 
   const handleCreateList = async (data: FormValues) => {
-    if (data.list_title.length < 1) {
+    if (data.listTitle.length < 1) {
       return;
     }
     const doc_id = uuidv4();
     try {
-      const list_order = calculateInitialListPosition(lists);
+      const listOrder = calculateInitialListPosition(lists);
       const ref = doc(firestore, "lists", doc_id);
       await setDoc(ref, {
         ...data,
-        list_id: doc_id,
-        user_id: user?.uid,
-        board_id: boardId,
-        list_order,
+        listId: doc_id,
+        boardId: boardId,
+        listOrder,
         createdAt: serverTimestamp(),
       });
-      resetField("list_title");
+      resetField("listTitle");
       closeListModal();
     } catch (err) {
       console.log(err);
@@ -79,7 +82,7 @@ const CreateList = () => {
               <InputGroup marginTop="4px">
                 <Controller
                   control={control}
-                  name="list_title"
+                  name="listTitle"
                   render={({ field }) => (
                     <Input
                       {...field}
@@ -89,6 +92,7 @@ const CreateList = () => {
                       value={field.value}
                     />
                   )}
+                  rules={{ required: true }}
                 />
               </InputGroup>
             </div>
@@ -96,13 +100,23 @@ const CreateList = () => {
               <span>Colour:</span>
               <Controller
                 control={control}
-                name="list_colour"
+                name="listColour"
                 render={({ field }) => <ColourPicker field={field} />}
               />
             </div>
             <div>
-              <Button marginBottom="12px" type="submit">
-                Create List
+              <Button
+                background="#00B5AD"
+                color="white"
+                disabled={!isDirty || !isValid}
+                _hover={{ backgroundColor: darken("#00B5AD", 8) }}
+                marginBottom="12px"
+                marginTop="16px"
+                width="100%"
+                type="submit"
+              >
+                Create List&nbsp;
+                <AiOutlineUnorderedList />
               </Button>
             </div>
           </Stack>

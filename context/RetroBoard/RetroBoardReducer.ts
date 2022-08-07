@@ -1,7 +1,8 @@
-import { Board, List, Item } from "utils/interfaces";
+import { Board, List, Item, Workspace } from "utils/interfaces";
 
 export interface RetroBoardState {
   board: Board;
+  workspace: Workspace;
   lists: List[];
   items: Item[];
   allBoards: Board[];
@@ -13,20 +14,23 @@ export const initialState = {
   board: {},
   allBoards: [],
   lists: [],
+  workspace: {},
   items: [],
-  status: "",
+  status: "pending",
   filterPayload: "",
 } as unknown as RetroBoardState;
 
 interface Reorder_Item_Payload {
   source: string;
   destination: string;
-  item_id: string;
+  itemId: string;
   position: number;
 }
 
 const FETCH_BOARD_REQUESTED = "FETCH_BOARD_REQUESTED";
 const FETCH_BOARD_FULFILLED = "FETCH_BOARD_FULFILLED";
+const FETCH_WORKSPACE_REQUESTED = "FETCH_WORKSPACE_REQUESTED"
+const FETCH_WORKSPACE_FULFILLED = "FETCH_WORKSPACE_FULFILLED"
 const FETCH_BOARDS_FULFILLED = "FETCH_BOARDS_FULFILLED";
 const FETCH_ITEMS_FULFILLED = "FETCH_ITEMS_FULFILLED";
 const FETCH_LISTS_FULFILLED = "FETCH_LISTS_FULFILLED";
@@ -41,6 +45,8 @@ export type ActionTypes =
     }
   | { type: typeof FETCH_BOARDS_FULFILLED; payload: Board[] }
   | { type: typeof FETCH_ITEMS_FULFILLED; payload: Item[] }
+  | { type: typeof FETCH_WORKSPACE_FULFILLED; payload: Workspace }
+  // | { type: typeof FETCH_WORKSPACE_REQUESTED; payload: Item[] }
   | { type: typeof FETCH_LISTS_FULFILLED; payload: List[] }
   | { type: typeof REORDER_ITEM_REQUESTED; payload: Reorder_Item_Payload }
   | { type: typeof FETCH_BOARD_FULFILLED; payload: BoardPayload }
@@ -58,22 +64,22 @@ export function RetroBoardReducer(state: RetroBoardState, action: ActionTypes) {
       return { ...state, ...action.payload, status: "fulfilled" };
     }
     case FETCH_LISTS_FULFILLED: {
-      return { ...state, lists: action.payload, status: "fulfilled" };
+      return { ...state, lists: action.payload };
     }
     case FETCH_ITEMS_FULFILLED: {
-      return { ...state, items: action.payload, status: "fulfilled" };
+      return { ...state, items: action.payload };
     }
     case REORDER_ITEM_REQUESTED: {
-      const { source, destination, item_id, position } = action.payload;
+      const { source, destination, itemId, position } = action.payload;
       const items = [...state.items];
-      const itemIdx = state.items.findIndex((s) => s.item_id === item_id);
+      const itemIdx = state.items.findIndex((s) => s.itemId === itemId);
       const item = items[itemIdx];
       if (source === destination) {
-        item.item_order = position;
+        item.itemOrder = position;
       } else {
         const item = state.items[itemIdx];
-        item.item_order = position;
-        item.list_id = destination;
+        item.itemOrder = position;
+        item.listId = destination;
       }
       return { ...state, items: items };
     }
