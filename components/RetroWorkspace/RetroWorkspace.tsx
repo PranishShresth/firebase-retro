@@ -32,7 +32,6 @@ export const RetroWorkspace = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const workspaceBg = useColorModeValue("white", "gray.700");
-  const noWorkspaces = workspaces.length === 0;
 
   const addWorkspace = (workspace: Workspace) => {
     setWorkspaces((prev) => [...prev, workspace]);
@@ -55,6 +54,7 @@ export const RetroWorkspace = () => {
   useEffect(() => {
     if (member) {
       const workspaces = member.workspaces;
+      console.log(workspaces);
       const promises = workspaces.map((id) =>
         getDoc(doc(firestore, Collection.Workspaces, id))
       );
@@ -76,7 +76,7 @@ export const RetroWorkspace = () => {
 
   return (
     <Wrapper>
-      {noWorkspaces ? (
+      {workspaces.length === 0 ? (
         <StyledFlex flexDirection="column" alignItems="center">
           <NoWorkspaces />
           <RetroWorkspaceCreateModal addWorkspace={addWorkspace} />
@@ -84,7 +84,7 @@ export const RetroWorkspace = () => {
       ) : (
         <>
           <RetroWorkspaceCreateModal addWorkspace={addWorkspace} />
-          {workspaces.map(
+          {workspaces?.map(
             ({ workspaceId, workspaceTitle, userId, members }) => (
               <Box
                 backgroundColor={workspaceBg}
