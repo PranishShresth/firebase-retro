@@ -15,25 +15,29 @@ import { darken } from "@chakra-ui/theme-tools";
 import { RetroWorkspaceActions } from "components/RetroWorkspace/RetroWorkspaceActions";
 import UserSelect from "components/UserSelect";
 import { firestore } from "configs/firebase/firestore";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
 
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { AiOutlineUserAdd } from "react-icons/ai";
 
 import { Collection } from "utils/firebaseCollection";
-import { Member } from "utils/interfaces";
+import { Member, Workspace } from "utils/interfaces";
 
 interface FormData {
   members: Member[];
 }
 export const RetroMemberSelectModal = ({
   members,
+  removeWorkspace,
+  updateWorkspace,
   userId,
   workspaceId,
   workspaceTitle,
 }: {
   members: Member[];
+  removeWorkspace: (workspaceId: string) => void;
+  updateWorkspace: (workspace: Workspace) => void;
   userId: string;
   workspaceId: string;
   workspaceTitle: string;
@@ -57,18 +61,12 @@ export const RetroMemberSelectModal = ({
   const inviteMembers = async (data: any) => {
     try {
       setLoading(true);
+      const workspaceRef = doc(firestore, Collection.Workspaces, workspaceId);
       const allInvitees = data.members
         .map(({ value: member }: { value: Member }) => {
           const memberId = member.userId;
-          console.log(member);
 
           const userRef = doc(firestore, Collection.Users, memberId);
-
-          const workspaceRef = doc(
-            firestore,
-            Collection.Workspaces,
-            workspaceId
-          );
 
           return [
             updateDoc(workspaceRef, {
@@ -84,6 +82,10 @@ export const RetroMemberSelectModal = ({
       setLoading(false);
       closeMemberSelect();
       reset();
+
+      const workspace = await (await getDoc(workspaceRef)).data();
+
+      workspace && updateWorkspace(workspace as Workspace);
 
       toast({
         title: "Invited!",
@@ -101,6 +103,7 @@ export const RetroMemberSelectModal = ({
     <Box>
       <RetroWorkspaceActions
         members={members}
+        removeWorkspace={removeWorkspace}
         openMemberSelect={openMemberSelect}
         userId={userId}
         workspaceId={workspaceId}

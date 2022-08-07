@@ -34,8 +34,22 @@ export const RetroWorkspace = () => {
   const workspaceBg = useColorModeValue("white", "gray.700");
   const noWorkspaces = workspaces.length === 0;
 
-  const updateWorkspace = (workspace: Workspace) => {
+  const addWorkspace = (workspace: Workspace) => {
     setWorkspaces((prev) => [...prev, workspace]);
+  };
+  const updateWorkspace = (workspace: Workspace) => {
+    const idx = workspaces.findIndex(
+      (w) => w.workspaceId === workspace.workspaceId
+    );
+    if (idx > -1) {
+      const wspaces = [...workspaces];
+      wspaces[idx] = workspace;
+      setWorkspaces(wspaces);
+    }
+  };
+
+  const removeWorkspace = (workspaceId: string) => {
+    setWorkspaces((prev) => prev.filter((w) => w.workspaceId !== workspaceId));
   };
 
   useEffect(() => {
@@ -65,11 +79,11 @@ export const RetroWorkspace = () => {
       {noWorkspaces ? (
         <StyledFlex flexDirection="column" alignItems="center">
           <NoWorkspaces />
-          <RetroWorkspaceCreateModal updateWorkspace={updateWorkspace} />
+          <RetroWorkspaceCreateModal addWorkspace={addWorkspace} />
         </StyledFlex>
       ) : (
         <>
-          <RetroWorkspaceCreateModal updateWorkspace={updateWorkspace} />
+          <RetroWorkspaceCreateModal addWorkspace={addWorkspace} />
           {workspaces.map(
             ({ workspaceId, workspaceTitle, userId, members }) => (
               <Box
@@ -86,6 +100,8 @@ export const RetroWorkspace = () => {
                   </Heading>
                   <RetroMemberSelectModal
                     members={members}
+                    removeWorkspace={removeWorkspace}
+                    updateWorkspace={updateWorkspace}
                     userId={userId}
                     workspaceId={workspaceId}
                     workspaceTitle={workspaceTitle}

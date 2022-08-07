@@ -9,21 +9,16 @@ import {
   MenuItem,
   MenuList,
   Tooltip,
+  useToast,
 } from "@chakra-ui/react";
 import { darken } from "@chakra-ui/theme-tools";
 import { AlertDialogBar } from "components/Alert";
+import { LeaveWorkspaceModal } from "components/Modals/LeaveWorkspaceModal";
 import { ViewMembersModal } from "components/Modals/ViewMembersModal";
 import { firestore } from "configs/firebase/firestore";
 import { useAuthContext } from "context/Auth/AuthContext";
-import {
-  deleteDoc,
-  doc,
-  query,
-  collection,
-  where,
-  getDocs,
-  writeBatch,
-} from "firebase/firestore";
+import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
+import { doc, arrayRemove, updateDoc } from "firebase/firestore";
 import { useState } from "react";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { FaEllipsisV } from "react-icons/fa";
@@ -34,6 +29,7 @@ const MEMBER_ICON_LIMIT = 3;
 interface RetroWorkspaceActionsProps {
   members: Member[];
   openMemberSelect: () => void;
+  removeWorkspace: (workspaceId: string) => void;
   userId: string;
   workspaceId: string;
   workspaceTitle: string;
@@ -41,71 +37,71 @@ interface RetroWorkspaceActionsProps {
 export const RetroWorkspaceActions = ({
   members,
   openMemberSelect: pushOpenMemberSelect,
+  removeWorkspace: pushRemoveWorkspace,
   userId,
   workspaceId,
   workspaceTitle,
 }: RetroWorkspaceActionsProps) => {
   const { member } = useAuthContext();
+  const {
+    board: { board },
+  } = useRetroContext();
   const [deleteModalOpen, setdeleteModalOpen] = useState(false);
+  const [leaveModalOpen, setLeaveModalOpen] = useState(false);
   const [membersModalOpen, setMembersModalOpen] = useState(false);
   const [deleteWorkspaceProgressing, setDeleteWorkspaceProgressing] =
     useState(false);
-  const allowInvites = member?.userId === userId;
+  const [leaveWorkspaceProgressing, setLeaveWorkspaceProgressing] =
+    useState(false);
+  const toast = useToast();
+  const userIsCreator = member?.userId === userId;
+
+  const currentWorkspaceRef = doc(
+    firestore,
+    Collection.Workspaces,
+    workspaceId
+  );
 
   // TODO
   const handleDeleteWorkspace = async () => {
     try {
-      setDeleteWorkspaceProgressing(true);
-      const currentWorkspaceRef = doc(
-        firestore,
-        Collection.Workspaces,
-        workspaceId
-      );
-      const batch = writeBatch(firestore);
-
-      const boardsQ = query(
-        collection(firestore, Collection.Boards),
-        where("workspaceId", "==", workspaceId)
-      );
-
-      // const usersQ = query(collection(firestore, Collection.Users),
-      // where("workspaceId", "==", workspaceId))
-      // const itemsQ = query(
-      //   collection(firestore, "items"),
-      //   where("boardId", "==", board.boardId)
-      // );
-      // const listsQ = query(
-      //   collection(firestore, "lists"),
-      //   where("boardId", "==", board.boardId)
-      // );
-      const [
-        boards,
-        // items,
-        // lists
-      ] = await Promise.all([
-        getDocs(boardsQ),
-        // getDocs(itemsQ),
-        // getDocs(listsQ),
-      ]);
-
-      boards.docs.forEach((doc) => {
-        batch.delete(doc.ref);
-      });
-      // items.docs.forEach((doc) => {
-      //   batch.delete(doc.ref);
-      // });
-      // lists.docs.forEach((doc) => {
-      //   batch.delete(doc.ref);
-      // });
-
-      // commits the batched delete for both items and boards
-      await batch.commit();
-
-      await deleteDoc(currentWorkspaceRef);
-      setDeleteWorkspaceProgressing(false);
-      setdeleteModalOpen(false);
     } catch (err) {
       console.log(err);
+    }
+  };
+
+  const handleLeaveWorkspace = async () => {
+    try {
+      setLeaveWorkspaceProgressing(true);
+      if (member) {
+        const userRef = doc(firestore, Collection.Users, member.userId);
+
+        const updatedMembers = members.filter(
+          (m) => m.userId !== member.userId
+        );
+        await Promise.all([
+          updateDoc(userRef, {
+            workspaces: arrayRemove(workspaceId),
+          }),
+          updateDoc(currentWorkspaceRef, {
+            members: updatedMembers,
+          }),
+        ]);
+        setLeaveWorkspaceProgressing(false);
+        setLeaveModalOpen(false);
+
+        pushRemoveWorkspace(workspaceId);
+        toast({
+          title: "You successfully have left the workspace",
+          description: "You will no longer have access to that workspace",
+          status: "success",
+          duration: 4000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      setLeaveWorkspaceProgressing(false);
     }
   };
 
@@ -142,7 +138,7 @@ export const RetroWorkspaceActions = ({
           </Box>
         </Box>
       )}
-      {allowInvites && (
+      {userIsCreator && (
         <Button
           backgroundColor={"#00B5AD"}
           color={"white"}
@@ -167,7 +163,16 @@ export const RetroWorkspaceActions = ({
         members={members}
         onClose={() => setMembersModalOpen(false)}
         workspaceTitle={workspaceTitle}
+        userIsCreator={userIsCreator}
       />
+      <LeaveWorkspaceModal
+        isLoading={leaveWorkspaceProgressing}
+        isOpen={leaveModalOpen}
+        onClick={handleLeaveWorkspace}
+        onClose={() => setLeaveModalOpen(false)}
+        workspaceTitle={workspaceTitle}
+      />
+
       <Menu>
         <MenuButton
           background="none !important"
@@ -182,7 +187,7 @@ export const RetroWorkspaceActions = ({
           <Icon as={FaEllipsisV} size={16} />
         </MenuButton>
         <MenuList>
-          {allowInvites ? (
+          {userIsCreator ? (
             <>
               <MenuItem onClick={() => console.log("edit")}>Edit</MenuItem>
               <MenuItem>Archive</MenuItem>
@@ -197,7 +202,14 @@ export const RetroWorkspaceActions = ({
               </MenuItem>
             </>
           ) : (
-            <MenuItem color="#E53E3E">Leave</MenuItem>
+            <>
+              <MenuItem onClick={() => setMembersModalOpen(true)}>
+                View Members
+              </MenuItem>
+              <MenuItem color="#E53E3E" onClick={() => setLeaveModalOpen(true)}>
+                Leave
+              </MenuItem>
+            </>
           )}
         </MenuList>
       </Menu>

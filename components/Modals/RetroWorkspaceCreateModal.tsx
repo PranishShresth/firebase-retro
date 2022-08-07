@@ -36,9 +36,9 @@ interface WorkspaceFormValues {
 }
 
 export const RetroWorkspaceCreateModal = ({
-  updateWorkspace,
+  addWorkspace,
 }: {
-  updateWorkspace: (workspace: Workspace) => void;
+  addWorkspace: (workspace: Workspace) => void;
 }) => {
   const { member } = useAuthContext();
   const {
@@ -81,7 +81,7 @@ export const RetroWorkspaceCreateModal = ({
           await getDoc(doc(firestore, Collection.Workspaces, workspaceId))
         ).data()) as Workspace;
 
-        updateWorkspace(updatedWorkspace);
+        addWorkspace(updatedWorkspace);
         closeWorkspaceCreate();
         reset();
 
