@@ -1,4 +1,4 @@
-import { useColorModeValue } from "@chakra-ui/react";
+import { Avatar, Box, Flex, useColorModeValue } from "@chakra-ui/react";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { getDocs, query, where } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
@@ -99,8 +99,13 @@ const CustomOption = (props: OptionProps) => {
   const { label, subLabel } = props.data as { label: string; subLabel: string };
   return (
     <components.Option {...props}>
-      <span>{label}</span>
-      <div style={{ color: "darkgray" }}>{subLabel}</div>
+      <Flex alignItems="center">
+        <Avatar name={label} size="sm" marginRight="12px" />
+        <Box>
+          <span>{label}</span>
+          <div style={{ color: "darkgray" }}>{subLabel}</div>
+        </Box>
+      </Flex>
     </components.Option>
   );
 };
