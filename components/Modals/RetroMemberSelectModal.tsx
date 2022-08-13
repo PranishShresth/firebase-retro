@@ -105,6 +105,7 @@ export const RetroMemberSelectModal = ({
         members={members}
         removeWorkspace={removeWorkspace}
         openMemberSelect={openMemberSelect}
+        updateWorkspace={updateWorkspace}
         userId={userId}
         workspaceId={workspaceId}
         workspaceTitle={workspaceTitle}

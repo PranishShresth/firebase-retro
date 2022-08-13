@@ -23,13 +23,14 @@ import { useState } from "react";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { FaEllipsisV } from "react-icons/fa";
 import { Collection } from "utils/firebaseCollection";
-import { Member } from "utils/interfaces";
+import { Member, Workspace } from "utils/interfaces";
 
 const MEMBER_ICON_LIMIT = 3;
 interface RetroWorkspaceActionsProps {
   members: Member[];
   openMemberSelect: () => void;
   removeWorkspace: (workspaceId: string) => void;
+  updateWorkspace: (workspace: Workspace) => void;
   userId: string;
   workspaceId: string;
   workspaceTitle: string;
@@ -38,6 +39,7 @@ export const RetroWorkspaceActions = ({
   members,
   openMemberSelect: pushOpenMemberSelect,
   removeWorkspace: pushRemoveWorkspace,
+  updateWorkspace: pushUpdateWorkspace,
   userId,
   workspaceId,
   workspaceTitle,
@@ -162,8 +164,10 @@ export const RetroWorkspaceActions = ({
         isOpen={membersModalOpen}
         members={members}
         onClose={() => setMembersModalOpen(false)}
-        workspaceTitle={workspaceTitle}
+        pushUpdateWorkspace={pushUpdateWorkspace}
         userIsCreator={userIsCreator}
+        workspaceTitle={workspaceTitle}
+        workspaceId={workspaceId}
       />
       <LeaveWorkspaceModal
         isLoading={leaveWorkspaceProgressing}
@@ -190,7 +194,6 @@ export const RetroWorkspaceActions = ({
           {userIsCreator ? (
             <>
               <MenuItem onClick={() => console.log("edit")}>Edit</MenuItem>
-              <MenuItem>Archive</MenuItem>
               <MenuItem onClick={() => setMembersModalOpen(true)}>
                 View Members
               </MenuItem>
