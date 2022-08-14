@@ -14,21 +14,31 @@ import {
   Box,
   useColorModeValue,
   Flex,
+  useToast,
 } from "@chakra-ui/react";
 import { useAuthContext } from "context/Auth/AuthContext";
-import { Member } from "utils/interfaces";
+import { firestore } from "configs/firebase/firestore";
+import { arrayRemove, doc, getDoc, updateDoc } from "firebase/firestore";
+import { useState } from "react";
+import { Collection } from "utils/firebaseCollection";
+import { Member, Workspace } from "utils/interfaces";
+import { KickMemberModal } from "./KickMemberModal";
 
 export const ViewMembersModal = ({
   isOpen,
   members,
   onClose,
+  pushUpdateWorkspace,
   userIsCreator,
+  workspaceId,
   workspaceTitle,
 }: {
   isOpen: boolean;
   members: Member[];
   onClose: () => void;
+  pushUpdateWorkspace: (workspace: Workspace) => void;
   userIsCreator: boolean;
+  workspaceId: string;
   workspaceTitle: string;
 }) => {
   const { member } = useAuthContext();
@@ -72,9 +82,13 @@ export const ViewMembersModal = ({
                     </Box>
                   </Flex>
                   {showKickButton && (
-                    <Button colorScheme="red" variant="outline">
-                      Kick
-                    </Button>
+                    <KickMember
+                      userId={userId}
+                      workspaceId={workspaceId}
+                      members={members}
+                      fullName={fullName}
+                      pushUpdateWorkspace={pushUpdateWorkspace}
+                    />
                   )}
                 </ListItem>
               );
@@ -87,5 +101,82 @@ export const ViewMembersModal = ({
         </ModalFooter>
       </ModalContent>
     </Modal>
+  );
+};
+
+const KickMember = ({
+  userId,
+  workspaceId,
+  members,
+  fullName,
+  pushUpdateWorkspace,
+}: {
+  userId: string;
+  workspaceId: string;
+  members: Member[];
+  fullName: string;
+  pushUpdateWorkspace: (workspace: Workspace) => void;
+}) => {
+  const [kickModalOpen, setKickModalOpen] = useState(false);
+  const [kickMemberProgressing, setKickMemberProgressing] = useState(false);
+  const toast = useToast();
+
+  const handleKickMember = async (userId: string) => {
+    const workspaceRef = doc(firestore, Collection.Workspaces, workspaceId);
+    try {
+      setKickMemberProgressing(true);
+
+      const currentWorkspaceRef = doc(
+        firestore,
+        Collection.Workspaces,
+        workspaceId
+      );
+      const userRef = doc(firestore, Collection.Users, userId);
+      const updatedMembers = members.filter((m) => m.userId !== userId);
+
+      await Promise.all([
+        updateDoc(userRef, {
+          workspaces: arrayRemove(workspaceId),
+        }),
+        updateDoc(currentWorkspaceRef, {
+          members: updatedMembers,
+        }),
+      ]);
+      const workspace = await (await getDoc(workspaceRef)).data();
+      pushUpdateWorkspace(workspace as Workspace);
+
+      setKickMemberProgressing(false);
+      setKickModalOpen(false);
+
+      toast({
+        title: "User successfully kicked from workspace",
+        description: "Kicked user will no longer have access to this workspace",
+        status: "success",
+        duration: 4000,
+        isClosable: true,
+      });
+    } catch (error) {
+      console.log(error);
+      setKickMemberProgressing(false);
+    }
+  };
+
+  return (
+    <>
+      <KickMemberModal
+        isLoading={kickMemberProgressing}
+        isOpen={kickModalOpen}
+        onClick={() => handleKickMember(userId)}
+        onClose={() => setKickModalOpen(false)}
+        memberName={fullName}
+      />
+      <Button
+        colorScheme="red"
+        onClick={() => setKickModalOpen(true)}
+        variant="outline"
+      >
+        Kick
+      </Button>
+    </>
   );
 };

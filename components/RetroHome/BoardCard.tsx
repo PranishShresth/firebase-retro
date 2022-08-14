@@ -157,7 +157,6 @@ const BoardCard = ({ board }: Props) => {
         </MenuButton>
         <MenuList>
           <MenuItem onClick={openEditBoardModal}>Edit</MenuItem>
-          <MenuItem>Archive</MenuItem>
           <MenuItem color="#E53E3E" onClick={() => setdeleteModalOpen(true)}>
             Delete
           </MenuItem>

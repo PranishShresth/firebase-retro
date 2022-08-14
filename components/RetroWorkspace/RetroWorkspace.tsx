@@ -54,7 +54,6 @@ export const RetroWorkspace = () => {
   useEffect(() => {
     if (member) {
       const workspaces = member.workspaces;
-      console.log(workspaces);
       const promises = workspaces.map((id) =>
         getDoc(doc(firestore, Collection.Workspaces, id))
       );
