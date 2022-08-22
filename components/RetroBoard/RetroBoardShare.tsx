@@ -81,7 +81,7 @@ export const RetroBoardShare = ({ boardId }: { boardId: string }) => {
                 includeMargin={false}
               />
               <Text>
-                Anyone with this url will be able to access this board
+                Members with this url will be able to access this board
               </Text>
             </Stack>
           </ModalBody>

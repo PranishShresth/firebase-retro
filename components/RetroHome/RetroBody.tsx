@@ -24,6 +24,11 @@ import Skeleton from "components/Loader/Skeleton";
 import { ColourPicker } from "components/ColourPicker";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { FaChalkboard } from "react-icons/fa";
+import {
+  TemplateSelect,
+  TEMPLATE_OPTIONS,
+} from "components/TemplateSelect/TemplateSelect";
+import { AUSTRALIA_RETRO_LISTS } from "utils/retroLists";
 
 const BoardsContainer = styled.div`
   max-width: 1600px;
@@ -31,8 +36,13 @@ const BoardsContainer = styled.div`
   width: 100%;
 `;
 
+interface BoardTemplate {
+  label: string;
+  value: string;
+}
 interface BoardFormValues {
   boardColour: string;
+  boardTemplate: BoardTemplate;
   boardTitle: string;
 }
 
@@ -103,85 +113,110 @@ export const RetroBody = ({ workspaceId }: { workspaceId: string }) => {
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       });
-      console.log(data);
+      const isAustraliaRetro =
+        data.boardTemplate && data.boardTemplate.value === "australiaRetro";
+
+      if (isAustraliaRetro) {
+        AUSTRALIA_RETRO_LISTS.forEach(
+          async ({ listColour, listTitle }, index) => {
+            const list_doc_id = uuidv4();
+            const listref = doc(firestore, "lists", list_doc_id);
+            await setDoc(listref, {
+              listColour,
+              listTitle,
+              listId: list_doc_id,
+              boardId: doc_id,
+              listOrder: index,
+              createdAt: serverTimestamp(),
+            });
+          }
+        );
+      }
     } catch (err) {
       console.log(err);
     }
   };
 
   return (
-    <>
-      <BoardsContainer>
-        <Grid
-          templateColumns={{
-            base: "1fr",
-            sm: "repeat(2, 1fr)",
-            md: "repeat(3, 1fr)",
-            lg: "repeat(4, 1fr)",
-            xl: "repeat(5, 1fr)",
-          }}
-          justifyContent="center"
-          gap={6}
-        >
-          <Box minHeight="90px">
-            <CreateBoardModal
-              createBoard
-              isOpen={isBoardModalOpen}
-              modalTitle="New Board"
-              onClose={closeBoardModal}
-              onOpen={openBoardModal}
-              triggerName="New Board"
-            >
-              <form onSubmit={handleSubmit(handleCreateBoard)}>
-                <Stack spacing={3}>
-                  <div>
-                    <span>Board Title:</span>
-                    <InputGroup marginTop="4px">
-                      <Input
-                        placeholder="Board Title"
-                        required
-                        type="text"
-                        {...register("boardTitle", { required: true })}
-                      />
-                    </InputGroup>
-                  </div>
-
-                  <div>
-                    <span>Colour:</span>
-                    <Controller
-                      control={control}
-                      name="boardColour"
-                      render={({ field }) => <ColourPicker field={field} />}
+    <BoardsContainer>
+      <Grid
+        templateColumns={{
+          base: "1fr",
+          sm: "repeat(2, 1fr)",
+          md: "repeat(3, 1fr)",
+          lg: "repeat(4, 1fr)",
+          xl: "repeat(5, 1fr)",
+        }}
+        justifyContent="center"
+        gap={6}
+      >
+        <Box minHeight="90px">
+          <CreateBoardModal
+            createBoard
+            isOpen={isBoardModalOpen}
+            modalTitle="New Board"
+            onClose={closeBoardModal}
+            onOpen={openBoardModal}
+            triggerName="New Board"
+          >
+            <form onSubmit={handleSubmit(handleCreateBoard)}>
+              <Stack spacing={3}>
+                <div>
+                  <span>Board Title:</span>
+                  <InputGroup marginTop="4px">
+                    <Input
+                      placeholder="Board Title"
+                      required
+                      type="text"
+                      {...register("boardTitle", { required: true })}
                     />
-                  </div>
-                  <div>
-                    <Button
-                      backgroundColor={"#00B5AD"}
-                      color={"white"}
-                      disabled={!isDirty || !isValid}
-                      _hover={{ backgroundColor: darken("#00B5AD", 8) }}
-                      marginBottom="12px"
-                      marginTop="16px"
-                      type="submit"
-                      width="100%"
-                    >
-                      Create Board&nbsp;
-                      <FaChalkboard />
-                    </Button>
-                  </div>
-                </Stack>
-              </form>
-            </CreateBoardModal>
-          </Box>
-          {loading ? (
-            <Skeleton amount={6} height="90px" width="100%" />
-          ) : (
-            boards?.map((board) => {
-              return <BoardCard key={board.boardId} board={board} />;
-            })
-          )}
-        </Grid>
-      </BoardsContainer>
-    </>
+                  </InputGroup>
+                </div>
+
+                <div>
+                  <span>Colour:</span>
+                  <Controller
+                    control={control}
+                    name="boardColour"
+                    render={({ field }) => <ColourPicker field={field} />}
+                  />
+                </div>
+                <div>
+                  <span>Template:</span>
+                  <Controller
+                    control={control}
+                    defaultValue={TEMPLATE_OPTIONS[0]}
+                    name="boardTemplate"
+                    render={({ field }) => <TemplateSelect field={field} />}
+                  />
+                </div>
+                <div>
+                  <Button
+                    backgroundColor={"#00B5AD"}
+                    color={"white"}
+                    disabled={!isDirty || !isValid}
+                    _hover={{ backgroundColor: darken("#00B5AD", 8) }}
+                    marginBottom="12px"
+                    marginTop="16px"
+                    type="submit"
+                    width="100%"
+                  >
+                    Create Board&nbsp;
+                    <FaChalkboard />
+                  </Button>
+                </div>
+              </Stack>
+            </form>
+          </CreateBoardModal>
+        </Box>
+        {loading ? (
+          <Skeleton amount={6} height="90px" width="100%" />
+        ) : (
+          boards?.map((board) => {
+            return <BoardCard key={board.boardId} board={board} />;
+          })
+        )}
+      </Grid>
+    </BoardsContainer>
   );
 };

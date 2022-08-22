@@ -109,7 +109,6 @@ export const RetroBoardSingle = () => {
     [items, dispatch]
   );
 
-  console.log(status);
   if (status == "pending") {
     return <RetroBoardSkeleton />;
   }
