@@ -42,9 +42,9 @@ export const TemplateSelect = ({ field }: { field: FieldValues }) => {
         // },
       };
     },
-    // input: (styles) => ({ ...styles, ...dot() }),
+    input: (styles) => ({ ...styles, color: optionColourBg }),
     // placeholder: (styles) => ({ ...styles, ...dot("#ccc") }),
-    // singleValue: (styles, { data }) => ({ ...styles, ...dot(data.color) }),
+    singleValue: (styles, { data }) => ({ ...styles, color: optionColourBg }),
   };
 
   return (
