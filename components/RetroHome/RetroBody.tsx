@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Grid, Stack } from "@chakra-ui/layout";
 import { useDisclosure } from "@chakra-ui/hooks";
-import { Input, InputGroup, Button, Box } from "@chakra-ui/react";
+import { Input, InputGroup, Button, Box, Flex } from "@chakra-ui/react";
 import { darken } from "@chakra-ui/theme-tools";
 import BoardCard from "./BoardCard";
 import styled from "styled-components";
@@ -24,11 +24,13 @@ import Skeleton from "components/Loader/Skeleton";
 import { ColourPicker } from "components/ColourPicker";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { FaChalkboard } from "react-icons/fa";
+import Link from "next/link";
 import {
   TemplateSelect,
   TEMPLATE_OPTIONS,
 } from "components/TemplateSelect/TemplateSelect";
 import { AUSTRALIA_RETRO_LISTS } from "utils/retroLists";
+import { FiChevronsRight } from "react-icons/fi";
 
 const BoardsContainer = styled.div`
   max-width: 1600px;
@@ -53,11 +55,26 @@ const defaultPrefs: Preference = {
 };
 
 export const FIVE_MINUTES_IN_SECONDS = 300;
+const XL_WINDOW_WIDTH_BREAKPOINT = 1279;
+const LG_WINDOW_WIDTH_BREAKPOINT = 991;
+const MD_WINDOW_WIDTH_BREAKPOINT = 767;
+const DEFAULT_BOARDS_LIMIT = 4;
 
 export const RetroBody = ({ workspaceId }: { workspaceId: string }) => {
   const [boards, setBoards] = useState<BoardWithDocId[] | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
+  const [boardsLimit, setBoardsLimit] = useState<number>(DEFAULT_BOARDS_LIMIT);
   const { member } = useAuthContext();
+
+  const numberOfBoardsLimit = () => {
+    if (window.innerWidth > XL_WINDOW_WIDTH_BREAKPOINT) {
+      setBoardsLimit(DEFAULT_BOARDS_LIMIT);
+    } else if (window.innerWidth > LG_WINDOW_WIDTH_BREAKPOINT) {
+      setBoardsLimit(DEFAULT_BOARDS_LIMIT - 1);
+    } else if (window.innerWidth > MD_WINDOW_WIDTH_BREAKPOINT) {
+      setBoardsLimit(DEFAULT_BOARDS_LIMIT - 2);
+    }
+  };
 
   const {
     isOpen: isBoardModalOpen,
@@ -137,86 +154,108 @@ export const RetroBody = ({ workspaceId }: { workspaceId: string }) => {
     }
   };
 
-  return (
-    <BoardsContainer>
-      <Grid
-        templateColumns={{
-          base: "1fr",
-          sm: "repeat(2, 1fr)",
-          md: "repeat(3, 1fr)",
-          lg: "repeat(4, 1fr)",
-          xl: "repeat(5, 1fr)",
-        }}
-        justifyContent="center"
-        gap={6}
-      >
-        <Box minHeight="90px">
-          <CreateBoardModal
-            createBoard
-            isOpen={isBoardModalOpen}
-            modalTitle="New Board"
-            onClose={closeBoardModal}
-            onOpen={openBoardModal}
-            triggerName="New Board"
-          >
-            <form onSubmit={handleSubmit(handleCreateBoard)}>
-              <Stack spacing={3}>
-                <div>
-                  <span>Board Title:</span>
-                  <InputGroup marginTop="4px">
-                    <Input
-                      placeholder="Board Title"
-                      required
-                      type="text"
-                      {...register("boardTitle", { required: true })}
-                    />
-                  </InputGroup>
-                </div>
+  useEffect(() => {
+    numberOfBoardsLimit();
+  }, []);
 
-                <div>
-                  <span>Colour:</span>
-                  <Controller
-                    control={control}
-                    name="boardColour"
-                    render={({ field }) => <ColourPicker field={field} />}
-                  />
-                </div>
-                <div>
-                  <span>Template:</span>
-                  <Controller
-                    control={control}
-                    defaultValue={TEMPLATE_OPTIONS[0]}
-                    name="boardTemplate"
-                    render={({ field }) => <TemplateSelect field={field} />}
-                  />
-                </div>
-                <div>
-                  <Button
-                    backgroundColor={"#00B5AD"}
-                    color={"white"}
-                    disabled={!isDirty || !isValid}
-                    _hover={{ backgroundColor: darken("#00B5AD", 8) }}
-                    marginBottom="12px"
-                    marginTop="16px"
-                    type="submit"
-                    width="100%"
-                  >
-                    Create Board&nbsp;
-                    <FaChalkboard />
-                  </Button>
-                </div>
-              </Stack>
-            </form>
-          </CreateBoardModal>
+  return (
+    <>
+      <BoardsContainer>
+        <Grid
+          templateColumns={{
+            base: "1fr",
+            sm: "repeat(2, 1fr)",
+            md: "repeat(3, 1fr)",
+            lg: "repeat(4, 1fr)",
+            xl: "repeat(5, 1fr)",
+          }}
+          justifyContent="center"
+          gap={6}
+        >
+          <Box minHeight="90px">
+            <CreateBoardModal
+              createBoard
+              isOpen={isBoardModalOpen}
+              modalTitle="New Board"
+              onClose={closeBoardModal}
+              onOpen={openBoardModal}
+              triggerName="New Board"
+            >
+              <form onSubmit={handleSubmit(handleCreateBoard)}>
+                <Stack spacing={3}>
+                  <div>
+                    <span>Board Title:</span>
+                    <InputGroup marginTop="4px">
+                      <Input
+                        placeholder="Board Title"
+                        required
+                        type="text"
+                        {...register("boardTitle", { required: true })}
+                      />
+                    </InputGroup>
+                  </div>
+
+                  <div>
+                    <span>Colour:</span>
+                    <Controller
+                      control={control}
+                      name="boardColour"
+                      render={({ field }) => <ColourPicker field={field} />}
+                    />
+                  </div>
+                  <div>
+                    <span>Template:</span>
+                    <Controller
+                      control={control}
+                      defaultValue={TEMPLATE_OPTIONS[0]}
+                      name="boardTemplate"
+                      render={({ field }) => <TemplateSelect field={field} />}
+                    />
+                  </div>
+                  <div>
+                    <Button
+                      backgroundColor={"#00B5AD"}
+                      color={"white"}
+                      disabled={!isDirty || !isValid}
+                      _hover={{ backgroundColor: darken("#00B5AD", 8) }}
+                      marginBottom="12px"
+                      marginTop="16px"
+                      type="submit"
+                      width="100%"
+                    >
+                      Create Board&nbsp;
+                      <FaChalkboard />
+                    </Button>
+                  </div>
+                </Stack>
+              </form>
+            </CreateBoardModal>
+          </Box>
+          {loading ? (
+            <Skeleton amount={6} height="90px" width="100%" />
+          ) : (
+            boards?.slice(0, boardsLimit)?.map((board) => {
+              return <BoardCard key={board.boardId} board={board} />;
+            })
+          )}
+        </Grid>
+      </BoardsContainer>
+      {boards && boards.length > boardsLimit && (
+        <Box
+          color={"#2bc0c1"}
+          fontSize="0.825rem"
+          fontWeight="bold"
+          marginTop="0.5rem"
+        >
+          <Link href={`workspace/${workspaceId}/boards`} passHref>
+            <a style={{ display: "inline-block" }}>
+              <Flex alignItems="center">
+                View all boards <FiChevronsRight size="1rem" />
+              </Flex>
+            </a>
+          </Link>
         </Box>
-        {loading ? (
-          <Skeleton amount={6} height="90px" width="100%" />
-        ) : (
-          boards?.map((board) => {
-            return <BoardCard key={board.boardId} board={board} />;
-          })
-        )}
-      </Grid>
-    </BoardsContainer>
+      )}
+    </>
   );
 };

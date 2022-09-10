@@ -21,12 +21,6 @@ const StyledFlex = styled(Flex)`
   width: 700px;
 `;
 
-const Wrapper = styled.div`
-  margin: 0 auto;
-  max-width: 1600px;
-  padding: 1rem;
-`;
-
 export const RetroWorkspace = () => {
   const { member } = useAuthContext();
   const [isLoading, setIsLoading] = useState(true);
@@ -74,7 +68,7 @@ export const RetroWorkspace = () => {
   }
 
   return (
-    <Wrapper>
+    <Box margin={"0 auto"} maxWidth={"1600px"} padding={"1rem"}>
       {workspaces.length === 0 ? (
         <StyledFlex flexDirection="column" alignItems="center">
           <NoWorkspaces />
@@ -112,6 +106,6 @@ export const RetroWorkspace = () => {
           )}
         </>
       )}
-    </Wrapper>
+    </Box>
   );
 };
