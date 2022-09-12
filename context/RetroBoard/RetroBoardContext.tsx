@@ -20,8 +20,6 @@ import {
   RetroBoardReducer,
   RetroBoardState,
   updateBoard,
-  updateBoards,
-  updateBoardToPending,
   updateItems,
   updateLists,
 } from "./RetroBoardReducer";
@@ -31,9 +29,11 @@ import { useAuthContext } from "context/Auth/AuthContext";
 const RetroBoardContext = createContext<{
   board: RetroBoardState;
   dispatch: Dispatch<any>;
+  workspaceId: string | null;
 }>({
   board: initialState,
   dispatch: () => null,
+  workspaceId: null,
 });
 
 export const useRetroContext = () => {
@@ -43,9 +43,15 @@ export const useRetroContext = () => {
 export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const boardId = "" + router.query.boardId;
+  const existingWorkspaceId = router.query.workspaceId
+    ? "" + router.query.workspaceId
+    : null;
+
   const { member } = useAuthContext();
   const [state, dispatch] = useReducer(RetroBoardReducer, initialState);
-  const [workspaceId, setWorkspaceId] = useState<string | null>(null);
+  const [workspaceId, setWorkspaceId] = useState<string | null>(
+    existingWorkspaceId
+  );
   const [members, setMembers] = useState<Member[] | null>(null);
 
   useEffect(() => {
@@ -53,7 +59,9 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
       doc(firestore, Collection.Boards, boardId),
       (snapshot) => {
         const board = snapshot.data() as Board;
-        setWorkspaceId(board.workspaceId);
+        if (!workspaceId) {
+          setWorkspaceId(board.workspaceId);
+        }
         if (members) {
           dispatch(updateBoard({ board: { ...board, members: members } }));
         }
@@ -61,7 +69,7 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
     );
 
     return boardSnap;
-  }, [boardId, dispatch, member, members]);
+  }, [boardId, dispatch, member, members, workspaceId]);
 
   useEffect(() => {
     if (workspaceId && member) {
@@ -105,7 +113,7 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
   }, [boardId]);
 
   return (
-    <RetroBoardContext.Provider value={{ board: state, dispatch }}>
+    <RetroBoardContext.Provider value={{ board: state, workspaceId, dispatch }}>
       {children}
     </RetroBoardContext.Provider>
   );

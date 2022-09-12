@@ -107,7 +107,7 @@ const BoardCard = ({ board }: Props) => {
       _focus={{ boxShadow: "outline" }}
       _focusVisible={{ boxShadow: "outline" }}
     >
-      <Link href={`board/${board.boardId}`} passHref>
+      <Link href={`/board/${board.boardId}`} passHref>
         <a>
           <Box
             backgroundColor={bg}
