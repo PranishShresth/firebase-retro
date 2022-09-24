@@ -52,6 +52,10 @@ const StyledForm = styled.form<{ background: string; boxShadowColour: string }>`
   top: 50%;
   transform: translate(-50%, -50%);
   width: 500px;
+
+  @media (max-width: 480px) {
+    width: 100%;
+  }
 `;
 
 interface FormValues {

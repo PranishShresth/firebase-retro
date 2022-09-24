@@ -41,12 +41,20 @@ export const RetroBoardFilter = () => {
 
   return (
     <>
-      <Button leftIcon={<BiFilterAlt />} {...buttonProp} onClick={onOpen}>
+      <Button
+        className="hideOnlyMobile"
+        leftIcon={<BiFilterAlt />}
+        {...buttonProp}
+        onClick={onOpen}
+      >
         Filter
+      </Button>
+      <Button className="showOnlyMobile" {...buttonProp} onClick={onOpen}>
+        <BiFilterAlt />
       </Button>
       <Modal isOpen={isOpen} onClose={closeFilterModal}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent margin="3.75rem 1rem">
           <form onSubmit={handleSubmit(filterBoardCards)}>
             <InputGroup>
               <InputLeftElement

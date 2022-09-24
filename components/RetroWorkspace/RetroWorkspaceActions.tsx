@@ -22,10 +22,17 @@ import { doc, arrayRemove, updateDoc } from "firebase/firestore";
 import { useState } from "react";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { FaEllipsisV } from "react-icons/fa";
+import styled from "styled-components";
 import { Collection } from "utils/firebaseCollection";
 import { Member, Workspace } from "utils/interfaces";
 
 const MEMBER_ICON_LIMIT = 3;
+
+const AvatarWrapper = styled.div`
+  @media (max-width: 480px) {
+    display: none;
+  }
+`;
 interface RetroWorkspaceActionsProps {
   members: Member[];
   openMemberSelect: () => void;
@@ -116,11 +123,17 @@ export const RetroWorkspaceActions = ({
             <Tooltip
               bg="gray.300"
               color="black"
+              className="hideOnlyMobile"
               hasArrow
               key={member.userId}
               label={label}
             >
-              <Avatar name={label} size="sm" marginRight="4px" />
+              <Avatar
+                className="hideOnlyMobile"
+                name={label}
+                size="sm"
+                marginRight="4px"
+              />
             </Tooltip>
           );
         })}
@@ -129,6 +142,7 @@ export const RetroWorkspaceActions = ({
           alignItems="center"
           backgroundColor="#cccccc"
           borderRadius="50%"
+          className="hideOnlyMobile"
           display="flex"
           height="2rem"
           justifyContent="center"

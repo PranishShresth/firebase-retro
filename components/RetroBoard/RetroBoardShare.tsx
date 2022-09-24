@@ -44,12 +44,19 @@ export const RetroBoardShare = ({ boardId }: { boardId: string }) => {
   };
   return (
     <>
-      <Button leftIcon={<BiShareAlt />} onClick={openShareModal}>
+      <Button
+        className="hideOnlyMobile"
+        leftIcon={<BiShareAlt />}
+        onClick={openShareModal}
+      >
         Share
+      </Button>
+      <Button className="showOnlyMobile" onClick={openShareModal}>
+        <BiShareAlt />
       </Button>
       <Modal onClose={closeShareModal} isOpen={isOpen} isCentered>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent margin="3.75rem 1rem">
           <ModalHeader>Share Board</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

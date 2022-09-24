@@ -19,6 +19,7 @@ const ColourLabel = styled.label`
 
 const ColourRow = styled.div`
   display: flex;
+  flex-wrap: wrap;
 `;
 
 const CustomColourInput = styled.div<{ colour: string }>`

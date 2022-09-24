@@ -27,7 +27,7 @@ export const KickMemberModal = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent margin="3.75rem 1rem">
         <ModalHeader>Kick {memberName}?</ModalHeader>
         <ModalBody>
           Are you sure? You can&apos;t undo this action afterwards.

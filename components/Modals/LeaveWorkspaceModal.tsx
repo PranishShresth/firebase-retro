@@ -27,7 +27,7 @@ export const LeaveWorkspaceModal = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent margin="3.75rem 1rem">
         <ModalHeader>Leave {workspaceTitle}?</ModalHeader>
         <ModalBody>
           Are you sure? You can&apos;t undo this action afterwards.
