@@ -58,20 +58,32 @@ export const Modal = ({
             </CreateBoardButton>
           )
         : triggerName && (
-            <Button
-              onClick={onOpen}
-              background="#00B5AD"
-              color="white"
-              _hover={{ backgroundColor: darken("#00B5AD", 8) }}
-            >
-              {triggerName}&nbsp;
-              <AiOutlineUnorderedList />
-            </Button>
+            <>
+              <Button
+                onClick={onOpen}
+                background="#00B5AD"
+                className="hideOnlyMobile"
+                color="white"
+                _hover={{ backgroundColor: darken("#00B5AD", 8) }}
+              >
+                {triggerName}&nbsp;
+                <AiOutlineUnorderedList />
+              </Button>
+              <Button
+                onClick={onOpen}
+                background="#00B5AD"
+                className="showOnlyMobile"
+                color="white"
+                _hover={{ backgroundColor: darken("#00B5AD", 8) }}
+              >
+                <AiOutlineUnorderedList />
+              </Button>
+            </>
           )}
 
       <ChakraModal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent margin="3.75rem 1rem">
           <ModalHeader>{modalTitle}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>{children}</ModalBody>

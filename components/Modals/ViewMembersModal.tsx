@@ -47,7 +47,7 @@ export const ViewMembersModal = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent margin="3.75rem 1rem">
         <ModalHeader textAlign="center">{workspaceTitle} Members</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -74,7 +74,7 @@ export const ViewMembersModal = ({
                 >
                   <Flex>
                     <Avatar name={fullName} size="sm" marginRight="8px" />
-                    <Box lineHeight="1.2">
+                    <Box lineHeight="1.2" marginRight="0.5rem">
                       <div>{fullName}</div>
                       <Text as="i" fontSize="12px">
                         {email}

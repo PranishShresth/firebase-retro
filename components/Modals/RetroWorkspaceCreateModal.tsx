@@ -114,7 +114,7 @@ export const RetroWorkspaceCreateModal = ({
       </Box>
       <Modal isOpen={isOpen} onClose={closeWorkspaceCreate}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent margin="3.75rem 1rem">
           <ModalHeader>Create Workspace</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

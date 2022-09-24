@@ -37,7 +37,7 @@ const RetroBoardHeader = () => {
       maxWidth="1600px"
     >
       <Stack direction="row" align="center" height="100%">
-        <IconDiv>
+        <IconDiv className="hideOnlyMobile">
           <Icon as={GiNinjaHead} w={6} h="100%" />
         </IconDiv>
         <Text fontWeight="bold" fontSize={"1.2rem"}>

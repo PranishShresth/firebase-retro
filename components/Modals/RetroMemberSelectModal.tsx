@@ -113,7 +113,7 @@ export const RetroMemberSelectModal = ({
 
       <Modal isOpen={isOpen} onClose={closeMemberSelect}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent margin="3.75rem 1rem">
           <ModalHeader>Invite Members</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

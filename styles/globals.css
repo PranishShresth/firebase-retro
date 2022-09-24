@@ -25,3 +25,16 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+.showOnlyMobile {
+  display: none !important;
+}
+
+@media (max-width: 480px) {
+  .hideOnlyMobile {
+    display: none !important;
+  }
+  .showOnlyMobile {
+    display: block !important;
+  }
+}
