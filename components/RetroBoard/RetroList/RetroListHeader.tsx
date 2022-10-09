@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Input } from "@chakra-ui/input";
-import { Box, useColorModeValue } from "@chakra-ui/react";
+import { Box, Text, useColorModeValue } from "@chakra-ui/react";
 import { Controller, useForm } from "react-hook-form";
 import { doc, updateDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import RetroListMenu from "./RetroListMenu";
+
+import Sparkle from "../../Sparkle";
 
 const ListTitleWrapper = styled(Box)`
   align-items: center;
@@ -21,15 +23,6 @@ const RetroColumnHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   margin: 24px 4px;
-`;
-
-const Square = styled.div`
-  background-color: ${({ $listColour }: { $listColour: string }) =>
-    $listColour};
-  border-radius: 4px;
-  height: 16px;
-  margin-right: 8px;
-  width: 16px;
 `;
 
 interface Props {
@@ -95,8 +88,10 @@ export default function RetroListHeader({
       ) : (
         <RetroColumnHeader>
           <ListTitleWrapper onClick={() => setEditMode(true)} color={color}>
-            <Square $listColour={listColour ?? "#000000"} />
-            {listTitle}
+            <Sparkle fill={listColour} />
+            <Text fontSize="20px" marginLeft="8px">
+              {listTitle}
+            </Text>
           </ListTitleWrapper>
           <RetroListMenu listId={listId} />
         </RetroColumnHeader>

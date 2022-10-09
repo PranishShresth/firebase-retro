@@ -40,11 +40,11 @@ export enum Colours {
   mangoTango = "#F78645",
   mikadoYellow = "#FBBD08",
   jasmine = "#F0DE77",
-  middleGreen = "#549462",
-  americanGreen = "#28A745",
+  seaGreen = "#219653",
   tiffanyBlue = "#00B5AD",
   glaucous = "#5B7ABA",
   azure = "#007BFF",
+  richLilac = "#BB6BD9",
   darkOrchid = "#A333C8",
 }
 

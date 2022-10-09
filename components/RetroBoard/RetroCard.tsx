@@ -34,7 +34,7 @@ const StyledIconAction = styled.div<{ hoverColor?: string; color?: string }>`
 `;
 
 const StyledBox = styled(Box)`
-  border-left: 5px solid
+  border-left: 8px solid
     ${({ $listColour }: { $listColour: string }) => $listColour};
   box-shadow: rgb(60 64 67 / 30%) 0px 1px 2px 0px,
     rgb(60 64 67 / 15%) 0px 1px 3px 1px;

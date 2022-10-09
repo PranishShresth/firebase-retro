@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Grid, Stack } from "@chakra-ui/layout";
 import { useDisclosure } from "@chakra-ui/hooks";
-import { Input, InputGroup, Button, Box, Flex } from "@chakra-ui/react";
+import {
+  Input,
+  InputGroup,
+  Button,
+  Box,
+  Flex,
+  useColorMode,
+} from "@chakra-ui/react";
 import { darken } from "@chakra-ui/theme-tools";
 import BoardCard from "./BoardCard";
 import styled from "styled-components";
@@ -61,6 +68,7 @@ const MD_WINDOW_WIDTH_BREAKPOINT = 767;
 const DEFAULT_BOARDS_LIMIT = 4;
 
 export const RetroBody = ({ workspaceId }: { workspaceId: string }) => {
+  const { colorMode } = useColorMode();
   const [boards, setBoards] = useState<BoardWithDocId[] | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
   const [boardsLimit, setBoardsLimit] = useState<number>(DEFAULT_BOARDS_LIMIT);
@@ -90,7 +98,7 @@ export const RetroBody = ({ workspaceId }: { workspaceId: string }) => {
     formState: { errors, isDirty, isValid },
   } = useForm<BoardFormValues>({
     defaultValues: {
-      boardColour: "#000000",
+      boardColour: colorMode === "light" ? "#000000" : "#F2F2F2",
     },
     mode: "onChange",
   });

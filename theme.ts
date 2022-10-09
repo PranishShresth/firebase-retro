@@ -13,7 +13,7 @@ const config: ThemeConfig = {
 const fontConfig = {
   fonts: {
     heading: "Open Sans, sans-serif",
-    body: "Inter, sans-serif",
+    body: "Roboto, Commissioner, Inter, sans-serif",
   },
 };
 

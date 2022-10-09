@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Input, InputGroup } from "@chakra-ui/input";
 import { Stack } from "@chakra-ui/layout";
@@ -14,12 +14,14 @@ import { calculateInitialListPosition } from "utils/dragAndDropUtils";
 import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 import { ColourPicker } from "components/ColourPicker";
 import { AiOutlineUnorderedList } from "react-icons/ai";
+import { useColorMode } from "@chakra-ui/react";
 
 interface FormValues {
   listColour: string;
   listTitle: string;
 }
 const CreateList = () => {
+  const { colorMode } = useColorMode();
   const router = useRouter();
   const {
     board: { lists },
@@ -38,7 +40,7 @@ const CreateList = () => {
     formState: { isDirty, isValid },
   } = useForm<FormValues>({
     defaultValues: {
-      listColour: "#000000",
+      listColour: colorMode === "light" ? "#000000" : "#F2F2F2",
       listTitle: "",
     },
     mode: "onChange",
