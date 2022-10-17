@@ -95,7 +95,7 @@ const UserSelect = ({
   );
 };
 
-const CustomOption = (props: OptionProps) => {
+const CustomOption = (props: any) => {
   const { label, subLabel } = props.data as { label: string; subLabel: string };
   return (
     <components.Option {...props}>

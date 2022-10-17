@@ -31,16 +31,12 @@ const RetroBoardHeader = () => {
     <Stack
       direction="row"
       justifyContent={"space-between"}
-      paddingTop="25px"
       width="95%"
-      margin="0 auto"
+      margin="32px auto 0 auto"
       maxWidth="1600px"
     >
       <Stack direction="row" align="center" height="100%">
-        <IconDiv className="hideOnlyMobile">
-          <Icon as={GiNinjaHead} w={6} h="100%" />
-        </IconDiv>
-        <Text fontWeight="bold" fontSize={"1.2rem"}>
+        <Text fontWeight="bold" fontSize="34px" textTransform="capitalize">
           {board?.boardTitle}
         </Text>
       </Stack>

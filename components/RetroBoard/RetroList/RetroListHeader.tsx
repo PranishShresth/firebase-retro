@@ -5,7 +5,7 @@ import { Box, Text, useColorModeValue } from "@chakra-ui/react";
 import { Controller, useForm } from "react-hook-form";
 import { doc, updateDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
-import RetroListMenu from "./RetroListMenu";
+import { RetroListDelete } from "./RetroListMenu";
 
 import Sparkle from "../../Sparkle";
 
@@ -89,11 +89,11 @@ export default function RetroListHeader({
         <RetroColumnHeader>
           <ListTitleWrapper onClick={() => setEditMode(true)} color={color}>
             <Sparkle fill={listColour} />
-            <Text fontSize="20px" marginLeft="8px">
+            <Text fontSize="20px" marginLeft="8px" fontWeight={700}>
               {listTitle}
             </Text>
           </ListTitleWrapper>
-          <RetroListMenu listId={listId} />
+          <RetroListDelete listId={listId} />
         </RetroColumnHeader>
       )}
     </>

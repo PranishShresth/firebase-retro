@@ -18,6 +18,7 @@ import Router from "next/router";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { auth } from "configs/firebase/firebaseClient";
 import { RetroWorkspaceCreateModal } from "components/Modals/RetroWorkspaceCreateModal";
+import Image from "next/image";
 
 const Header = styled(Box).attrs({ className: "header-bar" })`
   color: #2bc0c1;
@@ -41,7 +42,7 @@ const Container = styled.div`
 export const RetroHeader = () => {
   const { member } = useAuthContext();
   const { colorMode, toggleColorMode } = useColorMode();
-  const bg = useColorModeValue("white", "gray.600");
+  const bg = useColorModeValue("white", "#1C2A3A");
 
   const goToProfile = () => Router.push("/profile");
 
@@ -61,7 +62,9 @@ export const RetroHeader = () => {
     <Header backgroundColor={bg}>
       <Container>
         <HeaderBanner>
-          <Link href="/">Retro Board</Link>
+          <Link href="/" passHref>
+            <Image src="/logo.svg" alt="Logo" width={120} height={32} />
+          </Link>
 
           <Stack direction={"row"}>
             <DarkModeToggle onToggle={toggleColorMode} colorMode={colorMode} />

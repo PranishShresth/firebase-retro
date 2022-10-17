@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import styled from "styled-components";
-import RetroCard from "./RetroCard";
+import RetroCard from "./RetroItem/RetroItem";
 import { Draggable, DroppableProvided } from "react-beautiful-dnd";
 import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 import AddItem from "./RetroItem/AddItem";
