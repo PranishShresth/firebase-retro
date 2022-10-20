@@ -5,8 +5,7 @@ import { useDisclosure } from "@chakra-ui/react";
 import { doc, deleteDoc, writeBatch } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
-
-import Image from "next/image";
+import DeleteIcon from "icons/DeleteIcon";
 
 interface Props {
   listId: string;
@@ -41,7 +40,7 @@ export const RetroListDelete = ({ listId }: Props) => {
   return (
     <>
       <Box onClick={openDeleteDialog} cursor="pointer">
-        <Image src="/Delete.svg" width={14} height={18} alt="Delete icon" />
+        <DeleteIcon fill="#f2f2f2" />
       </Box>
       <AlertDialogBar
         isOpen={isDeleteDialogOpen}

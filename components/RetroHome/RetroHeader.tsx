@@ -1,9 +1,8 @@
 import {
   Avatar,
-  Button,
-  Menu,
   MenuButton,
   MenuItem,
+  Menu,
   MenuList,
   SkeletonCircle,
   Stack,
@@ -17,7 +16,7 @@ import { RetroToggle } from "components/Toggle/RetroToggle";
 import Router from "next/router";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { auth } from "configs/firebase/firebaseClient";
-import Image from "next/image";
+import LogoIcon from "icons/LogoIcon";
 
 const Header = styled(Box).attrs({ className: "header-bar" })`
   color: #2bc0c1;
@@ -62,7 +61,7 @@ export const RetroHeader = () => {
       <Container>
         <HeaderBanner>
           <Link href="/" passHref>
-            <Image src="/logo.svg" alt="Logo" width={120} height={32} />
+            <LogoIcon width={120} />
           </Link>
 
           <Stack direction={"row"}>
