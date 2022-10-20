@@ -7,7 +7,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import { RetroListDelete } from "./RetroListMenu";
 
-import Sparkle from "../../Sparkle";
+import Sparkle from "icons/SparkleIcon";
 
 const ListTitleWrapper = styled(Box)`
   align-items: center;
@@ -23,6 +23,12 @@ const RetroColumnHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   margin: 24px 4px;
+`;
+
+const StyledText = styled(Text)`
+  &::first-letter {
+    text-transform: capitalize;
+  }
 `;
 
 interface Props {
@@ -89,9 +95,9 @@ export default function RetroListHeader({
         <RetroColumnHeader>
           <ListTitleWrapper onClick={() => setEditMode(true)} color={color}>
             <Sparkle fill={listColour} />
-            <Text fontSize="20px" marginLeft="8px" fontWeight={700}>
+            <StyledText fontSize="20px" marginLeft="8px" fontWeight={700}>
               {listTitle}
-            </Text>
+            </StyledText>
           </ListTitleWrapper>
           <RetroListDelete listId={listId} />
         </RetroColumnHeader>

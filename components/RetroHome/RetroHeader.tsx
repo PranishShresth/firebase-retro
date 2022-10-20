@@ -13,11 +13,10 @@ import {
 import Link from "next/link";
 import styled from "styled-components";
 import { Box } from "@chakra-ui/react";
-import { DarkModeToggle } from "components/Toggle/Toggle";
+import { RetroToggle } from "components/Toggle/RetroToggle";
 import Router from "next/router";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { auth } from "configs/firebase/firebaseClient";
-import { RetroWorkspaceCreateModal } from "components/Modals/RetroWorkspaceCreateModal";
 import Image from "next/image";
 
 const Header = styled(Box).attrs({ className: "header-bar" })`
@@ -67,7 +66,7 @@ export const RetroHeader = () => {
           </Link>
 
           <Stack direction={"row"}>
-            <DarkModeToggle onToggle={toggleColorMode} colorMode={colorMode} />
+            <RetroToggle onToggle={toggleColorMode} colorMode={colorMode} />
             {member ? (
               <Menu>
                 <MenuButton>

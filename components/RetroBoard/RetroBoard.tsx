@@ -19,7 +19,7 @@ import { isEmpty } from "lodash-es";
 
 const ColumnsWrapper = styled.main`
   display: flex;
-  gap: 20px;
+  gap: 40px;
   bottom: 0;
   left: 0;
   margin-bottom: 8px;
@@ -40,19 +40,18 @@ const RetroColumnWrapper = styled.div<{ $listCount: number }>`
       width: ${$listCount > 5 ? "300px" : "100%"};
     `}
   height:100%;
-  min-width: 300px;
-  max-width: 100%;
-  padding: 8px;
+  max-width: 300px;
   display: flex;
   flex-direction: column;
 `;
 
 const FlexBox = styled(Box)<{ $listCount: number }>`
-  ${({ $listCount }) =>
+  width: 300px;
+  /* ${({ $listCount }) =>
     css`
       flex: ${$listCount < 5 ? 100 / $listCount : 100};
       max-width: 500px;
-    `}
+    `} */
 `;
 const RetroBoardCanvas = styled.div`
   flex-grow: 1;

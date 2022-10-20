@@ -1,9 +1,9 @@
-import { useColorModeValue, Button } from "@chakra-ui/react";
+import { useColorModeValue, Button, Text } from "@chakra-ui/react";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
-import Image from "next/image";
-import LikeSvgIcon from "./LikeIcon";
+import LikeSvgIcon from "icons/LikeIcon";
+
 export const RetroItemLike = ({
   itemId,
   itemUpvotes,
@@ -37,7 +37,6 @@ export const RetroItemLike = ({
       <Button
         onClick={toggleUpvote}
         aria-label="Like item"
-        rightIcon={<LikeSvgIcon fill={isUpvoted ? "#000000" : "#ffffff"} />}
         size="xs"
         width="49px"
         background={isUpvoted ? "#CFFF18" : "#0D131A"}
@@ -46,7 +45,12 @@ export const RetroItemLike = ({
         color={isUpvoted ? "#000000" : "#ffffff"}
         lineHeight={24}
       >
-        {!!upVotes && upVotes}
+        {!!upVotes && (
+          <Text fontSize={15} fontWeight={700}>
+            {upVotes}
+          </Text>
+        )}
+        <LikeSvgIcon fill={isUpvoted ? "#000000" : "#ffffff"} />
       </Button>
     </>
   );

@@ -1,6 +1,7 @@
 import { useColorModeValue } from "@chakra-ui/react";
+import { memo, SVGProps } from "react";
 
-const Sparkle = ({ fill }: { fill: string | undefined }) => {
+const SparkleIcon = ({ fill, ...props }: SVGProps<SVGSVGElement>) => {
   const defaultFill = useColorModeValue("#000000", "#F2F2F2");
 
   return (
@@ -10,6 +11,7 @@ const Sparkle = ({ fill }: { fill: string | undefined }) => {
       viewBox="0 0 16 16"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      {...props}
     >
       <g filter="url(#filter0_d_2_829)">
         <path
@@ -58,4 +60,4 @@ const Sparkle = ({ fill }: { fill: string | undefined }) => {
   );
 };
 
-export default Sparkle;
+export default memo(SparkleIcon);

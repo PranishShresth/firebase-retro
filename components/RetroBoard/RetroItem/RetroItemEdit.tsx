@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { IconButton } from "@chakra-ui/react";
+import EditIcon from "icons/EditIcon";
 
 export const RetroItemEdit = ({ openEditBox }: { openEditBox: () => void }) => {
   return (
@@ -7,7 +7,7 @@ export const RetroItemEdit = ({ openEditBox }: { openEditBox: () => void }) => {
       <IconButton
         onClick={openEditBox}
         aria-label="Edit item"
-        icon={<Image width={14} height={14} src="/Edit.svg" alt="delete" />}
+        icon={<EditIcon fill="#F2F2F2" />}
         isRound
         size="xs"
         background="#0D131A"

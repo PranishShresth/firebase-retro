@@ -20,7 +20,6 @@ const UserSelect = ({
   const optionColourBg = useColorModeValue("#000000", "#ffffff");
   const optionHoverBg = useColorModeValue("#ffffff14", "#cbd5e0");
   const [options, setOptions] = useState<any>([]);
-  // const selectInputRef = useRef();
 
   const colourStyles: StylesConfig<any> = {
     control: (styles) => ({ ...styles, backgroundColor: inputBg }),
@@ -37,25 +36,9 @@ const UserSelect = ({
           : optionsBg,
         color: isDisabled ? "#ccc" : isSelected ? "white" : optionColourBg,
         cursor: isDisabled ? "not-allowed" : "default",
-
-        // ":active": {
-        //   ...styles[":active"],
-        //   backgroundColor: !isDisabled
-        //     ? isSelected
-        //       ? data.color
-        //       : color.alpha(0.3).css()
-        //     : undefined,
-        // },
       };
     },
-    // input: (styles) => ({ ...styles, ...dot() }),
-    // placeholder: (styles) => ({ ...styles, ...dot("#ccc") }),
-    // singleValue: (styles, { data }) => ({ ...styles, ...dot(data.color) }),
   };
-
-  // const onClear = () => {
-  //   selectInputRef.current && selectInputRef.current.select.clearValue();
-  // };
 
   useEffect(() => {
     const getUsers = async () => {

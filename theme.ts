@@ -22,7 +22,7 @@ const theme = extendTheme({
   config,
   styles: {
     global: (props: any) => ({
-      body: { bg: mode("#f6f7fb", "#171923")(props) },
+      body: { bg: mode("#f6f7fb", "#0D131A")(props) },
     }),
   },
   ...fontConfig,

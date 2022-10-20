@@ -16,7 +16,6 @@ import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 import { RetroItemEdit } from "./RetroItemEdit";
 import { RetroItemDelete } from "./RetroItemDelete";
 import { RetroItemLike } from "./RetroItemLike";
-import { BiLike } from "react-icons/bi";
 interface Props {
   listColour: string;
   item: Item;
@@ -41,7 +40,7 @@ const ContentDiv = styled.div`
 
 const RetroItem = ({ listColour, item, provided, snapshot }: Props) => {
   const { isOpen, onClose, onOpen: openEditBox } = useDisclosure();
-  const bg = useColorModeValue("white", "gray.600");
+  const bg = useColorModeValue("white", "#1C2A3A");
 
   if (isOpen) {
     return (
