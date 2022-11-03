@@ -1,4 +1,10 @@
-import { ColorMode, Box, Stack, Text } from "@chakra-ui/react";
+import {
+  ColorMode,
+  Box,
+  Stack,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { useState } from "react";
 import styled, { css } from "styled-components";
 
@@ -25,17 +31,16 @@ export const RetroToggle = ({
   onToggle: () => void;
   colorMode: ColorMode;
 }) => {
-  const [isDarkMode, setIsDarkMode] = useState(true);
-
-  const toggle = () => {
-    setIsDarkMode((prev) => !prev);
-    onToggle();
-  };
+  const isDarkMode = colorMode === "dark";
+  const bg = useColorModeValue("#f2f2f2", "#0D131A");
+  const iconBg = useColorModeValue("#1C2A3A", "#DADADA");
+  const outlineBg = useColorModeValue("#DADADA", "#1C2A3A");
 
   return (
     <Stack
       alignItems="center"
-      background="#0d131a"
+      background={bg}
+      outline={`1px solid ${outlineBg}`}
       borderRadius="24px"
       cursor="pointer"
       direction="row"
@@ -44,11 +49,11 @@ export const RetroToggle = ({
       padding={4}
       position="relative"
       width="200px"
-      onClick={toggle}
+      onClick={onToggle}
     >
       <YellowOutline $isDarkMode={isDarkMode} />
       <Text
-        color={!isDarkMode ? "#000000" : "#ffffff"}
+        color={!isDarkMode ? "#000000" : iconBg}
         fontSize="14px"
         fontWeight="400"
         margin="0 !important"
@@ -57,7 +62,7 @@ export const RetroToggle = ({
         Light mode
       </Text>
       <Text
-        color={isDarkMode ? "#000000" : "#ffffff"}
+        color={isDarkMode ? "#000000" : iconBg}
         fontSize="14px"
         fontWeight="400"
         marginRight={12}

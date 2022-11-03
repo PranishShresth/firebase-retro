@@ -1,6 +1,6 @@
 import { firestore } from "configs/firebase/firestore";
 import { AlertDialogBar } from "components/Alert";
-import { useDisclosure, IconButton } from "@chakra-ui/react";
+import { useDisclosure, useColorModeValue, IconButton } from "@chakra-ui/react";
 import { deleteDoc, doc } from "firebase/firestore";
 import DeleteIcon from "icons/DeleteIcon";
 
@@ -10,6 +10,9 @@ export const RetroItemDelete = ({ itemId }: { itemId: string }) => {
     onClose: closeDeleteDialog,
     onOpen: openDeleteDialog,
   } = useDisclosure();
+  const bg = useColorModeValue("#f2f2f2", "#0D131A");
+  const iconBg = useColorModeValue("#1C2A3A", "#DADADA");
+  const outlineBg = useColorModeValue("#DADADA", "#1C2A3A");
 
   const deleteItem = async () => {
     try {
@@ -24,11 +27,11 @@ export const RetroItemDelete = ({ itemId }: { itemId: string }) => {
       <IconButton
         onClick={openDeleteDialog}
         aria-label="Delete item"
-        icon={<DeleteIcon fill="#F2F2F2" />}
+        icon={<DeleteIcon fill={iconBg} />}
         isRound
-        size="xs"
-        background="#0D131A"
-        x
+        size="sm"
+        outline={`1px solid ${outlineBg}`}
+        background={bg}
       />
       <AlertDialogBar
         isOpen={isDeleteDialogOpen}

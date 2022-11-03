@@ -13,7 +13,7 @@ import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 import { setFilterPayload } from "context/RetroBoard/RetroBoardReducer";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { BiFilterAlt, BiSearch } from "react-icons/bi";
+import { BiSearch } from "react-icons/bi";
 
 type FormInputs = {
   itemFilter: string;
@@ -42,15 +42,18 @@ export const RetroBoardFilter = () => {
   return (
     <>
       <Button
+        borderRadius="4px"
         className="hideOnlyMobile"
-        leftIcon={<BiFilterAlt />}
+        leftIcon={<BiSearch />}
         {...buttonProp}
         onClick={onOpen}
+        padding="0px 24px 0px 24px"
+        variant="outline"
       >
-        Filter
+        Search
       </Button>
       <Button className="showOnlyMobile" {...buttonProp} onClick={onOpen}>
-        <BiFilterAlt />
+        <BiSearch />
       </Button>
       <Modal isOpen={isOpen} onClose={closeFilterModal}>
         <ModalOverlay />

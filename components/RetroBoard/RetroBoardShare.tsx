@@ -13,17 +13,10 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React from "react";
 import { BiShareAlt } from "react-icons/bi";
 import { QRCodeSVG } from "qrcode.react";
-
-async function copyTextToClipboard(text: string) {
-  if ("clipboard" in navigator) {
-    return await navigator.clipboard.writeText(text);
-  } else {
-    return document.execCommand("copy", true, text);
-  }
-}
+import { useClipboard } from "hooks/useClipboard";
 
 export const RetroBoardShare = ({ boardId }: { boardId: string }) => {
   const {
@@ -31,23 +24,19 @@ export const RetroBoardShare = ({ boardId }: { boardId: string }) => {
     onOpen: openShareModal,
     onClose: closeShareModal,
   } = useDisclosure();
-  const [isCopied, setIsCopied] = useState(false);
+  const [isCopied, handleClipBoard] = useClipboard();
 
   const url = `https://${window.location.hostname}/board/${boardId}`;
 
-  const handleClipBoard = async () => {
-    await copyTextToClipboard(url);
-    setIsCopied(true);
-    setTimeout(() => {
-      setIsCopied(false);
-    }, 3000);
-  };
   return (
     <>
       <Button
+        borderRadius="4px"
         className="hideOnlyMobile"
         leftIcon={<BiShareAlt />}
         onClick={openShareModal}
+        padding="0px 24px 0px 24px"
+        variant="outline"
       >
         Share
       </Button>
@@ -73,7 +62,7 @@ export const RetroBoardShare = ({ boardId }: { boardId: string }) => {
                     colorScheme="teal"
                     h="1.75rem"
                     size="sm"
-                    onClick={handleClipBoard}
+                    onClick={() => handleClipBoard(url)}
                   >
                     {isCopied ? "Copied" : "Copy"}
                   </Button>

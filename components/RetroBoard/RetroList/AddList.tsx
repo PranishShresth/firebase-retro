@@ -72,7 +72,7 @@ const CreateList = () => {
     <>
       <Modal
         modalTitle="List Creation"
-        triggerName="Create"
+        triggerName="Add a column"
         isOpen={isOpen}
         onClose={closeListModal}
         onOpen={openListModal}

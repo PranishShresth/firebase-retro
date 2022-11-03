@@ -42,6 +42,8 @@ export const RetroHeader = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const bg = useColorModeValue("white", "#1C2A3A");
 
+  const iconBg = useColorModeValue("#1C2A3A", "#DADADA");
+
   const goToProfile = () => Router.push("/profile");
 
   const signOut = () => {
@@ -61,7 +63,7 @@ export const RetroHeader = () => {
       <Container>
         <HeaderBanner>
           <Link href="/" passHref>
-            <LogoIcon width={120} />
+            <LogoIcon fill={iconBg} width={120} />
           </Link>
 
           <Stack direction={"row"}>
