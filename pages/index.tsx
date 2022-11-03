@@ -13,7 +13,7 @@ const RetroDashboard: NextPage = () => {
   return (
     <Box background={bg} height="100%">
       <Head>
-        <title>Retro Board</title>
+        <title>Shiny Retro</title>
       </Head>
       <RetroHeader />
       <RetroWorkspace />
