@@ -49,7 +49,13 @@ export const RetroItemLike = ({
         lineHeight={24}
       >
         {!!upVotes && (
-          <Text fontSize={15} fontWeight={700} lineHeight="0" marginRight="3px">
+          <Text
+            color={isUpvoted ? "#000000" : iconBg}
+            fontSize={15}
+            fontWeight={700}
+            lineHeight="0"
+            marginRight="3px"
+          >
             {upVotes}
           </Text>
         )}
