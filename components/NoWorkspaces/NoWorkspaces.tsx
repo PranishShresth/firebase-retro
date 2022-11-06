@@ -31,7 +31,13 @@ const NoWorkspaces = () => {
           height="50%"
         />
       </StyledDiv>
-      <Text color="#cccccc" fontSize="2rem" fontWeight="bold">
+      <Text
+        color="#cccccc"
+        fontSize="2rem"
+        fontWeight="bold"
+        padding="0 16px"
+        textAlign="center"
+      >
         No workspaces here, why not create one?
       </Text>
     </Flex>
