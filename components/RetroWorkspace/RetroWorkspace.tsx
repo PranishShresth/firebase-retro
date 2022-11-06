@@ -15,10 +15,11 @@ import { Workspace } from "utils/interfaces";
 
 const StyledFlex = styled(Flex)`
   left: 50%;
+  max-width: 700px;
   position: fixed;
   top: 50%;
   transform: translate(-50%, -65%);
-  width: 700px;
+  width: 100%;
 `;
 
 export const RetroWorkspace = () => {
