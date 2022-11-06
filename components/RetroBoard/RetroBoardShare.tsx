@@ -1,5 +1,6 @@
 import {
   Button,
+  IconButton,
   Input,
   InputGroup,
   InputRightElement,
@@ -12,48 +13,47 @@ import {
   Stack,
   Text,
   useDisclosure,
+  useMediaQuery,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
-import { BiShareAlt } from "react-icons/bi";
+import { useClipboard } from "hooks/useClipboard";
+import { useRouter } from "next/router";
 import { QRCodeSVG } from "qrcode.react";
+import { BiShareAlt } from "react-icons/bi";
 
-async function copyTextToClipboard(text: string) {
-  if ("clipboard" in navigator) {
-    return await navigator.clipboard.writeText(text);
-  } else {
-    return document.execCommand("copy", true, text);
-  }
-}
-
-export const RetroBoardShare = ({ boardId }: { boardId: string }) => {
+export const RetroBoardShare = () => {
   const {
     isOpen,
     onOpen: openShareModal,
     onClose: closeShareModal,
   } = useDisclosure();
-  const [isCopied, setIsCopied] = useState(false);
+  const [isCopied, handleClipBoard] = useClipboard();
+  const router = useRouter();
+  const { boardId } = router.query;
 
   const url = `https://${window.location.hostname}/board/${boardId}`;
 
-  const handleClipBoard = async () => {
-    await copyTextToClipboard(url);
-    setIsCopied(true);
-    setTimeout(() => {
-      setIsCopied(false);
-    }, 3000);
-  };
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
+
   return (
     <>
-      <Button
-        className="hideOnlyMobile"
-        leftIcon={<BiShareAlt />}
-        onClick={openShareModal}
-      >
-        Share
-      </Button>
-      <Button className="showOnlyMobile" onClick={openShareModal}>
-        <BiShareAlt />
-      </Button>
+      {isMobile ? (
+        <IconButton
+          aria-label="share"
+          onClick={openShareModal}
+          icon={<BiShareAlt />}
+        />
+      ) : (
+        <Button
+          borderRadius="4px"
+          leftIcon={<BiShareAlt />}
+          onClick={openShareModal}
+          padding="0px 24px 0px 24px"
+          variant="outline"
+        >
+          Share
+        </Button>
+      )}
+
       <Modal onClose={closeShareModal} isOpen={isOpen} isCentered>
         <ModalOverlay />
         <ModalContent margin="3.75rem 1rem">
@@ -73,7 +73,7 @@ export const RetroBoardShare = ({ boardId }: { boardId: string }) => {
                     colorScheme="teal"
                     h="1.75rem"
                     size="sm"
-                    onClick={handleClipBoard}
+                    onClick={() => handleClipBoard(url)}
                   >
                     {isCopied ? "Copied" : "Copy"}
                   </Button>

@@ -20,7 +20,7 @@ const RetroBoard = () => {
     <AppWrapper background={bg}>
       <RetroBoardProvider>
         <Head>
-          <title>Retro Board</title>
+          <title>Shiny Retro</title>
         </Head>
         <RetroHeader />
         <RetroBoardSingle />

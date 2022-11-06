@@ -7,15 +7,16 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { FiStar } from "react-icons/fi";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { Item } from "utils/interfaces";
-import EditItem from "./RetroItem/EditItem";
-import { firestore } from "configs/firebase/firestore";
-import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
+import EditItem from "./EditItem";
+
 import { useAuthContext } from "context/Auth/AuthContext";
 import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
-import { RetroItemEditDelete } from "./RetroItemEditDelete";
+import { RetroItemEdit } from "./RetroItemEdit";
+import { RetroItemDelete } from "./RetroItemDelete";
+import { RetroItemLike } from "./RetroItemLike";
+import { RetroItemCopy } from "./RetroItemCopy";
 interface Props {
   listColour: string;
   item: Item;
@@ -24,31 +25,28 @@ interface Props {
   snapshot: DraggableStateSnapshot;
 }
 
-const StyledIconAction = styled.div<{ hoverColor?: string; color?: string }>`
-  color: ${(props) => props.color};
-  cursor: pointer;
-  transition: color 100ms linear;
-  &:hover {
-    color: ${(props) => props.hoverColor};
-  }
-`;
-
-const StyledBox = styled(Box)`
-  border-left: 8px solid
-    ${({ $listColour }: { $listColour: string }) => $listColour};
+const StyledBox = styled(Box)<{ $isDragging: boolean; $listColour: string }>`
+  border-left: 8px solid ${({ $listColour }) => $listColour};
   box-shadow: rgb(60 64 67 / 30%) 0px 1px 2px 0px,
     rgb(60 64 67 / 15%) 0px 1px 3px 1px;
-  margin: 4px 4px 8px 4px;
+  margin-bottom: 32px;
   transition: background 100ms linear;
+  ${({ $isDragging }) =>
+    $isDragging &&
+    css`
+      transform: rotate(-3.2deg);
+    `}
+  position: relative;
 `;
 
 const ContentDiv = styled.div`
   padding-bottom: 5px;
 `;
 
-const RetroCard = ({ listColour, item, provided, snapshot }: Props) => {
+const RetroItem = ({ listColour, item, provided, snapshot }: Props) => {
   const { isOpen, onClose, onOpen: openEditBox } = useDisclosure();
-  const bg = useColorModeValue("white", "gray.600");
+  const bg = useColorModeValue("white", "#1C2A3A");
+  const isDragging = snapshot.isDragging;
 
   if (isOpen) {
     return (
@@ -61,12 +59,15 @@ const RetroCard = ({ listColour, item, provided, snapshot }: Props) => {
     );
   }
 
+  console.log("isDragging", isDragging);
+
   return (
     <StyledBox
       $listColour={listColour}
-      padding="10px 8px"
+      padding="16px 16px 24px 16px"
       background={bg}
       ref={provided.innerRef}
+      $isDragging={isDragging}
       {...provided.draggableProps}
       {...provided.dragHandleProps}
     >
@@ -79,6 +80,7 @@ const RetroCard = ({ listColour, item, provided, snapshot }: Props) => {
         <RetroCardActions
           userId={item?.userId}
           itemId={item.itemId}
+          text={item.itemTitle}
           openEditBox={openEditBox}
           itemUpvotes={item.itemUpvotes}
         />
@@ -92,11 +94,13 @@ const RetroCardActions = ({
   itemId,
   openEditBox,
   itemUpvotes,
+  text,
 }: {
   userId: string;
   itemId: string;
   openEditBox: () => void;
   itemUpvotes: string[];
+  text: string;
 }) => {
   const { user } = useAuthContext();
 
@@ -107,59 +111,27 @@ const RetroCardActions = ({
       <Box
         display="flex"
         gridGap="15px"
-        padding="5px 0 0 0"
-        justifyContent="center"
+        position="absolute"
+        transform="translateY(30%)"
         alignItems="center"
+        justifyContent="space-between"
+        width="100%"
       >
-        <RetroItemMemberToolTip userId={userId} />
-        {allowEditAndDelete && (
-          <RetroItemEditDelete itemId={itemId} openEditBox={openEditBox} />
-        )}
-        <RetroItemUpvote itemId={itemId} itemUpvotes={itemUpvotes} />
+        <Stack direction="row" transform="translateX(28px)">
+          {allowEditAndDelete && (
+            <>
+              <RetroItemDelete itemId={itemId} />
+              <RetroItemEdit openEditBox={openEditBox} />
+            </>
+          )}
+          <RetroItemCopy text={text} />
+        </Stack>
+        <Stack direction="row">
+          <RetroItemLike itemId={itemId} itemUpvotes={itemUpvotes} />
+          <RetroItemMemberToolTip userId={userId} />
+        </Stack>
       </Box>
     </>
-  );
-};
-
-const RetroItemUpvote = ({
-  itemId,
-  itemUpvotes,
-}: {
-  itemId: string;
-  itemUpvotes: string[];
-}) => {
-  const bg = useColorModeValue("black", "gray.600");
-
-  const lightOrDarkStarBg = useColorModeValue("#F91880", "#FBBD08");
-  const { user } = useAuthContext();
-  const isUpvoted = user && itemUpvotes.includes(user.uid);
-
-  const toggleUpvote = async () => {
-    if (user) {
-      const itemRef = doc(firestore, "items", itemId);
-      if (!itemUpvotes.includes(user?.uid)) {
-        await updateDoc(itemRef, {
-          itemUpvotes: arrayUnion(user?.uid),
-        });
-      } else {
-        await updateDoc(itemRef, {
-          itemUpvotes: arrayRemove(user?.uid),
-        });
-      }
-    }
-  };
-
-  return (
-    <StyledIconAction
-      color={isUpvoted ? lightOrDarkStarBg : bg}
-      hoverColor={lightOrDarkStarBg}
-      onClick={toggleUpvote}
-    >
-      <Stack direction="row" spacing={2}>
-        <FiStar fill={isUpvoted ? lightOrDarkStarBg : "#FFFFFF"} />
-        <span style={{ lineHeight: "16px" }}>{itemUpvotes.length}</span>
-      </Stack>
-    </StyledIconAction>
   );
 };
 
@@ -177,10 +149,10 @@ const RetroItemMemberToolTip = ({ userId }: { userId: string }) => {
   return (
     <div>
       <Tooltip bg="gray.300" color="black" hasArrow label={label}>
-        <Avatar size="xs" name={label} />
+        <Avatar size="sm" name={label} />
       </Tooltip>
     </div>
   );
 };
 
-export default RetroCard;
+export default RetroItem;

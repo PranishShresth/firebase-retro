@@ -1,19 +1,20 @@
 import {
   Button,
-  useDisclosure,
+  Icon,
+  IconButton,
+  Input,
+  InputGroup,
+  InputLeftElement,
   Modal,
   ModalContent,
   ModalOverlay,
-  Input,
-  InputLeftElement,
-  InputGroup,
-  Icon,
+  useDisclosure,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 import { setFilterPayload } from "context/RetroBoard/RetroBoardReducer";
-import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { BiFilterAlt, BiSearch } from "react-icons/bi";
+import { BiSearch } from "react-icons/bi";
 
 type FormInputs = {
   itemFilter: string;
@@ -34,6 +35,7 @@ export const RetroBoardFilter = () => {
     dispatch(setFilterPayload(itemFilter.toLowerCase()));
     closeFilterModal();
   };
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
 
   const buttonProp = isFilterApplied
     ? { backgroundColor: "#2bc0c1", color: "white", _hover: { bg: "#2C7A7B" } }
@@ -41,17 +43,21 @@ export const RetroBoardFilter = () => {
 
   return (
     <>
-      <Button
-        className="hideOnlyMobile"
-        leftIcon={<BiFilterAlt />}
-        {...buttonProp}
-        onClick={onOpen}
-      >
-        Filter
-      </Button>
-      <Button className="showOnlyMobile" {...buttonProp} onClick={onOpen}>
-        <BiFilterAlt />
-      </Button>
+      {isMobile ? (
+        <IconButton aria-label="search" icon={<BiSearch />} onClick={onOpen} />
+      ) : (
+        <Button
+          borderRadius="4px"
+          leftIcon={<BiSearch />}
+          {...buttonProp}
+          onClick={onOpen}
+          padding="0px 24px 0px 24px"
+          variant="outline"
+        >
+          Search
+        </Button>
+      )}
+
       <Modal isOpen={isOpen} onClose={closeFilterModal}>
         <ModalOverlay />
         <ModalContent margin="3.75rem 1rem">

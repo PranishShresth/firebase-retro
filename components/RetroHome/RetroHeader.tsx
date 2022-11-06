@@ -1,9 +1,8 @@
 import {
   Avatar,
-  Button,
-  Menu,
   MenuButton,
   MenuItem,
+  Menu,
   MenuList,
   SkeletonCircle,
   Stack,
@@ -13,11 +12,11 @@ import {
 import Link from "next/link";
 import styled from "styled-components";
 import { Box } from "@chakra-ui/react";
-import { DarkModeToggle } from "components/Toggle/Toggle";
+import { RetroToggle } from "components/Toggle/RetroToggle";
 import Router from "next/router";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { auth } from "configs/firebase/firebaseClient";
-import { RetroWorkspaceCreateModal } from "components/Modals/RetroWorkspaceCreateModal";
+import LogoIcon from "icons/LogoIcon";
 
 const Header = styled(Box).attrs({ className: "header-bar" })`
   color: #2bc0c1;
@@ -41,7 +40,9 @@ const Container = styled.div`
 export const RetroHeader = () => {
   const { member } = useAuthContext();
   const { colorMode, toggleColorMode } = useColorMode();
-  const bg = useColorModeValue("white", "gray.600");
+  const bg = useColorModeValue("white", "#1C2A3A");
+
+  const iconBg = useColorModeValue("#1C2A3A", "#DADADA");
 
   const goToProfile = () => Router.push("/profile");
 
@@ -61,10 +62,12 @@ export const RetroHeader = () => {
     <Header backgroundColor={bg}>
       <Container>
         <HeaderBanner>
-          <Link href="/">Retro Board</Link>
+          <Link href="/" passHref>
+            <LogoIcon fill={iconBg} width={120} />
+          </Link>
 
           <Stack direction={"row"}>
-            <DarkModeToggle onToggle={toggleColorMode} colorMode={colorMode} />
+            <RetroToggle onToggle={toggleColorMode} colorMode={colorMode} />
             {member ? (
               <Menu>
                 <MenuButton>

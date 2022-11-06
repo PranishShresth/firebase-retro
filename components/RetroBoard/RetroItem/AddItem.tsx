@@ -26,6 +26,7 @@ interface Props {
 const StyledButton = styled(Button)`
   border: 1px solid #e6e7e9;
   color: #b7b8ba;
+  font-weight: normal;
 `;
 
 interface FormValues {
@@ -83,7 +84,6 @@ function AddItem({ listId }: Props) {
     <>
       {!open && (
         <StyledButton
-          leftIcon={<FaPlus />}
           variant="solid"
           width="100%"
           background={bg}
@@ -92,7 +92,7 @@ function AddItem({ listId }: Props) {
             setOpen(!open);
           }}
         >
-          Item
+          Add Item
         </StyledButton>
       )}
       {open && (

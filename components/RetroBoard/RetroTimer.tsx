@@ -1,7 +1,6 @@
 import {
   Badge,
   Box,
-  Button,
   Flex,
   IconButton,
   Tooltip,
@@ -9,16 +8,16 @@ import {
 } from "@chakra-ui/react";
 import { useInterval } from "hooks/useInterval";
 
-import { firestore } from "configs/firebase/firestore";
-import { zonedTimeToUtc } from "date-fns-tz";
-import { useState } from "react";
-import { Board } from "utils/interfaces";
 import { FIVE_MINUTES_IN_SECONDS } from "components/RetroHome/RetroBody";
-import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
+import { firestore } from "configs/firebase/firestore";
+import { useAuthContext } from "context/Auth/AuthContext";
+import { zonedTimeToUtc } from "date-fns-tz";
+import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { useState } from "react";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { BsStopCircle } from "react-icons/bs";
+import { Board } from "utils/interfaces";
 import { Colours } from "../ColourPicker";
-import { useAuthContext } from "context/Auth/AuthContext";
 interface RetroTimerProps {
   board: Board;
 }

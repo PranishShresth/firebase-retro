@@ -29,8 +29,8 @@ interface Reorder_Item_Payload {
 
 const FETCH_BOARD_REQUESTED = "FETCH_BOARD_REQUESTED";
 const FETCH_BOARD_FULFILLED = "FETCH_BOARD_FULFILLED";
-const FETCH_WORKSPACE_REQUESTED = "FETCH_WORKSPACE_REQUESTED"
-const FETCH_WORKSPACE_FULFILLED = "FETCH_WORKSPACE_FULFILLED"
+const FETCH_WORKSPACE_REQUESTED = "FETCH_WORKSPACE_REQUESTED";
+const FETCH_WORKSPACE_FULFILLED = "FETCH_WORKSPACE_FULFILLED";
 const FETCH_BOARDS_FULFILLED = "FETCH_BOARDS_FULFILLED";
 const FETCH_ITEMS_FULFILLED = "FETCH_ITEMS_FULFILLED";
 const FETCH_LISTS_FULFILLED = "FETCH_LISTS_FULFILLED";
@@ -56,6 +56,9 @@ export function RetroBoardReducer(state: RetroBoardState, action: ActionTypes) {
   switch (action.type) {
     case FETCH_BOARD_REQUESTED: {
       return { ...state, status: "pending" };
+    }
+    case FETCH_WORKSPACE_FULFILLED: {
+      return { ...state, workspace: action.payload };
     }
     case FETCH_BOARDS_FULFILLED: {
       return { ...state, allBoards: action.payload, status: "fulfilled" };
@@ -113,6 +116,11 @@ export const updateLists = (payload: List[]): ActionTypes => ({
 
 export const updateItems = (payload: Item[]): ActionTypes => ({
   type: FETCH_ITEMS_FULFILLED,
+  payload,
+});
+
+export const updateWorkspace = (payload: Workspace): ActionTypes => ({
+  type: FETCH_WORKSPACE_FULFILLED,
   payload,
 });
 

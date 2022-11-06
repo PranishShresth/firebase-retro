@@ -61,20 +61,20 @@ export const Modal = ({
             <>
               <Button
                 onClick={onOpen}
-                background="#00B5AD"
+                background="#CFFF18"
                 className="hideOnlyMobile"
-                color="white"
-                _hover={{ backgroundColor: darken("#00B5AD", 8) }}
+                color="black"
+                _hover={{ backgroundColor: darken("#CFFF18", 8) }}
+                padding="0px 24px 0px 24px"
+                fontWeight="normal"
               >
-                {triggerName}&nbsp;
-                <AiOutlineUnorderedList />
+                {triggerName}
               </Button>
               <Button
                 onClick={onOpen}
-                background="#00B5AD"
                 className="showOnlyMobile"
-                color="white"
-                _hover={{ backgroundColor: darken("#00B5AD", 8) }}
+                _hover={{ backgroundColor: darken("#CFFF18", 8) }}
+                padding="0px 24px 0px 24px"
               >
                 <AiOutlineUnorderedList />
               </Button>
