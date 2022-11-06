@@ -72,9 +72,7 @@ export const Modal = ({
               </Button>
               <Button
                 onClick={onOpen}
-                background="#CFFF18"
                 className="showOnlyMobile"
-                color="white"
                 _hover={{ backgroundColor: darken("#CFFF18", 8) }}
                 padding="0px 24px 0px 24px"
               >

@@ -1,19 +1,13 @@
-import {
-  ColorMode,
-  Box,
-  Stack,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import { useState } from "react";
+import { ColorMode, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import styled, { css } from "styled-components";
+import { useMediaQuery } from "@chakra-ui/react";
 
-const YellowOutline = styled.div<{ $isDarkMode: boolean }>`
+const YellowOutline = styled.div<{ $isDarkMode: boolean; $isMobile: boolean }>`
   background-color: #cfff18;
   border-radius: 16px;
   height: calc(100% - 8px);
   position: absolute;
-  width: 92px;
+  width: ${({ $isMobile }) => ($isMobile ? "53px" : "92px")};
   transition: right 300ms ease;
   z-index: 1;
   right: 4px;
@@ -35,6 +29,7 @@ export const RetroToggle = ({
   const bg = useColorModeValue("#f2f2f2", "#0D131A");
   const iconBg = useColorModeValue("#1C2A3A", "#DADADA");
   const outlineBg = useColorModeValue("#DADADA", "#1C2A3A");
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
 
   return (
     <Stack
@@ -48,10 +43,10 @@ export const RetroToggle = ({
       justifyContent="space-between"
       padding={4}
       position="relative"
-      width="200px"
+      width={[121, null, 200]}
       onClick={onToggle}
     >
-      <YellowOutline $isDarkMode={isDarkMode} />
+      <YellowOutline $isDarkMode={isDarkMode} $isMobile={isMobile} />
       <Text
         color={!isDarkMode ? "#000000" : iconBg}
         fontSize="14px"
@@ -59,7 +54,7 @@ export const RetroToggle = ({
         margin="0 !important"
         zIndex={2}
       >
-        Light mode
+        {isMobile ? "Light" : "Light Mode"}
       </Text>
       <Text
         color={isDarkMode ? "#000000" : iconBg}
@@ -68,7 +63,7 @@ export const RetroToggle = ({
         marginRight={12}
         zIndex={2}
       >
-        Dark mode
+        {isMobile ? "Dark" : "Dark Mode"}
       </Text>
     </Stack>
   );

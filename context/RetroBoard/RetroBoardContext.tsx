@@ -22,6 +22,7 @@ import {
   updateBoard,
   updateItems,
   updateLists,
+  updateWorkspace,
 } from "./RetroBoardReducer";
 import { Board, Item, List, Member, Workspace } from "utils/interfaces";
 import { useAuthContext } from "context/Auth/AuthContext";
@@ -75,10 +76,13 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
     if (workspaceId && member) {
       const q = doc(firestore, Collection.Workspaces, workspaceId);
       getDoc(q).then((snap) => {
-        const { members } = snap.data() as Workspace;
-        const isMember = members.find((m) => m.userId === member.userId);
+        const workspace = snap.data() as Workspace;
+        const isMember = workspace.members.find(
+          (m) => m.userId === member.userId
+        );
         if (isMember) {
-          return setMembers(members);
+          dispatch(updateWorkspace(workspace));
+          return setMembers(workspace.members);
         }
         dispatch(updateBoard({ board: {} as Board }));
         setMembers(null);

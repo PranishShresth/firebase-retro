@@ -40,7 +40,7 @@ const RetroColumnWrapper = styled.div<{ $listCount: number }>`
       width: ${$listCount > 5 ? "300px" : "100%"};
     `}
   height:100%;
-  max-width: 300px;
+  width: 300px;
   display: flex;
   flex-direction: column;
 `;
@@ -121,7 +121,7 @@ export const RetroBoardSingle = () => {
       <RetroBoardHeader />
       <RetroBoardCanvas>
         <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
-          <ColumnsWrapper>
+          <ColumnsWrapper id="#board">
             {sortedList?.map((list) => {
               return (
                 <FlexBox key={list.listId} $listCount={currentListCount}>
