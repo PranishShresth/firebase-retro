@@ -43,7 +43,6 @@ export const RetroItemLike = ({
         background={isUpvoted ? "#CFFF18" : bg}
         outline={`1px solid ${outlineBg}`}
         _hover={{ backgroundColor: darken("#CFFF18", 12) }}
-        isRound
         borderRadius={16.5}
         color={isUpvoted ? "#000000" : "#ffffff"}
         lineHeight={24}

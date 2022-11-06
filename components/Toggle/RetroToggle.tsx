@@ -28,14 +28,14 @@ export const RetroToggle = ({
   const isDarkMode = colorMode === "dark";
   const bg = useColorModeValue("#f2f2f2", "#0D131A");
   const iconBg = useColorModeValue("#1C2A3A", "#DADADA");
-  const outlineBg = useColorModeValue("#DADADA", "#1C2A3A");
+  const borderBg = useColorModeValue("#DADADA", "#1C2A3A");
   const [isMobile] = useMediaQuery("(max-width: 768px)");
 
   return (
     <Stack
       alignItems="center"
       background={bg}
-      outline={`1px solid ${outlineBg}`}
+      border={`1px solid ${borderBg}`}
       borderRadius="24px"
       cursor="pointer"
       direction="row"
