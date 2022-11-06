@@ -30,27 +30,6 @@ a {
   display: none !important;
 }
 
-main::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-/* Track */
-main::-webkit-scrollbar-track-piece {
-  background: #1c2a3a;
-}
-/* Handle */
-main::-webkit-scrollbar-thumb {
-  background: #e7ff8e;
-  border-radius: 4px;
-}
-
-main::-webkit-scrollbar-button {
-  display: block;
-  height: 100px;
-  width: 4px;
-}
-
 @media (max-width: 480px) {
   .hideOnlyMobile {
     display: none !important;

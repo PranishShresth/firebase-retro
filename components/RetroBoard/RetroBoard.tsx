@@ -16,8 +16,9 @@ import NoPageFound from "components/404page/PageNotFound";
 import { RetroBoardSkeleton } from "components/Loader";
 import { reorderItem } from "context/RetroBoard/RetroBoardReducer";
 import { isEmpty } from "lodash-es";
+import { useColorMode } from "@chakra-ui/react";
 
-const ColumnsWrapper = styled.main`
+const ColumnsWrapper = styled.main<{ $isDarkMode: boolean }>`
   display: flex;
   gap: 40px;
   bottom: 0;
@@ -31,6 +32,28 @@ const ColumnsWrapper = styled.main`
   top: 0;
   -webkit-user-select: none;
   user-select: none;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track-piece {
+    background: ${({ $isDarkMode }) => ($isDarkMode ? "#1c2a3a" : "#DADADA")};
+    border-radius: 4px;
+  }
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: ${({ $isDarkMode }) => ($isDarkMode ? "#e7ff8e" : "#1c2a3a")};
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-button {
+    display: block;
+    height: 100px;
+    width: 4px;
+  }
 `;
 
 const RetroColumnWrapper = styled.div<{ $listCount: number }>`
@@ -47,11 +70,6 @@ const RetroColumnWrapper = styled.div<{ $listCount: number }>`
 
 const FlexBox = styled(Box)<{ $listCount: number }>`
   width: 300px;
-  /* ${({ $listCount }) =>
-    css`
-      flex: ${$listCount < 5 ? 100 / $listCount : 100};
-      max-width: 500px;
-    `} */
 `;
 const RetroBoardCanvas = styled.div`
   flex-grow: 1;
@@ -65,6 +83,8 @@ export const RetroBoardSingle = () => {
     board: { items, lists, board, status },
     dispatch,
   } = useRetroContext();
+  const { colorMode } = useColorMode();
+  const isDarkMode = colorMode === "dark";
 
   const currentListCount = lists.length;
 
@@ -121,7 +141,7 @@ export const RetroBoardSingle = () => {
       <RetroBoardHeader />
       <RetroBoardCanvas>
         <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
-          <ColumnsWrapper id="#board">
+          <ColumnsWrapper id="#board" $isDarkMode={isDarkMode}>
             {sortedList?.map((list) => {
               return (
                 <FlexBox key={list.listId} $listCount={currentListCount}>

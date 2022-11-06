@@ -1,13 +1,12 @@
 import {
   Button,
-  Textarea,
-  Stack,
   IconButton,
+  Stack,
+  Textarea,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { firestore } from "configs/firebase/firestore";
 import { doc, updateDoc } from "firebase/firestore";
-import React, { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { IoMdClose } from "react-icons/io";
 

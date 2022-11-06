@@ -6,7 +6,6 @@ import { Button } from "@chakra-ui/button";
 import { darken } from "@chakra-ui/theme-tools";
 import { Controller, useForm } from "react-hook-form";
 import { useRouter } from "next/router";
-import { Modal } from "components/Modal";
 import { v4 as uuidv4 } from "uuid";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
@@ -14,19 +13,30 @@ import { calculateInitialListPosition } from "utils/dragAndDropUtils";
 import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 import { ColourPicker } from "components/ColourPicker";
 import { AiOutlineUnorderedList } from "react-icons/ai";
-import { useColorMode } from "@chakra-ui/react";
+import {
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  IconButton,
+  ModalOverlay,
+  useColorMode,
+  Modal,
+  useMediaQuery,
+} from "@chakra-ui/react";
 
 interface FormValues {
   listColour: string;
   listTitle: string;
 }
-const CreateList = () => {
+export const RetroColumnCreate = () => {
   const { colorMode } = useColorMode();
   const router = useRouter();
   const {
     board: { lists },
   } = useRetroContext();
   const boardId = "" + router.query.boardId;
+
   const {
     isOpen,
     onOpen: openListModal,
@@ -45,6 +55,8 @@ const CreateList = () => {
     },
     mode: "onChange",
   });
+
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
 
   const handleCreateList = async (data: FormValues) => {
     if (data.listTitle.length < 1) {
@@ -70,62 +82,80 @@ const CreateList = () => {
 
   return (
     <>
-      <Modal
-        modalTitle="List Creation"
-        triggerName="Add a column"
-        isOpen={isOpen}
-        onClose={closeListModal}
-        onOpen={openListModal}
-      >
-        <form onSubmit={handleSubmit(handleCreateList)}>
-          <Stack spacing={3}>
-            <div>
-              <span>Title:</span>
-              <InputGroup marginTop="4px">
-                <Controller
-                  control={control}
-                  name="listTitle"
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      placeholder="List Title"
-                      required
-                      type="text"
-                      value={field.value}
+      {isMobile ? (
+        <IconButton
+          onClick={openListModal}
+          aria-label="Create column"
+          icon={<AiOutlineUnorderedList />}
+        />
+      ) : (
+        <Button
+          onClick={openListModal}
+          background="#CFFF18"
+          color="black"
+          _hover={{ backgroundColor: darken("#CFFF18", 8) }}
+          padding="0px 24px 0px 24px"
+          fontWeight="normal"
+        >
+          Add a column
+        </Button>
+      )}
+
+      <Modal isOpen={isOpen} onClose={closeListModal}>
+        <ModalOverlay />
+        <ModalContent margin="3.75rem 1rem">
+          <ModalHeader>Add a column</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <form onSubmit={handleSubmit(handleCreateList)}>
+              <Stack spacing={3}>
+                <div>
+                  <span>Title:</span>
+                  <InputGroup marginTop="4px">
+                    <Controller
+                      control={control}
+                      name="listTitle"
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          placeholder="List Title"
+                          required
+                          type="text"
+                          value={field.value}
+                        />
+                      )}
+                      rules={{ required: true }}
                     />
-                  )}
-                  rules={{ required: true }}
-                />
-              </InputGroup>
-            </div>
-            <div>
-              <span>Colour:</span>
-              <Controller
-                control={control}
-                name="listColour"
-                render={({ field }) => <ColourPicker field={field} />}
-              />
-            </div>
-            <div>
-              <Button
-                background="#00B5AD"
-                color="white"
-                disabled={!isDirty || !isValid}
-                _hover={{ backgroundColor: darken("#00B5AD", 8) }}
-                marginBottom="12px"
-                marginTop="16px"
-                width="100%"
-                type="submit"
-              >
-                Create List&nbsp;
-                <AiOutlineUnorderedList />
-              </Button>
-            </div>
-          </Stack>
-        </form>
+                  </InputGroup>
+                </div>
+                <div>
+                  <span>Colour:</span>
+                  <Controller
+                    control={control}
+                    name="listColour"
+                    render={({ field }) => <ColourPicker field={field} />}
+                  />
+                </div>
+                <div>
+                  <Button
+                    background="#00B5AD"
+                    color="white"
+                    disabled={!isDirty || !isValid}
+                    _hover={{ backgroundColor: darken("#00B5AD", 8) }}
+                    marginBottom="12px"
+                    marginTop="16px"
+                    width="100%"
+                    type="submit"
+                  >
+                    Create List&nbsp;
+                    <AiOutlineUnorderedList />
+                  </Button>
+                </div>
+              </Stack>
+            </form>
+          </ModalBody>
+        </ModalContent>
       </Modal>
     </>
   );
 };
-
-export default CreateList;

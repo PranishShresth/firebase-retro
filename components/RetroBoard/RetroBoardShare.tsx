@@ -1,5 +1,6 @@
 import {
   Button,
+  IconButton,
   Input,
   InputGroup,
   InputRightElement,
@@ -12,37 +13,47 @@ import {
   Stack,
   Text,
   useDisclosure,
+  useMediaQuery,
 } from "@chakra-ui/react";
-import React from "react";
-import { BiShareAlt } from "react-icons/bi";
-import { QRCodeSVG } from "qrcode.react";
 import { useClipboard } from "hooks/useClipboard";
+import { useRouter } from "next/router";
+import { QRCodeSVG } from "qrcode.react";
+import { BiShareAlt } from "react-icons/bi";
 
-export const RetroBoardShare = ({ boardId }: { boardId: string }) => {
+export const RetroBoardShare = () => {
   const {
     isOpen,
     onOpen: openShareModal,
     onClose: closeShareModal,
   } = useDisclosure();
   const [isCopied, handleClipBoard] = useClipboard();
+  const router = useRouter();
+  const { boardId } = router.query;
 
   const url = `https://${window.location.hostname}/board/${boardId}`;
 
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
+
   return (
     <>
-      <Button
-        borderRadius="4px"
-        className="hideOnlyMobile"
-        leftIcon={<BiShareAlt />}
-        onClick={openShareModal}
-        padding="0px 24px 0px 24px"
-        variant="outline"
-      >
-        Share
-      </Button>
-      <Button className="showOnlyMobile" onClick={openShareModal}>
-        <BiShareAlt />
-      </Button>
+      {isMobile ? (
+        <IconButton
+          aria-label="share"
+          onClick={openShareModal}
+          icon={<BiShareAlt />}
+        />
+      ) : (
+        <Button
+          borderRadius="4px"
+          leftIcon={<BiShareAlt />}
+          onClick={openShareModal}
+          padding="0px 24px 0px 24px"
+          variant="outline"
+        >
+          Share
+        </Button>
+      )}
+
       <Modal onClose={closeShareModal} isOpen={isOpen} isCentered>
         <ModalOverlay />
         <ModalContent margin="3.75rem 1rem">

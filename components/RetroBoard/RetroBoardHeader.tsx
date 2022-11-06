@@ -1,20 +1,27 @@
-import React from "react";
-import { Box, Stack, Text, useColorModeValue } from "@chakra-ui/react";
+import {
+  Box,
+  Stack,
+  Text,
+  useColorModeValue,
+  useMediaQuery,
+} from "@chakra-ui/react";
 
-import styled from "styled-components";
 import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
-import AddList from "./RetroList/AddList";
+import { format } from "date-fns";
+import Link from "next/link";
+import { IoArrowBackSharp } from "react-icons/io5";
 import { RetroBoardFilter } from "./RetroBoardFilter";
 import { RetroBoardShare } from "./RetroBoardShare";
-import { IoArrowBackSharp } from "react-icons/io5";
-import Link from "next/link";
-import { format } from "date-fns";
+import { RetroColumnCreate } from "./RetroList/AddList";
+import { RetroMobileDrawer } from "./RetroMobileDrawer";
 const RetroBoardHeader = () => {
   const {
     board: { board, workspace },
   } = useRetroContext();
-  console.log(workspace);
+
   const bg = useColorModeValue("white", "#1C2A3A");
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
+
   return (
     <Stack
       direction="row"
@@ -75,13 +82,14 @@ const RetroBoardHeader = () => {
         </Stack>
       </Stack>
 
+      {isMobile && <RetroMobileDrawer />}
+
       <Stack display={{ base: "none", md: "flex" }} direction="row">
         {/* <RetroTimer board={board} /> */}
         <RetroBoardFilter />
-        <RetroBoardShare boardId={board.boardId} />
-        <Box>
-          <AddList />
-        </Box>
+        <RetroBoardShare />
+
+        <RetroColumnCreate />
       </Stack>
     </Stack>
   );
