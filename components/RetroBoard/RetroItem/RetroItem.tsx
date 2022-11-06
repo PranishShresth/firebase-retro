@@ -31,11 +31,11 @@ const StyledBox = styled(Box)<{ $isDragging: boolean; $listColour: string }>`
     rgb(60 64 67 / 15%) 0px 1px 3px 1px;
   margin-bottom: 32px;
   transition: background 100ms linear;
-  ${({ $isDragging }) =>
+  /* ${({ $isDragging }) =>
     $isDragging &&
     css`
       transform: rotate(-3.2deg);
-    `}
+    `} */
   position: relative;
 `;
 
@@ -58,8 +58,6 @@ const RetroItem = ({ listColour, item, provided, snapshot }: Props) => {
       />
     );
   }
-
-  console.log("isDragging", isDragging);
 
   return (
     <StyledBox
