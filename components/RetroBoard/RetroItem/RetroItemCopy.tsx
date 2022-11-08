@@ -6,7 +6,7 @@ export const RetroItemCopy = ({ text }: { text: string }) => {
   const [, handleClipBoard] = useClipboard();
   const toast = useToast();
   const bg = useColorModeValue("#f2f2f2", "#0D131A");
-  const outlineBg = useColorModeValue("#cccccc", "#1C2A3A");
+  const borderBg = useColorModeValue("#cccccc", "#1C2A3A");
 
   return (
     <IconButton
@@ -23,7 +23,7 @@ export const RetroItemCopy = ({ text }: { text: string }) => {
       icon={<FaRegCopy size={16} />}
       isRound
       size="sm"
-      outline={`1px solid ${outlineBg}`}
+      border={`1px solid ${borderBg}`}
       background={bg}
     />
   );
