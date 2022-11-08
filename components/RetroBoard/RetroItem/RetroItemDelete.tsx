@@ -12,7 +12,7 @@ export const RetroItemDelete = ({ itemId }: { itemId: string }) => {
   } = useDisclosure();
   const bg = useColorModeValue("#f2f2f2", "#0D131A");
   const iconBg = useColorModeValue("#1C2A3A", "#DADADA");
-  const outlineBg = useColorModeValue("#DADADA", "#1C2A3A");
+  const borderBg = useColorModeValue("#DADADA", "#1C2A3A");
 
   const deleteItem = async () => {
     try {
@@ -30,7 +30,7 @@ export const RetroItemDelete = ({ itemId }: { itemId: string }) => {
         icon={<DeleteIcon fill={iconBg} />}
         isRound
         size="sm"
-        outline={`1px solid ${outlineBg}`}
+        border={`1px solid ${borderBg}`}
         background={bg}
       />
       <AlertDialogBar

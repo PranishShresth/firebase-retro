@@ -22,7 +22,7 @@ const RetroColumnHeader = styled.div`
   color: #58585a;
   justify-content: space-between;
   align-items: center;
-  margin: 24px 4px;
+  margin: 24px 0px;
 `;
 
 const StyledText = styled(Text)`

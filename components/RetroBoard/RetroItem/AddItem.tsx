@@ -9,7 +9,6 @@ import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { v4 as uuidv4 } from "uuid";
 
-import styled from "styled-components";
 import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
@@ -22,12 +21,6 @@ import { IoMdClose } from "react-icons/io";
 interface Props {
   listId: string;
 }
-
-const StyledButton = styled(Button)`
-  border: 1px solid #e6e7e9;
-  color: #b7b8ba;
-  font-weight: normal;
-`;
 
 interface FormValues {
   itemTitle: string;
@@ -83,17 +76,20 @@ function AddItem({ listId }: Props) {
   return (
     <>
       {!open && (
-        <StyledButton
-          variant="solid"
-          width="100%"
+        <Button
           background={bg}
           borderColor={borderBg}
+          borderRadius="4px"
+          fontWeight="normal"
           onClick={() => {
             setOpen(!open);
           }}
+          padding="0px 24px 0px 24px"
+          variant="outline"
+          width="100%"
         >
           Add Item
-        </StyledButton>
+        </Button>
       )}
       {open && (
         <form onSubmit={handleSubmit(handleAddingItem)}>
@@ -104,7 +100,7 @@ function AddItem({ listId }: Props) {
               render={({ field }) => (
                 <Textarea
                   {...field}
-                  placeholder="Add a Item"
+                  placeholder="Add an item"
                   resize="none"
                   focusBorderColor="blue.500"
                   background={textareaBg}

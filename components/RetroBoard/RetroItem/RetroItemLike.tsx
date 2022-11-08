@@ -14,7 +14,7 @@ export const RetroItemLike = ({
 }) => {
   const bg = useColorModeValue("#f2f2f2", "#0D131A");
   const iconBg = useColorModeValue("#1C2A3A", "#DADADA");
-  const outlineBg = useColorModeValue("#DADADA", "#1C2A3A");
+  const borderBg = useColorModeValue("#DADADA", "#1C2A3A");
 
   const { user } = useAuthContext();
   const isUpvoted = user && itemUpvotes.includes(user.uid);
@@ -41,7 +41,7 @@ export const RetroItemLike = ({
         aria-label="Like item"
         size="sm"
         background={isUpvoted ? "#CFFF18" : bg}
-        outline={`1px solid ${outlineBg}`}
+        border={`1px solid ${borderBg}`}
         _hover={{ backgroundColor: darken("#CFFF18", 12) }}
         borderRadius={16.5}
         color={isUpvoted ? "#000000" : "#ffffff"}

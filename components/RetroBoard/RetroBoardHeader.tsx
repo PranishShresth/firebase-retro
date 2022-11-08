@@ -62,7 +62,7 @@ const RetroBoardHeader = () => {
             <Text
               fontSize={{ base: "14px" }}
               margin="0 !important"
-              paddingRight="4px"
+              paddingRight="8px"
               textDecoration="underline"
               borderRight="1px solid grey"
               lineHeight={1}
@@ -74,10 +74,10 @@ const RetroBoardHeader = () => {
 
           <Text
             fontSize={{ base: "14px" }}
-            margin="0 0 0 4px !important"
+            margin="0 0 0 8px !important"
             lineHeight={1}
           >
-            {format(new Date(board.createdAt.seconds * 1000), "dd/MM/yyyy")}
+            {format(new Date(board.createdAt.seconds * 1000), "dd MMMM yyyy")}
           </Text>
         </Stack>
       </Stack>
