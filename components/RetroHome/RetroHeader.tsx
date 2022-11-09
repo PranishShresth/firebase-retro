@@ -17,6 +17,7 @@ import Router from "next/router";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { auth } from "configs/firebase/firebaseClient";
 import LogoIcon from "icons/LogoIcon";
+import Image from "next/image";
 
 const Header = styled(Box).attrs({ className: "header-bar" })`
   color: #2bc0c1;
@@ -41,6 +42,7 @@ export const RetroHeader = () => {
   const { member } = useAuthContext();
   const { colorMode, toggleColorMode } = useColorMode();
   const bg = useColorModeValue("white", "#1C2A3A");
+  const isDarkMode = colorMode === "dark";
 
   const iconBg = useColorModeValue("#1C2A3A", "#DADADA");
 
@@ -63,7 +65,12 @@ export const RetroHeader = () => {
       <Container>
         <HeaderBanner>
           <Link href="/" passHref>
-            <LogoIcon fill={iconBg} width={120} />
+            <Image
+              alt="Shiny Retro Logo"
+              src={isDarkMode ? "/logo-dark.svg" : "/logo-light.svg"}
+              height={24}
+              width={120}
+            />
           </Link>
 
           <Stack direction={"row"}>
