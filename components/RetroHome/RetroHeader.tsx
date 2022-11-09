@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import {
   Avatar,
   MenuButton,
@@ -16,8 +17,6 @@ import { RetroToggle } from "components/Toggle/RetroToggle";
 import Router from "next/router";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { auth } from "configs/firebase/firebaseClient";
-import LogoIcon from "icons/LogoIcon";
-import Image from "next/image";
 
 const Header = styled(Box).attrs({ className: "header-bar" })`
   color: #2bc0c1;
@@ -44,8 +43,6 @@ export const RetroHeader = () => {
   const bg = useColorModeValue("white", "#1C2A3A");
   const isDarkMode = colorMode === "dark";
 
-  const iconBg = useColorModeValue("#1C2A3A", "#DADADA");
-
   const goToProfile = () => Router.push("/profile");
 
   const signOut = () => {
@@ -65,11 +62,10 @@ export const RetroHeader = () => {
       <Container>
         <HeaderBanner>
           <Link href="/" passHref>
-            <Image
+            <img
               alt="Shiny Retro Logo"
               src={isDarkMode ? "/logo-dark.svg" : "/logo-light.svg"}
-              height={24}
-              width={120}
+              width={"120px"}
             />
           </Link>
 
