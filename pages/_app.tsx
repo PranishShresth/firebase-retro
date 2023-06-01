@@ -6,14 +6,17 @@ import { ColorModeScript } from "@chakra-ui/react";
 import theme from "./../theme";
 import "@fontsource/inter/400.css";
 import "@fontsource/open-sans/700.css";
+import ErrorBoundary from "components/ErrorBoundary";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider theme={theme}>
-      <AuthProvider>
-        <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-        <Component {...pageProps} />
-      </AuthProvider>
+      <ErrorBoundary fallback={<p>Something went wrong!</p>}>
+        <AuthProvider>
+          <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+          <Component {...pageProps} />
+        </AuthProvider>
+      </ErrorBoundary>
     </ChakraProvider>
   );
 }

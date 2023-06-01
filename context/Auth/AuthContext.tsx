@@ -2,7 +2,13 @@ import { auth } from "configs/firebase/firebaseClient";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
 import { AnonymousUser, Auth, Member } from "utils/interfaces";
 import { firestore } from "configs/firebase/firestore";
 
@@ -44,13 +50,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     });
   }, []);
 
-  const updateUser = (data: User) => {
+  const updateUser = useCallback((data: User) => {
     setUser(data);
-  };
+  }, []);
 
-  const updateMember = (data: Member) => {
+  const updateMember = useCallback((data: Member) => {
     setMember(data);
-  };
+  }, []);
 
   return (
     <AuthContext.Provider
