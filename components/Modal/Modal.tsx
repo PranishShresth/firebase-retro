@@ -23,6 +23,7 @@ const CreateBoardButton = styled(Button)`
   min-height: 60px;
   width: 100% !important;
 `;
+
 interface Props {
   children?: React.ReactNode;
   createBoard?: boolean;

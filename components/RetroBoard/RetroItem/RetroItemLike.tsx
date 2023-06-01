@@ -4,7 +4,8 @@ import { useAuthContext } from "context/Auth/AuthContext";
 import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import LikeSvgIcon from "icons/LikeIcon";
-
+import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
+const MAX_LIKES_PER_BOARD = 3;
 export const RetroItemLike = ({
   itemId,
   itemUpvotes,
@@ -19,19 +20,40 @@ export const RetroItemLike = ({
 
   const { user } = useAuthContext();
   const isUpvoted = user && itemUpvotes.includes(user.uid);
+  const {
+    board: { items },
+  } = useRetroContext();
+
   const upVotes = itemUpvotes.length;
   const toggleUpvote = async () => {
-    if (user) {
-      const itemRef = doc(firestore, "items", itemId);
-      if (!itemUpvotes.includes(user?.uid)) {
-        await updateDoc(itemRef, {
-          itemUpvotes: arrayUnion(user?.uid),
-        });
-      } else {
-        await updateDoc(itemRef, {
-          itemUpvotes: arrayRemove(user?.uid),
-        });
+    try {
+      if (user) {
+        const totalUpvotesOnBoard = items.reduce(
+          (totalUpVotes, currentItem) => {
+            const userUpvotes = currentItem.itemUpvotes.reduce(
+              (count, userId) => (userId === user.uid ? count + 1 : count),
+              0
+            );
+            return userUpvotes + totalUpVotes;
+          },
+          0
+        );
+
+        const itemRef = doc(firestore, "items", itemId);
+        const isUpvoted = itemUpvotes.includes(user?.uid);
+
+        if (!isUpvoted && totalUpvotesOnBoard < MAX_LIKES_PER_BOARD) {
+          await updateDoc(itemRef, {
+            itemUpvotes: arrayUnion(user?.uid),
+          });
+        } else if (isUpvoted) {
+          await updateDoc(itemRef, {
+            itemUpvotes: arrayRemove(user?.uid),
+          });
+        }
       }
+    } catch (err) {
+      console.log(err);
     }
   };
 
