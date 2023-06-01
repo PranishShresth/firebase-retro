@@ -3,6 +3,7 @@ import { DraggableProvided, DraggableStateSnapshot } from "react-beautiful-dnd";
 import { Box, Stack, Text } from "@chakra-ui/layout";
 import {
   Avatar,
+  Checkbox,
   Tooltip,
   useColorModeValue,
   useDisclosure,
@@ -17,6 +18,9 @@ import { RetroItemEdit } from "./RetroItemEdit";
 import { RetroItemDelete } from "./RetroItemDelete";
 import { RetroItemLike } from "./RetroItemLike";
 import { RetroItemCopy } from "./RetroItemCopy";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
 interface Props {
   listColour: string;
   item: Item;
@@ -62,7 +66,7 @@ const RetroItem = ({ listColour, item, provided, snapshot }: Props) => {
   return (
     <StyledBox
       $listColour={listColour}
-      padding="16px 16px 24px 16px"
+      padding="16px 16px 24px 24px"
       background={bg}
       ref={provided.innerRef}
       $isDragging={isDragging}
@@ -70,9 +74,32 @@ const RetroItem = ({ listColour, item, provided, snapshot }: Props) => {
       {...provided.dragHandleProps}
     >
       <ContentDiv>
-        <Text overflowWrap="anywhere" fontWeight="normal" fontSize="15px">
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          components={{
+            a: ({ node, ...props }) => (
+              <a
+                target="_blank"
+                style={{ color: "#0f82af", textDecoration: "underline" }}
+                {...props}
+              />
+            ),
+            input: ({ node, ...props }) =>
+              props.type === "checkbox" ? (
+                <Checkbox
+                  size="md"
+                  colorScheme="green"
+                  verticalAlign="center"
+                  defaultChecked
+                  {...props}
+                />
+              ) : (
+                node
+              ),
+          }}
+        >
           {item.itemTitle}
-        </Text>
+        </ReactMarkdown>
       </ContentDiv>
       <Stack direction="row-reverse">
         <RetroCardActions
