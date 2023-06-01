@@ -91,10 +91,9 @@ const RetroItem = ({ listColour, item, provided, snapshot }: Props) => {
                   colorScheme="green"
                   verticalAlign="center"
                   defaultChecked
-                  {...props}
                 />
               ) : (
-                node
+                <> {node}</>
               ),
           }}
         >
