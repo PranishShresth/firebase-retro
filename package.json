@@ -32,7 +32,9 @@
     "react-firebase-hooks": "^5.0.3",
     "react-hook-form": "^7.25.1",
     "react-icons": "^4.3.1",
+    "react-markdown": "^8.0.7",
     "react-select": "^5.4.0",
+    "remark-gfm": "^3.0.1",
     "styled-components": "^5.3.3",
     "uuid": "^8.3.2"
   },
