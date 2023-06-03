@@ -6,14 +6,14 @@
   box-sizing: border-box;
 }
 
+.header-bar {
+  font-size: 24px;
+}
+
 html,
 body,
 #__next {
   height: 100%;
-}
-
-.header-bar {
-  font-size: 24px;
 }
 
 body {
@@ -28,13 +28,4 @@ a {
 
 .showOnlyMobile {
   display: none !important;
-}
-
-@media (max-width: 480px) {
-  .hideOnlyMobile {
-    display: none !important;
-  }
-  .showOnlyMobile {
-    display: block !important;
-  }
 }

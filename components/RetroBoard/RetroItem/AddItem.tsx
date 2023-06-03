@@ -69,6 +69,8 @@ function AddItem({ listId }: Props) {
         itemOrder,
         createdAt: serverTimestamp(),
       });
+      // scroll to the element after it is added
+      document.getElementById(doc_id)?.scrollIntoView({ behavior: "smooth" });
     } catch (err) {
       console.log(err);
     }

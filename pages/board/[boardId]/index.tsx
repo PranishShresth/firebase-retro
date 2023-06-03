@@ -10,7 +10,7 @@ import withAuth from "utils/withAuth";
 const AppWrapper = styled(Box)`
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 100vh;
 `;
 
 const RetroBoard = () => {
@@ -23,6 +23,7 @@ const RetroBoard = () => {
           <title>Shiny Retro</title>
         </Head>
         <RetroHeader />
+
         <RetroBoardSingle />
       </RetroBoardProvider>
     </AppWrapper>

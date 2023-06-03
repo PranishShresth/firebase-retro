@@ -18,25 +18,6 @@ import Router from "next/router";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { auth } from "configs/firebase/firebaseClient";
 
-const Header = styled(Box).attrs({ className: "header-bar" })`
-  color: #2bc0c1;
-  box-shadow: 0 4px 12px 0 rgb(0 0 0 / 5%);
-  font-weight: 800;
-  padding: 10px 0;
-`;
-const HeaderBanner = styled.div`
-  font-size: 18px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const Container = styled.div`
-  width: 95%;
-  margin: 0 auto;
-  max-width: 1600px;
-`;
-
 export const RetroHeader = () => {
   const { member } = useAuthContext();
   const { colorMode, toggleColorMode } = useColorMode();
@@ -58,7 +39,7 @@ export const RetroHeader = () => {
   };
 
   return (
-    <Header backgroundColor={bg}>
+    <Header backgroundColor={bg} padding={{ base: 4 }}>
       <Container>
         <HeaderBanner>
           <Link href="/" passHref>
@@ -93,3 +74,19 @@ export const RetroHeader = () => {
     </Header>
   );
 };
+const Header = styled(Box).attrs({ className: "header-bar" })`
+  color: #2bc0c1;
+  box-shadow: 0 4px 12px 0 rgb(0 0 0 / 5%);
+  font-weight: 800;
+`;
+const HeaderBanner = styled.div`
+  font-size: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const Container = styled.div`
+  max-width: 1536px;
+  margin: 0 auto;
+`;

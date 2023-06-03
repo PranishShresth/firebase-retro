@@ -1,4 +1,13 @@
-import { Box, Flex, Heading, useColorModeValue } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Heading,
+  useColorModeValue,
+  Text,
+  Button,
+  Stack,
+  Select,
+} from "@chakra-ui/react";
 import DualRingLoader from "components/Loader/DualRingLoader";
 import { RetroMemberSelectModal } from "components/Modals/RetroMemberSelectModal";
 import { RetroWorkspaceCreateModal } from "components/Modals/RetroWorkspaceCreateModal";
@@ -69,7 +78,7 @@ export const RetroWorkspace = () => {
   }
 
   return (
-    <Box margin={"0 auto"} maxWidth={"1600px"} padding={"1rem"}>
+    <Box margin={"0 auto"} maxWidth={"1536px"} height="100%">
       {workspaces.length === 0 ? (
         <StyledFlex flexDirection="column" alignItems="center">
           <NoWorkspaces />
@@ -77,34 +86,51 @@ export const RetroWorkspace = () => {
         </StyledFlex>
       ) : (
         <>
-          <RetroWorkspaceCreateModal addWorkspace={addWorkspace} />
-          {workspaces?.map(
-            ({ workspaceId, workspaceTitle, userId, members }) => (
-              <Box
-                backgroundColor={workspaceBg}
-                borderRadius="8px"
-                boxShadow="0 4px 12px 0 rgb(0 0 0 / 5%)"
-                key={workspaceId}
-                margin="1.5rem 0"
-                padding="1rem"
-              >
-                <Flex alignItems="center" justifyContent="space-between">
-                  <Heading as="h4" size="md">
-                    {workspaceTitle}
-                  </Heading>
-                  <RetroMemberSelectModal
-                    members={members}
-                    removeWorkspace={removeWorkspace}
-                    updateWorkspace={updateWorkspace}
-                    userId={userId}
-                    workspaceId={workspaceId}
-                    workspaceTitle={workspaceTitle}
-                  />
-                </Flex>
-                <RetroBody workspaceId={workspaceId} />
-              </Box>
-            )
-          )}
+          <Stack direction="column" height="100%">
+            <Box maxW="32rem" padding={{ base: 4, xl: 0 }}>
+              <Heading mb={4} mt={4}>
+                Hello {member?.firstName}!
+              </Heading>
+              <Text fontSize="md" mb={4}>
+                Would you like to create new workspace?
+              </Text>
+              <RetroWorkspaceCreateModal addWorkspace={addWorkspace} />
+            </Box>
+            <Box flex="1" padding={{ base: 4, lg: 0 }}>
+              {workspaces?.map(
+                ({ workspaceId, workspaceTitle, userId, members }) => (
+                  <Box
+                    backgroundColor={workspaceBg}
+                    borderRadius="8px"
+                    boxShadow="0 4px 12px 0 rgb(0 0 0 / 5%)"
+                    key={workspaceId}
+                    margin="1.5rem 0"
+                    padding="1rem"
+                  >
+                    <Flex
+                      alignItems="center"
+                      justifyContent="space-between"
+                      direction={{ base: "column", md: "row" }}
+                      gap={{ base: 4, md: 0 }}
+                    >
+                      <Heading as="h4" size="sm">
+                        {workspaceTitle}
+                      </Heading>
+                      <RetroMemberSelectModal
+                        members={members}
+                        removeWorkspace={removeWorkspace}
+                        updateWorkspace={updateWorkspace}
+                        userId={userId}
+                        workspaceId={workspaceId}
+                        workspaceTitle={workspaceTitle}
+                      />
+                    </Flex>
+                    <RetroBody workspaceId={workspaceId} />
+                  </Box>
+                )
+              )}
+            </Box>
+          </Stack>
         </>
       )}
     </Box>

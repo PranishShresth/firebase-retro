@@ -46,25 +46,13 @@ const Grid = styled.div`
 const BoardCard = ({ board }: Props) => {
   const [deleteModalOpen, setdeleteModalOpen] = useState(false);
   const [deleteBoardProgressing, setDeleteBoardProgressing] = useState(false);
-  const [formattedDate, setFormattedDate] = useState("");
   const {
     isOpen: isEditModalOpen,
     onClose: closeEditBoardModal,
     onOpen: openEditBoardModal,
   } = useDisclosure();
   const bg = useColorModeValue("white", "gray.600");
-
-  useEffect(() => {
-    if (board.createdAt) {
-      const date = format(
-        new Date(board.createdAt.seconds * 1000),
-        "dd/MM/yyyy"
-      );
-
-      setFormattedDate(date);
-    }
-  }, [board.createdAt]);
-
+  console.log(board);
   const handleDeleteBoard = async () => {
     try {
       setDeleteBoardProgressing(true);
@@ -123,7 +111,7 @@ const BoardCard = ({ board }: Props) => {
               </Text>
             </Grid>
             <DateCreated>
-              <i>Date Created: {formattedDate}</i>
+              {format(new Date(board.createdAt.seconds * 1000), "dd/MM/yyyy")}
             </DateCreated>
             <EditBoard
               isEditModalOpen={isEditModalOpen}

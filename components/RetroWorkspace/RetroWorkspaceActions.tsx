@@ -128,12 +128,7 @@ export const RetroWorkspaceActions = ({
               key={member.userId}
               label={label}
             >
-              <Avatar
-                className="hideOnlyMobile"
-                name={label}
-                size="sm"
-                marginRight="4px"
-              />
+              <Avatar name={label} size="sm" marginRight="4px" />
             </Tooltip>
           );
         })}
@@ -142,7 +137,6 @@ export const RetroWorkspaceActions = ({
           alignItems="center"
           backgroundColor="#cccccc"
           borderRadius="50%"
-          className="hideOnlyMobile"
           display="flex"
           height="2rem"
           justifyContent="center"

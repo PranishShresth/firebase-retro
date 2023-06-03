@@ -18,8 +18,8 @@ import { RetroItemEdit } from "./RetroItemEdit";
 import { RetroItemDelete } from "./RetroItemDelete";
 import { RetroItemLike } from "./RetroItemLike";
 import { RetroItemCopy } from "./RetroItemCopy";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+
+import { RetroMarkDown } from "../ReactMarkdown/RetroMarkdown";
 
 interface Props {
   listColour: string;
@@ -70,35 +70,12 @@ const RetroItem = ({ listColour, item, provided, snapshot }: Props) => {
       background={bg}
       ref={provided.innerRef}
       $isDragging={isDragging}
+      id={item.itemId}
       {...provided.draggableProps}
       {...provided.dragHandleProps}
     >
       <ContentDiv>
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
-          components={{
-            a: ({ node, ...props }) => (
-              <a
-                target="_blank"
-                style={{ color: "#0f82af", textDecoration: "underline" }}
-                {...props}
-              />
-            ),
-            input: ({ node, ...props }) =>
-              props.type === "checkbox" ? (
-                <Checkbox
-                  size="md"
-                  colorScheme="green"
-                  verticalAlign="center"
-                  defaultChecked
-                />
-              ) : (
-                <> {node}</>
-              ),
-          }}
-        >
-          {item.itemTitle}
-        </ReactMarkdown>
+        <RetroMarkDown text={item.itemTitle} />
       </ContentDiv>
       <Stack direction="row-reverse">
         <RetroCardActions
