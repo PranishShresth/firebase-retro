@@ -1,14 +1,10 @@
-import {
-  Button,
-  IconButton,
-  Stack,
-  Textarea,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Button, IconButton, Stack, useColorModeValue } from "@chakra-ui/react";
 import { firestore } from "configs/firebase/firestore";
 import { doc, updateDoc } from "firebase/firestore";
 import { Controller, useForm } from "react-hook-form";
 import { IoMdClose } from "react-icons/io";
+import { useIsDarkMode } from "utils/color";
+import { RetroTextArea } from "./RetroTextArea";
 
 interface Props {
   isOpen: boolean;
@@ -27,6 +23,7 @@ function EditItem({ isOpen, closeEditMode, content, itemId }: Props) {
       itemTitle: content,
     },
   });
+  const isDarkMode = useIsDarkMode();
 
   const handleEditingItem = async (data: FormValues) => {
     try {
@@ -49,8 +46,9 @@ function EditItem({ isOpen, closeEditMode, content, itemId }: Props) {
               control={control}
               name="itemTitle"
               render={({ field }) => (
-                <Textarea
+                <RetroTextArea
                   {...field}
+                  $isDarkMode={isDarkMode}
                   placeholder="Add a Item"
                   resize="none"
                   focusBorderColor="blue.500"

@@ -17,7 +17,8 @@ import { calculateInitialItemPosition } from "utils/dragAndDropUtils";
 import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { IoMdClose } from "react-icons/io";
-
+import { useIsDarkMode } from "utils/color";
+import { RetroTextArea } from "./RetroTextArea";
 interface Props {
   listId: string;
 }
@@ -32,6 +33,7 @@ function AddItem({ listId }: Props) {
   const bg = useColorModeValue("#f7f7f7", "gray.900");
   const borderBg = useColorModeValue("gray.200", "gray.600");
   const textareaBg = useColorModeValue("white", "gray.600");
+  const isDarkMode = useIsDarkMode();
 
   const {
     board: { items },
@@ -100,8 +102,9 @@ function AddItem({ listId }: Props) {
               control={control}
               name="itemTitle"
               render={({ field }) => (
-                <Textarea
+                <RetroTextArea
                   {...field}
+                  $isDarkMode={isDarkMode}
                   placeholder="Add an item"
                   resize="none"
                   focusBorderColor="blue.500"

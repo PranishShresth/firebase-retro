@@ -1,11 +1,43 @@
-import { useColorModeValue, Button, Text } from "@chakra-ui/react";
+import {
+  useColorModeValue,
+  Button,
+  Text,
+  useToast,
+  Alert,
+  AlertIcon,
+} from "@chakra-ui/react";
 import { darken } from "@chakra-ui/theme-tools";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import LikeSvgIcon from "icons/LikeIcon";
 import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
-const MAX_LIKES_PER_BOARD = 3;
+import { Item } from "utils/interfaces";
+
+const MAX_UPVOTES_PER_BOARD = 5;
+
+const getCurrentUpvotes = (items: Item[], currentUserId: string) => {
+  return items.reduce((totalUpVotes, currentItem) => {
+    const userUpvotes = currentItem.itemUpvotes.reduce(
+      (count, userId) => (userId === currentUserId ? count + 1 : count),
+      0
+    );
+    return userUpvotes + totalUpVotes;
+  }, 0);
+};
+
+const ToastAlert = ({ description }: { description: string }) => (
+  <Alert
+    status="info"
+    variant="solid"
+    color="#1C2A3A"
+    backgroundColor="#cfff18"
+  >
+    <AlertIcon />
+    {description}
+  </Alert>
+);
+
 export const RetroItemLike = ({
   itemId,
   itemUpvotes,
@@ -17,6 +49,7 @@ export const RetroItemLike = ({
   const iconBg = useColorModeValue("#1C2A3A", "#DADADA");
   const borderBg = useColorModeValue("#DADADA", "#1C2A3A");
   const likeHoverBg = useColorModeValue("#ffffff", "#9f9f9f");
+  const toast = useToast();
 
   const { user } = useAuthContext();
   const isUpvoted = user && itemUpvotes.includes(user.uid);
@@ -28,23 +61,25 @@ export const RetroItemLike = ({
   const toggleUpvote = async () => {
     try {
       if (user) {
-        const totalUpvotesOnBoard = items.reduce(
-          (totalUpVotes, currentItem) => {
-            const userUpvotes = currentItem.itemUpvotes.reduce(
-              (count, userId) => (userId === user.uid ? count + 1 : count),
-              0
-            );
-            return userUpvotes + totalUpVotes;
-          },
-          0
-        );
+        const totalUpvotesOnBoard = getCurrentUpvotes(items, user.uid);
 
         const itemRef = doc(firestore, "items", itemId);
         const isUpvoted = itemUpvotes.includes(user?.uid);
 
-        if (!isUpvoted && totalUpvotesOnBoard < MAX_LIKES_PER_BOARD) {
+        if (!isUpvoted && totalUpvotesOnBoard < MAX_UPVOTES_PER_BOARD) {
           await updateDoc(itemRef, {
             itemUpvotes: arrayUnion(user?.uid),
+          });
+          toast({
+            position: "bottom-right",
+            duration: 2000,
+            render: () => (
+              <ToastAlert
+                description={`Remaining Upvotes: ${
+                  MAX_UPVOTES_PER_BOARD - totalUpvotesOnBoard - 1
+                }`}
+              />
+            ),
           });
         } else if (isUpvoted) {
           await updateDoc(itemRef, {
