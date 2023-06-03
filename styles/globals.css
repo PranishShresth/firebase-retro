@@ -23,3 +23,7 @@ a {
 .showOnlyMobile {
   display: none !important;
 }
+
+html {
+  height: 100%;
+}

@@ -52,7 +52,7 @@ const BoardCard = ({ board }: Props) => {
     onOpen: openEditBoardModal,
   } = useDisclosure();
   const bg = useColorModeValue("white", "gray.600");
-  console.log(board);
+
   const handleDeleteBoard = async () => {
     try {
       setDeleteBoardProgressing(true);

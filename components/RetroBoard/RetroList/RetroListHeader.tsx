@@ -8,7 +8,8 @@ import { firestore } from "configs/firebase/firestore";
 import { RetroListDelete } from "./RetroListMenu";
 
 import Sparkle from "icons/SparkleIcon";
-
+import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
+import { MdDragIndicator } from "react-icons/md";
 const ListTitleWrapper = styled(Box)`
   align-items: center;
   display: flex;
@@ -35,6 +36,7 @@ interface Props {
   listColour: string | undefined;
   listId: string;
   listTitle: string;
+  dragHandleProps?: DraggableProvidedDragHandleProps;
 }
 
 interface FormValues {
@@ -44,6 +46,7 @@ export default function RetroListHeader({
   listColour: listColour,
   listId,
   listTitle,
+  dragHandleProps,
 }: Props) {
   const {
     getValues,
@@ -99,6 +102,9 @@ export default function RetroListHeader({
               {listTitle}
             </StyledText>
           </ListTitleWrapper>
+          <div {...dragHandleProps}>
+            <MdDragIndicator />
+          </div>
           <RetroListDelete listId={listId} />
         </RetroColumnHeader>
       )}

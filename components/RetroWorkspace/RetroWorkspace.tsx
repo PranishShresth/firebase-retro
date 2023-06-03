@@ -87,7 +87,7 @@ export const RetroWorkspace = () => {
       ) : (
         <>
           <Stack direction="column" height="100%">
-            <Box maxW="32rem" padding={{ base: 4, xl: 0 }}>
+            <Box maxW="32rem" padding={{ base: 4 }}>
               <Heading mb={4} mt={4}>
                 Hello {member?.firstName}!
               </Heading>
@@ -96,7 +96,7 @@ export const RetroWorkspace = () => {
               </Text>
               <RetroWorkspaceCreateModal addWorkspace={addWorkspace} />
             </Box>
-            <Box flex="1" padding={{ base: 4, lg: 0 }}>
+            <Box flex="1" padding={{ base: 4 }}>
               {workspaces?.map(
                 ({ workspaceId, workspaceTitle, userId, members }) => (
                   <Box

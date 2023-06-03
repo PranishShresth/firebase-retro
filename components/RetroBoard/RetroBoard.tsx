@@ -1,6 +1,11 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import styled, { css } from "styled-components";
-import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DropResult,
+} from "react-beautiful-dnd";
 import {
   isPositionChanged,
   calculateItemPosition,
@@ -14,9 +19,177 @@ import { doc, updateDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import NoPageFound from "components/404page/PageNotFound";
 import { RetroBoardSkeleton } from "components/Loader";
-import { reorderItem } from "context/RetroBoard/RetroBoardReducer";
+import { reorderItem, reorderList } from "context/RetroBoard/RetroBoardReducer";
 import { isEmpty } from "lodash-es";
 import { useColorMode } from "@chakra-ui/react";
+import { Collection } from "utils/firebaseCollection";
+
+export const RetroBoardSingle = () => {
+  const {
+    board: { items, lists, board, status },
+    dispatch,
+  } = useRetroContext();
+  const { colorMode } = useColorMode();
+  const isDarkMode = colorMode === "dark";
+  const currentListCount = lists.length;
+
+  const sortedList = useMemo(() => {
+    return lists.sort((a, b) => a.listOrder - b.listOrder);
+  }, [lists]);
+
+  const onDragStart = useCallback(() => {
+    console.log("draggin");
+    /*...*/
+  }, []);
+
+  const onDragEnd = useCallback(
+    async (result: DropResult) => {
+      const { source, destination, draggableId } = result;
+      try {
+        if (!isPositionChanged(source, destination)) return;
+
+        if (result.type === "ITEM") {
+          if (!destination) return;
+          const position = calculateItemPosition(
+            items,
+            source,
+            destination,
+            draggableId
+          );
+
+          const itemRef = doc(firestore, Collection.Items, draggableId);
+
+          dispatch(
+            reorderItem({
+              source: source.droppableId,
+              destination: destination.droppableId,
+              itemId: draggableId,
+              position,
+            })
+          );
+
+          await updateDoc(itemRef, {
+            itemOrder: position,
+            listId: destination.droppableId,
+          });
+        }
+
+        if (result.type === "LIST") {
+          if (source.index === destination?.index) return;
+
+          const staticList = sortedList[destination?.index ?? 0];
+          const draggableList = sortedList[source.index];
+
+          const staticListOrder = staticList.listOrder;
+          const draggableListOrder = draggableList.listOrder;
+          if (staticList && draggableList) {
+            dispatch(
+              reorderList({
+                sourceIndex: source.index,
+                destinationIndex: destination?.index ?? 0,
+              })
+            );
+            const draggableListRef = doc(
+              firestore,
+              Collection.Lists,
+              draggableId
+            );
+
+            const staticListRef = doc(
+              firestore,
+              Collection.Lists,
+              staticList.listId
+            );
+
+            await Promise.all([
+              updateDoc(draggableListRef, {
+                listOrder: staticListOrder,
+              }),
+              updateDoc(staticListRef, { listOrder: draggableListOrder }),
+            ]);
+          }
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    },
+
+    [items, sortedList, dispatch]
+  );
+
+  if (status == "pending") {
+    return <RetroBoardSkeleton />;
+  }
+
+  if (isEmpty(board)) {
+    return <NoPageFound />;
+  }
+
+  return (
+    <>
+      <RetroBoardHeader />
+      <RetroBoardCanvas>
+        <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+          <Droppable droppableId="board" type="LIST" direction="horizontal">
+            {(listDroppableProvided) => (
+              <ColumnsWrapper
+                id="#board"
+                $isDarkMode={isDarkMode}
+                ref={listDroppableProvided.innerRef}
+                {...listDroppableProvided.droppableProps}
+              >
+                {sortedList?.map((list, index) => {
+                  return (
+                    <Draggable
+                      draggableId={list.listId}
+                      index={index}
+                      key={list.listId}
+                    >
+                      {(listDraggableProvided, snapshot) => (
+                        <FlexBox
+                          key={list.listId}
+                          $listCount={currentListCount}
+                          ref={listDraggableProvided.innerRef}
+                          {...listDraggableProvided.draggableProps}
+                        >
+                          <RetroColumnWrapper $listCount={currentListCount}>
+                            <RetroListHeader
+                              listColour={list?.listColour}
+                              listId={list.listId}
+                              listTitle={list.listTitle}
+                              dragHandleProps={
+                                listDraggableProvided.dragHandleProps
+                              }
+                            />
+
+                            <Droppable
+                              droppableId={list.listId}
+                              key={list.listId}
+                              type="ITEM"
+                            >
+                              {(provided) => (
+                                <RetroColumn
+                                  droppableProvided={provided}
+                                  listColour={list?.listColour}
+                                  listId={list.listId}
+                                />
+                              )}
+                            </Droppable>
+                          </RetroColumnWrapper>
+                        </FlexBox>
+                      )}
+                    </Draggable>
+                  );
+                })}
+                {listDroppableProvided.placeholder}
+              </ColumnsWrapper>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </RetroBoardCanvas>
+    </>
+  );
+};
 
 const ColumnsWrapper = styled.main<{ $isDarkMode: boolean }>`
   display: flex;
@@ -78,95 +251,3 @@ const RetroBoardCanvas = styled.div`
   position: relative;
   width: calc(100% - 50px);
 `;
-export const RetroBoardSingle = () => {
-  const {
-    board: { items, lists, board, status },
-    dispatch,
-  } = useRetroContext();
-  const { colorMode } = useColorMode();
-  const isDarkMode = colorMode === "dark";
-
-  const currentListCount = lists.length;
-
-  const sortedList = useMemo(() => {
-    return lists.sort((a, b) => a.listOrder - b.listOrder);
-  }, [lists]);
-
-  const onDragStart = useCallback(() => {
-    console.log("draggin");
-    /*...*/
-  }, []);
-
-  const onDragEnd = useCallback(
-    async (result: DropResult) => {
-      const { source, destination, draggableId } = result;
-      if (!isPositionChanged(source, destination)) return;
-      if (!destination) return;
-      const position = calculateItemPosition(
-        items,
-        source,
-        destination,
-        draggableId
-      );
-
-      const itemRef = doc(firestore, "items", draggableId);
-
-      dispatch(
-        reorderItem({
-          source: source.droppableId,
-          destination: destination.droppableId,
-          itemId: draggableId,
-          position,
-        })
-      );
-
-      await updateDoc(itemRef, {
-        itemOrder: position,
-        listId: destination.droppableId,
-      });
-    },
-    [items, dispatch]
-  );
-
-  if (status == "pending") {
-    return <RetroBoardSkeleton />;
-  }
-
-  if (isEmpty(board)) {
-    return <NoPageFound />;
-  }
-
-  return (
-    <>
-      <RetroBoardHeader />
-      <RetroBoardCanvas>
-        <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
-          <ColumnsWrapper id="#board" $isDarkMode={isDarkMode}>
-            {sortedList?.map((list) => {
-              return (
-                <FlexBox key={list.listId} $listCount={currentListCount}>
-                  <RetroColumnWrapper $listCount={currentListCount}>
-                    <RetroListHeader
-                      listColour={list?.listColour}
-                      listId={list.listId}
-                      listTitle={list.listTitle}
-                    />
-                    <Droppable droppableId={list.listId} key={list.listId}>
-                      {(provided) => (
-                        <RetroColumn
-                          droppableProvided={provided}
-                          listColour={list?.listColour}
-                          listId={list.listId}
-                        />
-                      )}
-                    </Droppable>
-                  </RetroColumnWrapper>
-                </FlexBox>
-              );
-            })}
-          </ColumnsWrapper>
-        </DragDropContext>
-      </RetroBoardCanvas>
-    </>
-  );
-};

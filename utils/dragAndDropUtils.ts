@@ -39,23 +39,24 @@ export const calculateItemPosition = (
   return position;
 };
 
-const moveItemWithinArray = (
-  arr: Item[],
-  item: Item | undefined,
+const moveItemWithinArray = <T>(
+  arr: T[],
+  item: T | undefined,
   newIndex: number
 ) => {
+  if (!item) return [];
   const arrClone = [...arr];
   const oldIndex = arrClone.indexOf(item!);
   arrClone.splice(newIndex, 0, arrClone.splice(oldIndex, 1)[0]);
   return arrClone;
 };
 
-const insertItemIntoArray = (
-  arr: Item[],
-  item: Item | undefined,
+const insertItemIntoArray = <T>(
+  arr: T[],
+  item: T | undefined,
   index: number
 ) => {
-  if(!item) return []
+  if (!item) return [];
   const arrClone = [...arr];
   arrClone.splice(index, 0, item);
   return arrClone;
@@ -84,6 +85,29 @@ const getPrevAndNextItem = (
   return { prevItem, nextItem };
 };
 
+// const getPrevAndNextList = (
+//   lists: List[],
+//   source: DraggableLocation,
+//   destination: DraggableLocation | undefined,
+//   droppedItemId: string
+// ) => {
+//   const isDroppedInSamePosition = source.index === destination?.index;
+
+//   const destItems = lists.filter((i) => i.listId === destination?.droppableId);
+
+//   const droppedItem = items.find((i) => i.itemId === droppedItemId);
+
+//   const destSortedItems = getSortedItems(destItems);
+//   const afterDropDestinationItems = isSameList
+//     ? moveItemWithinArray(destSortedItems, droppedItem, destination!.index)
+//     : insertItemIntoArray(destSortedItems, droppedItem, destination!.index);
+
+//   const prevItem = afterDropDestinationItems[destination!.index - 1];
+//   const nextItem = afterDropDestinationItems[destination!.index + 1];
+
+//   return { prevItem, nextItem };
+// };
+
 function getSortedItems(items: Item[] | undefined) {
   if (!items) return [];
   return [...items].sort((a, b) => a.itemOrder - b.itemOrder);
@@ -104,4 +128,3 @@ export const calculateInitialListPosition = (lists: List[]): number => {
   }
   return 1;
 };
-

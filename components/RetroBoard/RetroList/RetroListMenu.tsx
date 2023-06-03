@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, useColorModeValue } from "@chakra-ui/react";
 import { AlertDialogBar } from "components/Alert";
 import React from "react";
 import { useDisclosure } from "@chakra-ui/react";
@@ -21,6 +21,8 @@ export const RetroListDelete = ({ listId }: Props) => {
     board: { items },
   } = useRetroContext();
 
+  const bg = useColorModeValue("#1C2A3A", "#F2F2F2");
+
   const deleteList = async () => {
     try {
       const listRef = doc(firestore, "lists", listId);
@@ -40,7 +42,7 @@ export const RetroListDelete = ({ listId }: Props) => {
   return (
     <>
       <Box onClick={openDeleteDialog} cursor="pointer">
-        <DeleteIcon fill="#f2f2f2" />
+        <DeleteIcon fill={bg} />
       </Box>
       <AlertDialogBar
         isOpen={isDeleteDialogOpen}

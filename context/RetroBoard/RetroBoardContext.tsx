@@ -6,6 +6,7 @@ import React, {
   useContext,
   ReactNode,
   useState,
+  useMemo,
 } from "react";
 import { useRouter } from "next/router";
 import { onSnapshot, query, doc, where, getDoc } from "firebase/firestore";
@@ -54,6 +55,11 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
     existingWorkspaceId
   );
   const [members, setMembers] = useState<Member[] | null>(null);
+
+  const ctx = useMemo(
+    () => ({ board: state, workspaceId, dispatch }),
+    [state, workspaceId, dispatch]
+  );
 
   useEffect(() => {
     const boardSnap = onSnapshot(
@@ -117,7 +123,7 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
   }, [boardId]);
 
   return (
-    <RetroBoardContext.Provider value={{ board: state, workspaceId, dispatch }}>
+    <RetroBoardContext.Provider value={ctx}>
       {children}
     </RetroBoardContext.Provider>
   );

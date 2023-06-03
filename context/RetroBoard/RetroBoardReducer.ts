@@ -20,11 +20,19 @@ export const initialState = {
   filterPayload: "",
 } as unknown as RetroBoardState;
 
-interface Reorder_Item_Payload {
+interface BaseReorderPayload {
   source: string;
   destination: string;
-  itemId: string;
   position: number;
+}
+
+interface ReorderItemPayload extends BaseReorderPayload {
+  itemId: string;
+}
+
+interface ReorderListPayload {
+  sourceIndex: number;
+  destinationIndex: number;
 }
 
 const FETCH_BOARD_REQUESTED = "FETCH_BOARD_REQUESTED";
@@ -36,6 +44,7 @@ const FETCH_ITEMS_FULFILLED = "FETCH_ITEMS_FULFILLED";
 const FETCH_LISTS_FULFILLED = "FETCH_LISTS_FULFILLED";
 const REORDER_ITEM_REQUESTED = "REORDER_ITEM_REQUESTED";
 const SET_FILTER_ITEM_PAYLOAD = "SET_FILTER_ITEM_PAYLOAD";
+const REORDER_LIST_REQUESTED = "REORDER_LIST_REQUESTED";
 
 type BoardPayload = { items?: Item[]; lists?: List[]; board?: Board };
 
@@ -48,9 +57,10 @@ export type ActionTypes =
   | { type: typeof FETCH_WORKSPACE_FULFILLED; payload: Workspace }
   // | { type: typeof FETCH_WORKSPACE_REQUESTED; payload: Item[] }
   | { type: typeof FETCH_LISTS_FULFILLED; payload: List[] }
-  | { type: typeof REORDER_ITEM_REQUESTED; payload: Reorder_Item_Payload }
+  | { type: typeof REORDER_ITEM_REQUESTED; payload: ReorderItemPayload }
   | { type: typeof FETCH_BOARD_FULFILLED; payload: BoardPayload }
-  | { type: typeof SET_FILTER_ITEM_PAYLOAD; payload: string };
+  | { type: typeof SET_FILTER_ITEM_PAYLOAD; payload: string }
+  | { type: typeof REORDER_LIST_REQUESTED; payload: ReorderListPayload };
 
 export function RetroBoardReducer(state: RetroBoardState, action: ActionTypes) {
   switch (action.type) {
@@ -71,6 +81,19 @@ export function RetroBoardReducer(state: RetroBoardState, action: ActionTypes) {
     }
     case FETCH_ITEMS_FULFILLED: {
       return { ...state, items: action.payload };
+    }
+    case REORDER_LIST_REQUESTED: {
+      const { sourceIndex, destinationIndex } = action.payload;
+      const lists = [...state.lists].sort((a, b) => a.listOrder - b.listOrder);
+      const sourceList = lists[sourceIndex];
+      const destList = lists[destinationIndex];
+
+      [sourceList.listOrder, destList.listOrder] = [
+        destList.listOrder,
+        sourceList.listOrder,
+      ];
+
+      return { ...state, lists: lists };
     }
     case REORDER_ITEM_REQUESTED: {
       const { source, destination, itemId, position } = action.payload;
@@ -104,8 +127,13 @@ export const updateBoard = (payload: BoardPayload): ActionTypes => ({
   payload,
 });
 
-export const reorderItem = (payload: Reorder_Item_Payload): ActionTypes => ({
+export const reorderItem = (payload: ReorderItemPayload): ActionTypes => ({
   type: REORDER_ITEM_REQUESTED,
+  payload,
+});
+
+export const reorderList = (payload: ReorderListPayload): ActionTypes => ({
+  type: REORDER_LIST_REQUESTED,
   payload,
 });
 
