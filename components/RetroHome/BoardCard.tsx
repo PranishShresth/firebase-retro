@@ -104,9 +104,14 @@ const BoardCard = ({ board }: Props) => {
             minHeight="60px"
             overflow="hidden"
             padding="1rem"
+            height="100%"
           >
             <Grid>
-              <Text fontSize="md" fontWeight="bold">
+              <Text
+                fontSize={{ base: "sm", md: "md" }}
+                fontWeight="bold"
+                maxWidth="90%"
+              >
                 {board.boardTitle}
               </Text>
             </Grid>

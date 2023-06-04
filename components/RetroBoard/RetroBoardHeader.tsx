@@ -52,7 +52,7 @@ const RetroBoardHeader = () => {
       >
         <Text
           fontWeight="bold"
-          fontSize={{ base: "16px", md: "34px" }}
+          fontSize={{ base: "16px", md: "26px" }}
           textTransform="capitalize"
           lineHeight={1}
         >

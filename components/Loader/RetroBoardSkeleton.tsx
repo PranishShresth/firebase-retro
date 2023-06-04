@@ -1,14 +1,16 @@
 import { Grid, Stack } from "@chakra-ui/react";
 import React from "react";
+import { MAX_SCREEN_WIDTH } from "utils/constants";
 import Skeleton from "./Skeleton";
 
 export const RetroBoardSkeleton = () => {
   return (
     <Stack
       padding="25px 0 15px 24px"
-      width="95%"
+      maxWidth={MAX_SCREEN_WIDTH}
       margin="0 auto"
       direction="column"
+      width="100%"
       height="100%"
       spacing={3}
     >

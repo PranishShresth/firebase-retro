@@ -129,7 +129,7 @@ export const RetroBoardSingle = () => {
   return (
     <>
       <RetroBoardHeader />
-      <RetroBoardCanvas>
+      <RetroBoardCanvas margin={{ base: 4, "2xl": "0 auto" }}>
         <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
           <Droppable droppableId="board" type="LIST" direction="horizontal">
             {(listDroppableProvided) => (
@@ -245,10 +245,9 @@ const RetroColumnWrapper = styled.div<{ $listCount: number }>`
 const FlexBox = styled(Box)<{ $listCount: number }>`
   width: 300px;
 `;
-const RetroBoardCanvas = styled.div`
+const RetroBoardCanvas = styled(Box)`
   flex-grow: 1;
-  margin: 0 auto;
   max-width: ${MAX_SCREEN_WIDTH};
   position: relative;
-  width: calc(100% - 50px);
+  width: 100%;
 `;

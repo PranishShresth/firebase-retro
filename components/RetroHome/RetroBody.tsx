@@ -23,6 +23,7 @@ import {
   doc,
   setDoc,
   where,
+  limit,
 } from "firebase/firestore"; // import Loading from "./Loader";
 import { Controller, useForm } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
@@ -109,7 +110,8 @@ export const RetroBody = ({ workspaceId }: { workspaceId: string }) => {
       const q = query(
         collection(firestore, "boards"),
         where("workspaceId", "==", workspaceId),
-        orderBy("createdAt", "desc")
+        orderBy("createdAt", "desc"),
+        limit(5)
       );
 
       const boardsCollectionSnap = onSnapshot(q, (snapshot) => {
