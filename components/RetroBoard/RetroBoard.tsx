@@ -129,7 +129,7 @@ export const RetroBoardSingle = () => {
   return (
     <>
       <RetroBoardHeader />
-      <RetroBoardCanvas margin={{ base: 4, "2xl": "0 auto" }}>
+      <RetroBoardCanvas margin="0 auto">
         <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
           <Droppable droppableId="board" type="LIST" direction="horizontal">
             {(listDroppableProvided) => (
@@ -200,7 +200,7 @@ const ColumnsWrapper = styled.main<{ $isDarkMode: boolean }>`
   margin-bottom: 8px;
   overflow-x: auto;
   overflow-y: hidden;
-  padding-bottom: 8px;
+  padding: 1rem;
   position: absolute;
   right: 0;
   top: 0;
