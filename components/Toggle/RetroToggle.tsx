@@ -30,6 +30,9 @@ export const RetroToggle = ({
   const iconBg = useColorModeValue("#1C2A3A", "#DADADA");
   const borderBg = useColorModeValue("#DADADA", "#1C2A3A");
   const [isMobile] = useMediaQuery("(max-width: 768px)");
+  const [isXsSize] = useMediaQuery("(max-width: 324px)");
+
+  if (isXsSize) return null;
 
   return (
     <Stack

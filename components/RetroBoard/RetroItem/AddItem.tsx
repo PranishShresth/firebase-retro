@@ -1,9 +1,9 @@
 import {
   Button,
-  Textarea,
   Stack,
   IconButton,
   useColorModeValue,
+  ButtonGroup,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
@@ -113,17 +113,16 @@ function AddItem({ listId }: Props) {
               )}
             />
 
-            <Stack direction="row" spacing={2}>
-              <Button leftIcon={<FaPlus />} type="submit" variant="solid">
+            <ButtonGroup size="sm" isAttached variant="outline">
+              <Button type="submit" colorScheme="facebook">
                 Create
               </Button>
               <IconButton
-                aria-label="cross"
+                aria-label="Close Save"
                 icon={<IoMdClose />}
-                size="md"
                 onClick={close}
               />
-            </Stack>
+            </ButtonGroup>
           </Stack>
         </form>
       )}

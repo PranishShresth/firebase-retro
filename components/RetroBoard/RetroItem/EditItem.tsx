@@ -1,4 +1,10 @@
-import { Button, IconButton, Stack, useColorModeValue } from "@chakra-ui/react";
+import {
+  Button,
+  ButtonGroup,
+  IconButton,
+  Stack,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { firestore } from "configs/firebase/firestore";
 import { doc, updateDoc } from "firebase/firestore";
 import { Controller, useForm } from "react-hook-form";
@@ -39,7 +45,7 @@ function EditItem({ isOpen, closeEditMode, content, itemId }: Props) {
       {isOpen && (
         <form
           onSubmit={handleSubmit(handleEditingItem)}
-          style={{ padding: "20px 0" }}
+          style={{ marginBottom: 16 }}
         >
           <Stack spacing={2}>
             <Controller
@@ -56,18 +62,16 @@ function EditItem({ isOpen, closeEditMode, content, itemId }: Props) {
                 />
               )}
             />
-            <Stack direction="row" spacing={2}>
-              <Button type="submit" variant="solid">
+            <ButtonGroup size="sm" isAttached variant="outline">
+              <Button type="submit" colorScheme="facebook">
                 Save
               </Button>
-
               <IconButton
-                aria-label="cross"
+                aria-label="Close Edit"
                 icon={<IoMdClose />}
-                size="md"
                 onClick={closeEditMode}
               />
-            </Stack>
+            </ButtonGroup>
           </Stack>
         </form>
       )}
