@@ -106,6 +106,7 @@ export const RetroWorkspaceCreateModal = ({
           backgroundColor={"#00B5AD"}
           color={"white"}
           onClick={openWorkspaceCreate}
+          size="lg"
           _hover={{ backgroundColor: darken("#00B5AD", 8) }}
         >
           Create Workspace&nbsp;

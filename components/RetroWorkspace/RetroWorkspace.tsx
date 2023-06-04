@@ -92,7 +92,10 @@ export const RetroWorkspace = () => {
                 Hello {member?.firstName}!
               </Heading>
               <Text fontSize="md" mb={4}>
-                Would you like to create new workspace?
+                Reflect. Learn. Improve. Retrospect with Ease!
+              </Text>
+              <Text fontSize="md" mb={4}>
+                To start off, would you like to create workspace ?
               </Text>
               <RetroWorkspaceCreateModal addWorkspace={addWorkspace} />
             </Box>
