@@ -29,24 +29,6 @@ interface Props {
   snapshot: DraggableStateSnapshot;
 }
 
-const StyledBox = styled(Box)<{ $isDragging: boolean; $listColour: string }>`
-  border-left: 8px solid ${({ $listColour }) => $listColour};
-  box-shadow: rgb(60 64 67 / 30%) 0px 1px 2px 0px,
-    rgb(60 64 67 / 15%) 0px 1px 3px 1px;
-  margin-bottom: 32px;
-  transition: background 100ms linear;
-  /* ${({ $isDragging }) =>
-    $isDragging &&
-    css`
-      transform: rotate(-3.2deg);
-    `} */
-  position: relative;
-`;
-
-const ContentDiv = styled.div`
-  padding-bottom: 5px;
-`;
-
 const RetroItem = ({ listColour, item, provided, snapshot }: Props) => {
   const { isOpen, onClose, onOpen: openEditBox } = useDisclosure();
   const bg = useColorModeValue("white", "#1C2A3A");
@@ -155,5 +137,25 @@ const RetroItemMemberToolTip = ({ userId }: { userId: string }) => {
     </div>
   );
 };
+
+const StyledBox = styled(Box)<{ $isDragging: boolean; $listColour: string }>`
+  border-left: 8px solid ${({ $listColour }) => $listColour};
+  box-shadow: rgb(60 64 67 / 30%) 0px 1px 2px 0px,
+    rgb(60 64 67 / 15%) 0px 1px 3px 1px;
+  margin-bottom: 32px;
+  transition: background 100ms linear;
+  ${({ $isDragging }) =>
+    $isDragging &&
+    css`
+      box-shadow: rgba(207, 255, 24, 0.3) 0px 5px,
+        rgba(207, 255, 24, 0.2) 0px 10px, rgba(207, 255, 24, 0.1) 0px 15px;
+    `}
+
+  position: relative;
+`;
+
+const ContentDiv = styled.div`
+  padding-bottom: 5px;
+`;
 
 export default RetroItem;
