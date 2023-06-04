@@ -17,10 +17,11 @@ import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 import BoardCard from "components/RetroHome/BoardCard";
 import { Collection } from "utils/firebaseCollection";
 import { Heading } from "@chakra-ui/react";
+import { MAX_SCREEN_WIDTH } from "utils/constants";
 
 const BoardsContainer = styled.div`
   margin: 0 auto;
-  max-width: 1600px;
+  max-width: ${MAX_SCREEN_WIDTH};
   padding: 2rem;
   width: 100%;
 `;

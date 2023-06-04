@@ -10,6 +10,7 @@ import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 import { format } from "date-fns";
 import Link from "next/link";
 import { IoArrowBackSharp } from "react-icons/io5";
+import { MAX_SCREEN_WIDTH } from "utils/constants";
 import { RetroBoardFilter } from "./RetroBoardFilter";
 import { RetroBoardShare } from "./RetroBoardShare";
 import { RetroColumnCreate } from "./RetroList/AddList";
@@ -28,7 +29,7 @@ const RetroBoardHeader = () => {
       alignItems="center"
       width={{ base: "100%", md: "95%" }}
       margin={{ base: "2px 0 0 0", md: "32px auto 0 auto" }}
-      maxWidth="1600px"
+      maxWidth={MAX_SCREEN_WIDTH}
       background={{ base: bg, md: "none" }}
       height={{ base: "60px" }}
       justifyContent="space-between"

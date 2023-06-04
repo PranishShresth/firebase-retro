@@ -38,9 +38,10 @@ import {
 } from "components/TemplateSelect/TemplateSelect";
 import { AUSTRALIA_RETRO_LISTS } from "utils/retroLists";
 import { FiChevronsRight } from "react-icons/fi";
+import { MAX_SCREEN_WIDTH } from "utils/constants";
 
 const BoardsContainer = styled.div`
-  max-width: 1600px;
+  max-width: ${MAX_SCREEN_WIDTH};
   padding-top: 1rem;
   width: 100%;
 `;

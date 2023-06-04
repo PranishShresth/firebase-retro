@@ -23,6 +23,7 @@ import { reorderItem, reorderList } from "context/RetroBoard/RetroBoardReducer";
 import { isEmpty } from "lodash-es";
 import { useColorMode } from "@chakra-ui/react";
 import { Collection } from "utils/firebaseCollection";
+import { MAX_SCREEN_WIDTH } from "utils/constants";
 
 export const RetroBoardSingle = () => {
   const {
@@ -247,7 +248,7 @@ const FlexBox = styled(Box)<{ $listCount: number }>`
 const RetroBoardCanvas = styled.div`
   flex-grow: 1;
   margin: 0 auto;
-  max-width: 1600px;
+  max-width: ${MAX_SCREEN_WIDTH};
   position: relative;
   width: calc(100% - 50px);
 `;
