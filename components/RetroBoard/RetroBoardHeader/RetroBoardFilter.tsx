@@ -11,8 +11,12 @@ import {
   useDisclosure,
   useMediaQuery,
 } from "@chakra-ui/react";
-import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
-import { setFilterPayload } from "context/RetroBoard/RetroBoardReducer";
+import {
+  useBoard,
+  useBoardPref,
+  useDispatch,
+} from "context/RetroBoard/RetroBoardContext";
+import { updateItemFilter } from "context/RetroBoard/reducers";
 import { Controller, useForm } from "react-hook-form";
 import { BiSearch } from "react-icons/bi";
 
@@ -22,17 +26,16 @@ type FormInputs = {
 
 export const RetroBoardFilter = () => {
   const { isOpen, onOpen, onClose: closeFilterModal } = useDisclosure();
-  const { dispatch } = useRetroContext();
-  const {
-    board: { filterPayload },
-  } = useRetroContext();
-  const isFilterApplied = filterPayload !== "";
+  const dispatch = useDispatch();
+  const { filterString } = useBoardPref();
+  const isFilterApplied = filterString !== "";
+
   const { handleSubmit, control } = useForm<FormInputs>({
     defaultValues: { itemFilter: "" },
   });
 
   const filterBoardCards = ({ itemFilter }: FormInputs) => {
-    dispatch(setFilterPayload(itemFilter.toLowerCase()));
+    dispatch(updateItemFilter(itemFilter.toLowerCase()));
     closeFilterModal();
   };
   const [isMobile] = useMediaQuery("(max-width: 768px)");
@@ -53,6 +56,7 @@ export const RetroBoardFilter = () => {
           onClick={onOpen}
           padding="0px 24px 0px 24px"
           variant="outline"
+          fontWeight="normal"
         >
           Search
         </Button>

@@ -12,14 +12,14 @@ import {
 } from "utils/dragAndDropUtils";
 import { Box } from "@chakra-ui/layout";
 import RetroBoardHeader from "./RetroBoardHeader/RetroBoardHeader";
-import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
+import { useBoard, useDispatch } from "context/RetroBoard/RetroBoardContext";
 import RetroColumn from "./RetroColumn";
 import RetroListHeader from "./RetroList/RetroListHeader";
 import { doc, updateDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import NoPageFound from "components/404page/PageNotFound";
 import { RetroBoardSkeleton } from "components/Loader";
-import { reorderItem, reorderList } from "context/RetroBoard/RetroBoardReducer";
+import { reorderItem, reorderList } from "context/RetroBoard/reducers";
 import { isEmpty } from "lodash-es";
 import { useColorMode } from "@chakra-ui/react";
 import { Collection } from "utils/firebaseCollection";
@@ -28,8 +28,8 @@ import { MAX_SCREEN_WIDTH } from "utils/constants";
 export const RetroBoardSingle = () => {
   const {
     board: { items, lists, board, status },
-    dispatch,
-  } = useRetroContext();
+  } = useBoard();
+  const dispatch = useDispatch();
   const { colorMode } = useColorMode();
   const isDarkMode = colorMode === "dark";
   const currentListCount = lists.length;

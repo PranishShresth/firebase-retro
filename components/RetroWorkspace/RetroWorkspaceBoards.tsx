@@ -13,7 +13,7 @@ import {
 } from "firebase/firestore"; // import Loading from "./Loader";
 import { BoardWithDocId, Workspace } from "utils/interfaces";
 import { useAuthContext } from "context/Auth/AuthContext";
-import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
+import { useBoard, useWorkpaceId } from "context/RetroBoard/RetroBoardContext";
 import BoardCard from "components/RetroHome/BoardCard";
 import { Collection } from "utils/firebaseCollection";
 import { Heading } from "@chakra-ui/react";
@@ -31,7 +31,7 @@ export const RetroWorkspaceBoards = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [workspace, setWorkspace] = useState<Workspace>();
   const { member } = useAuthContext();
-  const { workspaceId } = useRetroContext();
+  const workspaceId = useWorkpaceId();
 
   useEffect(() => {
     if (member) {

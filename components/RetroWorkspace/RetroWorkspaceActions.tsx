@@ -17,7 +17,6 @@ import { LeaveWorkspaceModal } from "components/Modals/LeaveWorkspaceModal";
 import { ViewMembersModal } from "components/Modals/ViewMembersModal";
 import { firestore } from "configs/firebase/firestore";
 import { useAuthContext } from "context/Auth/AuthContext";
-import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 import { doc, arrayRemove, updateDoc } from "firebase/firestore";
 import { useState } from "react";
 import { AiOutlineUserAdd } from "react-icons/ai";
@@ -52,9 +51,7 @@ export const RetroWorkspaceActions = ({
   workspaceTitle,
 }: RetroWorkspaceActionsProps) => {
   const { member } = useAuthContext();
-  const {
-    board: { board },
-  } = useRetroContext();
+
   const [deleteModalOpen, setdeleteModalOpen] = useState(false);
   const [leaveModalOpen, setLeaveModalOpen] = useState(false);
   const [membersModalOpen, setMembersModalOpen] = useState(false);

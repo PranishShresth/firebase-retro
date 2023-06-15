@@ -1,24 +1,28 @@
 import { Board, List, Item, Workspace } from "utils/interfaces";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-export interface RetroBoardState {
+import { createSlice, PayloadAction, combineReducers } from "@reduxjs/toolkit";
+
+export type RetroState = {
   board: Board;
   workspace: Workspace;
   lists: List[];
   items: Item[];
   allBoards: Board[];
   status: string;
-  filterPayload: string;
-}
+};
 
-export const initialState = {
+export const boardInitialState = {
   board: {},
   allBoards: [],
   lists: [],
   workspace: {},
   items: [],
   status: "pending",
-  filterPayload: "",
-} as unknown as RetroBoardState;
+} as unknown as RetroState;
+
+const pref = {
+  filterString: "",
+  sortByLikes: false,
+};
 
 type ReorderItemPayload = {
   source: string;
@@ -36,6 +40,7 @@ type BoardPayload = { items?: Item[]; lists?: List[]; board?: Board };
 
 const boardSlice = createSlice({
   name: "boardReducer",
+  initialState: boardInitialState,
   reducers: {
     updateBoards(state, action) {
       state.allBoards = action.payload;
@@ -92,11 +97,7 @@ const boardSlice = createSlice({
     updateBoardToPending(state) {
       state.status = "pending";
     },
-    setFilterPayload(state, action: PayloadAction<string>) {
-      state.filterPayload = action.payload;
-    },
   },
-  initialState,
 });
 
 const {
@@ -108,8 +109,8 @@ const {
   updateWorkspace,
   reorderItem,
   reorderList,
-  setFilterPayload,
 } = boardSlice.actions;
+
 const retroBoardReducer = boardSlice.reducer;
 
 export {
@@ -121,65 +122,5 @@ export {
   updateWorkspace,
   reorderItem,
   reorderList,
-  setFilterPayload,
   retroBoardReducer,
 };
-
-// export {retroBoardReducer:boardSlice.reducers}
-// export const updateWorkspace = (payload: Workspace): ActionTypes => ({
-//   type: FETCH_WORKSPACE_FULFILLED,
-//   payload,
-// });
-
-// export const updateBoardToPending = (): ActionTypes => ({
-//   type: FETCH_BOARD_REQUESTED,
-// });
-
-// export const setFilterPayload = (filterString: string): ActionTypes => ({
-//   type: SET_FILTER_ITEM_PAYLOAD,
-//   payload: filterString,
-// });
-
-// export const updateBoards = (payload: Board[]): ActionTypes => ({
-//   type: FETCH_BOARDS_FULFILLED,
-//   payload,
-// });
-
-// export const updateBoard = (payload: BoardPayload): ActionTypes => ({
-//   type: FETCH_BOARD_FULFILLED,
-//   payload,
-// });
-
-// export const reorderItem = (payload: ReorderItemPayload): ActionTypes => ({
-//   type: REORDER_ITEM_REQUESTED,
-//   payload,
-// });
-
-// export const reorderList = (payload: ReorderListPayload): ActionTypes => ({
-//   type: REORDER_LIST_REQUESTED,
-//   payload,
-// });
-
-// export const updateLists = (payload: List[]): ActionTypes => ({
-//   type: FETCH_LISTS_FULFILLED,
-//   payload,
-// });
-
-// export const updateItems = (payload: Item[]): ActionTypes => ({
-//   type: FETCH_ITEMS_FULFILLED,
-//   payload,
-// });
-
-// export const updateWorkspace = (payload: Workspace): ActionTypes => ({
-//   type: FETCH_WORKSPACE_FULFILLED,
-//   payload,
-// });
-
-// export const updateBoardToPending = (): ActionTypes => ({
-//   type: FETCH_BOARD_REQUESTED,
-// });
-
-// export const setFilterPayload = (filterString: string): ActionTypes => ({
-//   type: SET_FILTER_ITEM_PAYLOAD,
-//   payload: filterString,
-// });

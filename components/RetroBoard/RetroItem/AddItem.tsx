@@ -14,7 +14,7 @@ import { Controller, useForm } from "react-hook-form";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import { calculateInitialItemPosition } from "utils/dragAndDropUtils";
-import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
+import { useBoard } from "context/RetroBoard/RetroBoardContext";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { IoMdClose } from "react-icons/io";
 import { useIsDarkMode } from "utils/color";
@@ -37,7 +37,7 @@ function AddItem({ listId }: Props) {
 
   const {
     board: { items },
-  } = useRetroContext();
+  } = useBoard();
 
   const { handleSubmit, control, resetField } = useForm<FormValues>({
     defaultValues: {

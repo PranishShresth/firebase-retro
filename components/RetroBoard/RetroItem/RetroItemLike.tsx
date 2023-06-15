@@ -11,7 +11,7 @@ import { useAuthContext } from "context/Auth/AuthContext";
 import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import LikeSvgIcon from "icons/LikeIcon";
-import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
+import { useBoard } from "context/RetroBoard/RetroBoardContext";
 import { Item } from "utils/interfaces";
 
 const MAX_UPVOTES_PER_BOARD = 5;
@@ -55,7 +55,7 @@ export const RetroItemLike = ({
   const isUpvoted = user && itemUpvotes.includes(user.uid);
   const {
     board: { items },
-  } = useRetroContext();
+  } = useBoard();
 
   const upVotes = itemUpvotes.length;
   const toggleUpvote = async () => {

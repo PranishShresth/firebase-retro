@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import { calculateInitialListPosition } from "utils/dragAndDropUtils";
-import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
+import { useBoard } from "context/RetroBoard/RetroBoardContext";
 import { ColourPicker } from "components/ColourPicker";
 import { AiOutlineUnorderedList } from "react-icons/ai";
 import {
@@ -34,7 +34,7 @@ export const RetroColumnCreate = () => {
   const router = useRouter();
   const {
     board: { lists },
-  } = useRetroContext();
+  } = useBoard();
   const boardId = "" + router.query.boardId;
 
   const {

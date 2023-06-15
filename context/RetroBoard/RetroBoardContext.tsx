@@ -18,13 +18,13 @@ import {
 import { firestore } from "configs/firebase/firestore";
 import {
   initialState,
-  retroBoardReducer,
+  rootReducer,
   RetroBoardState,
   updateBoard,
   updateItems,
   updateLists,
   updateWorkspace,
-} from "./RetroBoardReducer";
+} from "./reducers";
 import { Board, Item, List, Member, Workspace } from "utils/interfaces";
 import { useAuthContext } from "context/Auth/AuthContext";
 
@@ -38,8 +38,22 @@ const RetroBoardContext = createContext<{
   workspaceId: null,
 });
 
-export const useRetroContext = () => {
-  return useContext(RetroBoardContext);
+export const useBoard = () => {
+  const ctx = useContext(RetroBoardContext);
+  return ctx.board;
+};
+
+export const useDispatch = () => {
+  return useContext(RetroBoardContext).dispatch;
+};
+
+export const useBoardPref = () => {
+  const ctx = useContext(RetroBoardContext);
+  return ctx.board.boardPref;
+};
+
+export const useWorkpaceId = () => {
+  return useContext(RetroBoardContext).workspaceId;
 };
 
 export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
@@ -50,7 +64,7 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
     : null;
 
   const { member } = useAuthContext();
-  const [state, dispatch] = useReducer(retroBoardReducer, initialState);
+  const [state, dispatch] = useReducer(rootReducer, initialState);
   const [workspaceId, setWorkspaceId] = useState<string | null>(
     existingWorkspaceId
   );
@@ -62,7 +76,7 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
   );
 
   useEffect(() => {
-    const boardSnap = onSnapshot(
+    const unsubBoard = onSnapshot(
       doc(firestore, Collection.Boards, boardId),
       (snapshot) => {
         const board = snapshot.data() as Board;
@@ -75,7 +89,7 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
       }
     );
 
-    return boardSnap;
+    return unsubBoard;
   }, [boardId, dispatch, member, members, workspaceId]);
 
   useEffect(() => {
@@ -100,26 +114,28 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const q = query(listsCollection, where("boardId", "==", boardId));
 
-    const listsCollectionSnap = onSnapshot(q, (snapshot) => {
+    const unsubListSnap = onSnapshot(q, (snapshot) => {
       const payload = snapshot.docs.map((doc) => {
         return doc.data() as List;
       });
       dispatch(updateLists(payload));
     });
-    return listsCollectionSnap;
+
+    return unsubListSnap;
   }, [boardId]);
 
   // items subscription
   useEffect(() => {
     const q = query(itemsCollection, where("boardId", "==", boardId));
 
-    const itemsCollectionSnap = onSnapshot(q, (snapshot) => {
+    const unsubItemsSnap = onSnapshot(q, (snapshot) => {
       const payload = snapshot.docs.map((doc) => {
         return doc.data() as Item;
       });
       dispatch(updateItems(payload));
     });
-    return itemsCollectionSnap;
+
+    return unsubItemsSnap;
   }, [boardId]);
 
   return (

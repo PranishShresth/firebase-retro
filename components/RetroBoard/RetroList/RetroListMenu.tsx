@@ -4,7 +4,7 @@ import React from "react";
 import { useDisclosure } from "@chakra-ui/react";
 import { doc, deleteDoc, writeBatch } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
-import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
+import { useBoard } from "context/RetroBoard/RetroBoardContext";
 import DeleteIcon from "icons/DeleteIcon";
 
 interface Props {
@@ -19,7 +19,7 @@ export const RetroListDelete = ({ listId }: Props) => {
   } = useDisclosure();
   const {
     board: { items },
-  } = useRetroContext();
+  } = useBoard();
 
   const bg = useColorModeValue("#1C2A3A", "#F2F2F2");
 

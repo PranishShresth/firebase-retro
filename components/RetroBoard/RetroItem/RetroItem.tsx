@@ -13,7 +13,7 @@ import { Item } from "utils/interfaces";
 import EditItem from "./EditItem";
 
 import { useAuthContext } from "context/Auth/AuthContext";
-import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
+import { useBoard } from "context/RetroBoard/RetroBoardContext";
 import { RetroItemEdit } from "./RetroItemEdit";
 import { RetroItemDelete } from "./RetroItemDelete";
 import { RetroItemLike } from "./RetroItemLike";
@@ -123,7 +123,7 @@ const RetroItemMemberToolTip = ({ userId }: { userId: string }) => {
     board: {
       board: { members },
     },
-  } = useRetroContext();
+  } = useBoard();
 
   const member = members.find((_) => _.userId === userId);
   if (!member) return null;

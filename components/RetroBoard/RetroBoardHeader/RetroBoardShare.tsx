@@ -49,6 +49,7 @@ export const RetroBoardShare = () => {
           onClick={openShareModal}
           padding="0px 24px 0px 24px"
           variant="outline"
+          fontWeight="normal"
         >
           Share
         </Button>

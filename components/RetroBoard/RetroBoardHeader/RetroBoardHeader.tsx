@@ -6,7 +6,7 @@ import {
   useMediaQuery,
 } from "@chakra-ui/react";
 
-import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
+import { useBoard } from "context/RetroBoard/RetroBoardContext";
 import { format } from "date-fns";
 import Link from "next/link";
 import { IoArrowBackSharp } from "react-icons/io5";
@@ -15,10 +15,11 @@ import { RetroBoardFilter } from "./RetroBoardFilter";
 import { RetroBoardShare } from "./RetroBoardShare";
 import { RetroColumnCreate } from "../RetroList/AddList";
 import { RetroMobileDrawer } from "../RetroMobileDrawer";
+import { RetroBoardSort } from "./RetroBoardSort";
 const RetroBoardHeader = () => {
   const {
     board: { board, workspace },
-  } = useRetroContext();
+  } = useBoard();
 
   const bg = useColorModeValue("white", "#1C2A3A");
   const [isMobile] = useMediaQuery("(max-width: 768px)");
@@ -90,7 +91,7 @@ const RetroBoardHeader = () => {
         {/* <RetroTimer board={board} /> */}
         <RetroBoardFilter />
         <RetroBoardShare />
-
+        <RetroBoardSort />
         <RetroColumnCreate />
       </Stack>
     </Stack>

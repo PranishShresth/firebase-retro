@@ -2,27 +2,8 @@ import React, { useMemo } from "react";
 import styled from "styled-components";
 import RetroCard from "./RetroItem/RetroItem";
 import { Draggable, DroppableProvided } from "react-beautiful-dnd";
-import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
+import { useBoard, useBoardPref } from "context/RetroBoard/RetroBoardContext";
 import AddItem from "./RetroItem/AddItem";
-
-const RetroCardContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  gap: 1px;
-  min-height: 2px;
-  max-height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
-
-  &::-webkit-scrollbar {
-    width: 5px;
-  }
-  &::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    box-shadow: inset 0 0 6px rgb(0 0 0 / 10%);
-  }
-`;
 
 const BottomListButton = styled.div`
   margin-top: 10px;
@@ -37,15 +18,21 @@ interface Props {
 
 const RetroColumn = ({ listColour, listId, droppableProvided }: Props) => {
   const {
-    board: { items, filterPayload },
-  } = useRetroContext();
+    board: { items },
+  } = useBoard();
+
+  const { filterString, sortByLikes } = useBoardPref();
 
   const memoizedListItems = useMemo(() => {
     return items
       .filter((item) => item.listId === listId)
-      .filter((item) => item.itemTitle.toLowerCase().includes(filterPayload))
-      .sort((a, b) => a.itemOrder - b.itemOrder);
-  }, [items, listId, filterPayload]);
+      .filter((item) => item.itemTitle.toLowerCase().includes(filterString))
+      .sort((a, b) =>
+        sortByLikes
+          ? b.itemUpvotes.length - a.itemUpvotes.length
+          : a.itemOrder - b.itemOrder
+      );
+  }, [items, listId, filterString, sortByLikes]);
 
   return (
     <>
@@ -77,5 +64,24 @@ const RetroColumn = ({ listColour, listId, droppableProvided }: Props) => {
     </>
   );
 };
+
+const RetroCardContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  gap: 1px;
+  min-height: 2px;
+  max-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px rgb(0 0 0 / 10%);
+  }
+`;
 
 export default RetroColumn;
