@@ -1,16 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 import {
-  useDisclosure,
+  Box,
   Drawer,
-  DrawerOverlay,
+  DrawerBody,
   DrawerContent,
   DrawerHeader,
-  DrawerBody,
-  Stack,
-  Box,
+  DrawerOverlay,
   IconButton,
+  Stack,
+  useDisclosure,
 } from "@chakra-ui/react";
-import LogoIcon from "icons/LogoIcon";
 import React from "react";
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import { RetroBoardFilter } from "./RetroBoardHeader/RetroBoardFilter";

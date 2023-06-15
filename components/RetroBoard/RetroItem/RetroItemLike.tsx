@@ -1,17 +1,17 @@
 import {
-  useColorModeValue,
-  Button,
-  Text,
-  useToast,
   Alert,
   AlertIcon,
+  Button,
+  Text,
+  useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 import { darken } from "@chakra-ui/theme-tools";
-import { useAuthContext } from "context/Auth/AuthContext";
-import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
-import LikeSvgIcon from "icons/LikeIcon";
+import { useAuthContext } from "context/Auth/AuthContext";
 import { useBoard } from "context/RetroBoard/RetroBoardContext";
+import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
+import LikeSvgIcon from "icons/LikeIcon";
 import { Item } from "utils/interfaces";
 
 const MAX_UPVOTES_PER_BOARD = 5;

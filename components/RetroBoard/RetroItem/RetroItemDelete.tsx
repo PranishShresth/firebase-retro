@@ -1,6 +1,6 @@
-import { firestore } from "configs/firebase/firestore";
+import { IconButton, useColorModeValue, useDisclosure } from "@chakra-ui/react";
 import { AlertDialogBar } from "components/Alert";
-import { useDisclosure, useColorModeValue, IconButton } from "@chakra-ui/react";
+import { firestore } from "configs/firebase/firestore";
 import { deleteDoc, doc } from "firebase/firestore";
 import DeleteIcon from "icons/DeleteIcon";
 

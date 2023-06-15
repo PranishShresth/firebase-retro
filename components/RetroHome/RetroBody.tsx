@@ -1,45 +1,45 @@
-import React, { useEffect, useState } from "react";
-import { Grid, Stack } from "@chakra-ui/layout";
 import { useDisclosure } from "@chakra-ui/hooks";
+import { Grid, Stack } from "@chakra-ui/layout";
 import {
+  Box,
+  Button,
+  Flex,
   Input,
   InputGroup,
-  Button,
-  Box,
-  Flex,
   useColorMode,
 } from "@chakra-ui/react";
 import { darken } from "@chakra-ui/theme-tools";
-import BoardCard from "./BoardCard";
-import styled from "styled-components";
-import { Modal as CreateBoardModal } from "components/Modal";
-import { firestore } from "configs/firebase/firestore";
-import {
-  collection,
-  onSnapshot,
-  serverTimestamp,
-  query,
-  orderBy,
-  doc,
-  setDoc,
-  where,
-  limit,
-} from "firebase/firestore"; // import Loading from "./Loader";
-import { Controller, useForm } from "react-hook-form";
-import { v4 as uuidv4 } from "uuid";
-import { BoardWithDocId, Preference } from "utils/interfaces";
-import Skeleton from "components/Loader/Skeleton";
 import { ColourPicker } from "components/ColourPicker";
-import { useAuthContext } from "context/Auth/AuthContext";
-import { FaChalkboard } from "react-icons/fa";
-import Link from "next/link";
+import Skeleton from "components/Loader/Skeleton";
+import { Modal as CreateBoardModal } from "components/Modal";
 import {
   TemplateSelect,
   TEMPLATE_OPTIONS,
 } from "components/TemplateSelect/TemplateSelect";
-import { AUSTRALIA_RETRO_LISTS } from "utils/retroLists";
+import { firestore } from "configs/firebase/firestore";
+import { useAuthContext } from "context/Auth/AuthContext";
+import {
+  collection,
+  doc,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+  setDoc,
+  where,
+} from "firebase/firestore"; // import Loading from "./Loader";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { FaChalkboard } from "react-icons/fa";
 import { FiChevronsRight } from "react-icons/fi";
+import styled from "styled-components";
 import { MAX_SCREEN_WIDTH } from "utils/constants";
+import { BoardWithDocId, Preference } from "utils/interfaces";
+import { AUSTRALIA_RETRO_LISTS } from "utils/retroLists";
+import { v4 as uuidv4 } from "uuid";
+import BoardCard from "./BoardCard";
 
 const BoardsContainer = styled.div`
   max-width: ${MAX_SCREEN_WIDTH};

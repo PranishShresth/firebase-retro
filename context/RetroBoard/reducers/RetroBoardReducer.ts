@@ -1,5 +1,5 @@
-import { Board, List, Item, Workspace } from "utils/interfaces";
-import { createSlice, PayloadAction, combineReducers } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Board, Item, List, Workspace } from "utils/interfaces";
 
 export type RetroState = {
   board: Board;

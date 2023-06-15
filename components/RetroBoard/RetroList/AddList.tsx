@@ -1,29 +1,29 @@
-import React from "react";
+import { Button } from "@chakra-ui/button";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Input, InputGroup } from "@chakra-ui/input";
 import { Stack } from "@chakra-ui/layout";
-import { Button } from "@chakra-ui/button";
-import { darken } from "@chakra-ui/theme-tools";
-import { Controller, useForm } from "react-hook-form";
-import { useRouter } from "next/router";
-import { v4 as uuidv4 } from "uuid";
-import { doc, serverTimestamp, setDoc } from "firebase/firestore";
-import { firestore } from "configs/firebase/firestore";
-import { calculateInitialListPosition } from "utils/dragAndDropUtils";
-import { useBoard } from "context/RetroBoard/RetroBoardContext";
-import { ColourPicker } from "components/ColourPicker";
-import { AiOutlineUnorderedList } from "react-icons/ai";
 import {
+  IconButton,
+  Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
-  IconButton,
   ModalOverlay,
   useColorMode,
-  Modal,
   useMediaQuery,
 } from "@chakra-ui/react";
+import { darken } from "@chakra-ui/theme-tools";
+import { ColourPicker } from "components/ColourPicker";
+import { firestore } from "configs/firebase/firestore";
+import { useBoard } from "context/RetroBoard/RetroBoardContext";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { useRouter } from "next/router";
+import React from "react";
+import { Controller, useForm } from "react-hook-form";
+import { AiOutlineUnorderedList } from "react-icons/ai";
+import { calculateInitialListPosition } from "utils/dragAndDropUtils";
+import { v4 as uuidv4 } from "uuid";
 
 interface FormValues {
   listColour: string;

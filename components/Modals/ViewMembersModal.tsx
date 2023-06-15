@@ -1,23 +1,23 @@
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  Button,
-  ListItem,
-  UnorderedList,
   Avatar,
-  Text,
   Box,
-  useColorModeValue,
+  Button,
   Flex,
+  ListItem,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+  UnorderedList,
+  useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import { useAuthContext } from "context/Auth/AuthContext";
 import { firestore } from "configs/firebase/firestore";
+import { useAuthContext } from "context/Auth/AuthContext";
 import { arrayRemove, doc, getDoc, updateDoc } from "firebase/firestore";
 import { useState } from "react";
 import { Collection } from "utils/firebaseCollection";

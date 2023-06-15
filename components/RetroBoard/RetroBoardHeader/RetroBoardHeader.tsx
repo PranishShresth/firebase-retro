@@ -5,17 +5,17 @@ import {
   useColorModeValue,
   useMediaQuery,
 } from "@chakra-ui/react";
-
 import { useBoard } from "context/RetroBoard/RetroBoardContext";
 import { format } from "date-fns";
 import Link from "next/link";
 import { IoArrowBackSharp } from "react-icons/io5";
 import { MAX_SCREEN_WIDTH } from "utils/constants";
-import { RetroBoardFilter } from "./RetroBoardFilter";
-import { RetroBoardShare } from "./RetroBoardShare";
 import { RetroColumnCreate } from "../RetroList/AddList";
 import { RetroMobileDrawer } from "../RetroMobileDrawer";
+import { RetroBoardFilter } from "./RetroBoardFilter";
+import { RetroBoardShare } from "./RetroBoardShare";
 import { RetroBoardSort } from "./RetroBoardSort";
+
 const RetroBoardHeader = () => {
   const {
     board: { board, workspace },

@@ -1,11 +1,10 @@
-import { Box, useColorModeValue } from "@chakra-ui/react";
+import { Box, useColorModeValue, useDisclosure } from "@chakra-ui/react";
 import { AlertDialogBar } from "components/Alert";
-import React from "react";
-import { useDisclosure } from "@chakra-ui/react";
-import { doc, deleteDoc, writeBatch } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
 import { useBoard } from "context/RetroBoard/RetroBoardContext";
+import { deleteDoc, doc, writeBatch } from "firebase/firestore";
 import DeleteIcon from "icons/DeleteIcon";
+import React from "react";
 
 interface Props {
   listId: string;

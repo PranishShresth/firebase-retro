@@ -1,32 +1,32 @@
+import { firestore } from "configs/firebase/firestore";
+import { useAuthContext } from "context/Auth/AuthContext";
+import { doc, getDoc, onSnapshot, query, where } from "firebase/firestore";
+import { useRouter } from "next/router";
 import React, {
   createContext,
   Dispatch,
-  useEffect,
-  useReducer,
-  useContext,
   ReactNode,
-  useState,
+  useContext,
+  useEffect,
   useMemo,
+  useReducer,
+  useState,
 } from "react";
-import { useRouter } from "next/router";
-import { onSnapshot, query, doc, where, getDoc } from "firebase/firestore";
 import {
   Collection,
   itemsCollection,
   listsCollection,
 } from "utils/firebaseCollection";
-import { firestore } from "configs/firebase/firestore";
+import { Board, Item, List, Member, Workspace } from "utils/interfaces";
 import {
   initialState,
-  rootReducer,
   RetroBoardState,
+  rootReducer,
   updateBoard,
   updateItems,
   updateLists,
   updateWorkspace,
 } from "./reducers";
-import { Board, Item, List, Member, Workspace } from "utils/interfaces";
-import { useAuthContext } from "context/Auth/AuthContext";
 
 const RetroBoardContext = createContext<{
   board: RetroBoardState;

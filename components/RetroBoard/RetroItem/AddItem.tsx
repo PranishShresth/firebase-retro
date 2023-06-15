@@ -1,24 +1,23 @@
 import {
   Button,
-  Stack,
-  IconButton,
-  useColorModeValue,
   ButtonGroup,
+  IconButton,
+  Stack,
+  useColorModeValue,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
-import { FaPlus } from "react-icons/fa";
-import { v4 as uuidv4 } from "uuid";
-
-import { useRouter } from "next/router";
-import { Controller, useForm } from "react-hook-form";
-import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
-import { calculateInitialItemPosition } from "utils/dragAndDropUtils";
-import { useBoard } from "context/RetroBoard/RetroBoardContext";
 import { useAuthContext } from "context/Auth/AuthContext";
+import { useBoard } from "context/RetroBoard/RetroBoardContext";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { IoMdClose } from "react-icons/io";
 import { useIsDarkMode } from "utils/color";
+import { calculateInitialItemPosition } from "utils/dragAndDropUtils";
+import { v4 as uuidv4 } from "uuid";
 import { RetroTextArea } from "./RetroTextArea";
+
 interface Props {
   listId: string;
 }

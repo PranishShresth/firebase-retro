@@ -1,26 +1,24 @@
 import {
+  Box,
+  Button,
   Modal,
-  ModalOverlay,
+  ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  useDisclosure,
-  Button,
+  ModalOverlay,
   Stack,
+  useDisclosure,
   useToast,
-  Box,
 } from "@chakra-ui/react";
 import { darken } from "@chakra-ui/theme-tools";
 import { RetroWorkspaceActions } from "components/RetroWorkspace/RetroWorkspaceActions";
 import UserSelect from "components/UserSelect";
 import { firestore } from "configs/firebase/firestore";
 import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
-
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { AiOutlineUserAdd } from "react-icons/ai";
-
 import { Collection } from "utils/firebaseCollection";
 import { Member, Workspace } from "utils/interfaces";
 

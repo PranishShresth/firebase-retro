@@ -3,9 +3,9 @@
 import { Checkbox } from "@chakra-ui/react";
 import React from "react";
 import ReactMarkdown from "react-markdown";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import remarkGfm from "remark-gfm";
 import { a11yDark } from "./styles";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 
 export const RetroMarkDown = ({ text }: { text: string }) => {
   return (

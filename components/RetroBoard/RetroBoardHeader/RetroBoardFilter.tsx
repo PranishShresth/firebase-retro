@@ -11,12 +11,11 @@ import {
   useDisclosure,
   useMediaQuery,
 } from "@chakra-ui/react";
+import { updateItemFilter } from "context/RetroBoard/reducers";
 import {
-  useBoard,
   useBoardPref,
   useDispatch,
 } from "context/RetroBoard/RetroBoardContext";
-import { updateItemFilter } from "context/RetroBoard/reducers";
 import { Controller, useForm } from "react-hook-form";
 import { BiSearch } from "react-icons/bi";
 

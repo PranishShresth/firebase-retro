@@ -1,29 +1,29 @@
-import { useCallback, useMemo, useState } from "react";
-import styled, { css } from "styled-components";
+import { Box } from "@chakra-ui/layout";
+import { useColorMode } from "@chakra-ui/react";
+import NoPageFound from "components/404page/PageNotFound";
+import { RetroBoardSkeleton } from "components/Loader";
+import { firestore } from "configs/firebase/firestore";
+import { reorderItem, reorderList } from "context/RetroBoard/reducers";
+import { useBoard, useDispatch } from "context/RetroBoard/RetroBoardContext";
+import { doc, updateDoc } from "firebase/firestore";
+import { isEmpty } from "lodash-es";
+import { useCallback, useMemo } from "react";
 import {
   DragDropContext,
   Draggable,
   Droppable,
   DropResult,
 } from "react-beautiful-dnd";
+import styled, { css } from "styled-components";
+import { MAX_SCREEN_WIDTH } from "utils/constants";
 import {
-  isPositionChanged,
   calculateItemPosition,
+  isPositionChanged,
 } from "utils/dragAndDropUtils";
-import { Box } from "@chakra-ui/layout";
+import { Collection } from "utils/firebaseCollection";
 import RetroBoardHeader from "./RetroBoardHeader/RetroBoardHeader";
-import { useBoard, useDispatch } from "context/RetroBoard/RetroBoardContext";
 import RetroColumn from "./RetroColumn";
 import RetroListHeader from "./RetroList/RetroListHeader";
-import { doc, updateDoc } from "firebase/firestore";
-import { firestore } from "configs/firebase/firestore";
-import NoPageFound from "components/404page/PageNotFound";
-import { RetroBoardSkeleton } from "components/Loader";
-import { reorderItem, reorderList } from "context/RetroBoard/reducers";
-import { isEmpty } from "lodash-es";
-import { useColorMode } from "@chakra-ui/react";
-import { Collection } from "utils/firebaseCollection";
-import { MAX_SCREEN_WIDTH } from "utils/constants";
 
 export const RetroBoardSingle = () => {
   const {

@@ -1,33 +1,32 @@
-import styled from "styled-components";
-import React, { useEffect, useState } from "react";
-import { AlertDialogBar } from "components/Alert";
-import { format } from "date-fns";
-import Link from "next/link";
 import {
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
   Box,
   Icon,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Text,
-  useDisclosure,
   useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react";
-
-import { FaEllipsisV } from "react-icons/fa";
+import { AlertDialogBar } from "components/Alert";
+import { firestore } from "configs/firebase/firestore";
+import { format } from "date-fns";
 import {
+  collection,
   deleteDoc,
   doc,
-  query,
-  collection,
-  where,
   getDocs,
+  query,
+  where,
   writeBatch,
 } from "firebase/firestore";
-import { firestore } from "configs/firebase/firestore";
-import EditBoard from "./EditBoard";
+import Link from "next/link";
+import React, { useState } from "react";
+import { FaEllipsisV } from "react-icons/fa";
+import styled from "styled-components";
 import { BoardWithDocId } from "utils/interfaces";
+import EditBoard from "./EditBoard";
 
 interface Props {
   board: BoardWithDocId;

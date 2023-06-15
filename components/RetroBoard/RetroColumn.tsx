@@ -1,9 +1,9 @@
-import React, { useMemo } from "react";
-import styled from "styled-components";
-import RetroCard from "./RetroItem/RetroItem";
-import { Draggable, DroppableProvided } from "react-beautiful-dnd";
 import { useBoard, useBoardPref } from "context/RetroBoard/RetroBoardContext";
+import React, { useMemo } from "react";
+import { Draggable, DroppableProvided } from "react-beautiful-dnd";
+import styled from "styled-components";
 import AddItem from "./RetroItem/AddItem";
+import RetroCard from "./RetroItem/RetroItem";
 
 const BottomListButton = styled.div`
   margin-top: 10px;

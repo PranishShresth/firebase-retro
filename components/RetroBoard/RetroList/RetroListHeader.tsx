@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import styled from "styled-components";
 import { Input } from "@chakra-ui/input";
 import { Box, Text, useColorModeValue } from "@chakra-ui/react";
-import { Controller, useForm } from "react-hook-form";
-import { doc, updateDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
+import Sparkle from "icons/SparkleIcon";
+import React, { useState } from "react";
+import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
+import { Controller, useForm } from "react-hook-form";
+import { MdDragIndicator } from "react-icons/md";
+import styled from "styled-components";
 import { RetroListDelete } from "./RetroListMenu";
 
-import Sparkle from "icons/SparkleIcon";
-import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
-import { MdDragIndicator } from "react-icons/md";
 const ListTitleWrapper = styled(Box)`
   align-items: center;
   display: flex;

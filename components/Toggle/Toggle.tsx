@@ -1,4 +1,4 @@
-import { ColorMode, Box } from "@chakra-ui/react";
+import { Box, ColorMode } from "@chakra-ui/react";
 import { BsDot } from "react-icons/bs";
 import { FaCloud } from "react-icons/fa";
 import { IoIosPlanet } from "react-icons/io";

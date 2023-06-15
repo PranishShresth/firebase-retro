@@ -1,22 +1,22 @@
 /* eslint-disable @next/next/no-img-element */
 import {
   Avatar,
+  Box,
+  Menu,
   MenuButton,
   MenuItem,
-  Menu,
   MenuList,
   SkeletonCircle,
   Stack,
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
-import Link from "next/link";
-import styled from "styled-components";
-import { Box } from "@chakra-ui/react";
 import { RetroToggle } from "components/Toggle/RetroToggle";
-import Router from "next/router";
-import { useAuthContext } from "context/Auth/AuthContext";
 import { auth } from "configs/firebase/firebaseClient";
+import { useAuthContext } from "context/Auth/AuthContext";
+import Link from "next/link";
+import Router from "next/router";
+import styled from "styled-components";
 
 export const RetroHeader = () => {
   const { member } = useAuthContext();

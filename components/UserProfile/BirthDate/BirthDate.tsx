@@ -1,19 +1,19 @@
 import {
   Box,
+  Button,
   Flex,
   Input,
-  Button,
   Text,
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
 import Cleave from "cleave.js/react";
-import { Member } from "utils/interfaces";
-import { doc, setDoc } from "firebase/firestore";
 import { firestore } from "configs/firebase/firestore";
-import { useForm, Controller } from "react-hook-form";
+import { doc, setDoc } from "firebase/firestore";
 import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import styled from "styled-components";
+import { Member } from "utils/interfaces";
 
 interface FormValues {
   birthDate: string;

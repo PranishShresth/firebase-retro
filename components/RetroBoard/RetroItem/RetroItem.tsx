@@ -1,25 +1,22 @@
-import React from "react";
-import { DraggableProvided, DraggableStateSnapshot } from "react-beautiful-dnd";
-import { Box, Stack, Text } from "@chakra-ui/layout";
+import { Box, Stack } from "@chakra-ui/layout";
 import {
   Avatar,
-  Checkbox,
   Tooltip,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import styled, { css } from "styled-components";
-import { Item } from "utils/interfaces";
-import EditItem from "./EditItem";
-
 import { useAuthContext } from "context/Auth/AuthContext";
 import { useBoard } from "context/RetroBoard/RetroBoardContext";
-import { RetroItemEdit } from "./RetroItemEdit";
-import { RetroItemDelete } from "./RetroItemDelete";
-import { RetroItemLike } from "./RetroItemLike";
-import { RetroItemCopy } from "./RetroItemCopy";
-
+import React from "react";
+import { DraggableProvided, DraggableStateSnapshot } from "react-beautiful-dnd";
+import styled, { css } from "styled-components";
+import { Item } from "utils/interfaces";
 import { RetroMarkDown } from "../ReactMarkdown/RetroMarkdown";
+import EditItem from "./EditItem";
+import { RetroItemCopy } from "./RetroItemCopy";
+import { RetroItemDelete } from "./RetroItemDelete";
+import { RetroItemEdit } from "./RetroItemEdit";
+import { RetroItemLike } from "./RetroItemLike";
 
 interface Props {
   listColour: string;

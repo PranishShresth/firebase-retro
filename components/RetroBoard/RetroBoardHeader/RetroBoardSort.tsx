@@ -1,11 +1,10 @@
 import { Button, IconButton, useMediaQuery } from "@chakra-ui/react";
+import { darken } from "@chakra-ui/theme-tools";
+import { updateItemsSort } from "context/RetroBoard/reducers";
 import {
   useBoardPref,
   useDispatch,
 } from "context/RetroBoard/RetroBoardContext";
-import { updateItemsSort } from "context/RetroBoard/reducers";
-import { darken } from "@chakra-ui/theme-tools";
-
 import { BiSortAlt2 } from "react-icons/bi";
 
 export const RetroBoardSort = () => {

@@ -1,6 +1,11 @@
-import { ColorMode, Stack, Text, useColorModeValue } from "@chakra-ui/react";
+import {
+  ColorMode,
+  Stack,
+  Text,
+  useColorModeValue,
+  useMediaQuery,
+} from "@chakra-ui/react";
 import styled, { css } from "styled-components";
-import { useMediaQuery } from "@chakra-ui/react";
 
 const YellowOutline = styled.div<{ $isDarkMode: boolean; $isMobile: boolean }>`
   background-color: #cfff18;

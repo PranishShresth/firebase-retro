@@ -1,21 +1,20 @@
 import { combineReducers } from "@reduxjs/toolkit";
 import {
+  boardInitialState,
+  reorderItem,
+  reorderList,
+  retroBoardReducer,
+  RetroState,
   updateBoard,
-  updateBoardToPending,
   updateBoards,
+  updateBoardToPending,
   updateItems,
   updateLists,
   updateWorkspace,
-  reorderItem,
-  reorderList,
-  boardInitialState,
-  retroBoardReducer,
-  RetroState,
 } from "./RetroBoardReducer";
-
 import {
-  prefReducer,
   prefIniitalState,
+  prefReducer,
   RetroBoardPrefState,
   updateItemFilter,
   updateItemsSort,

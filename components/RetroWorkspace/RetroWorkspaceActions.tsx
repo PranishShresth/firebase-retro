@@ -17,7 +17,7 @@ import { LeaveWorkspaceModal } from "components/Modals/LeaveWorkspaceModal";
 import { ViewMembersModal } from "components/Modals/ViewMembersModal";
 import { firestore } from "configs/firebase/firestore";
 import { useAuthContext } from "context/Auth/AuthContext";
-import { doc, arrayRemove, updateDoc } from "firebase/firestore";
+import { arrayRemove, doc, updateDoc } from "firebase/firestore";
 import { useState } from "react";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { FaEllipsisV } from "react-icons/fa";

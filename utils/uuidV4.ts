@@ -1,2 +1,2 @@
-import {v4 } from "uuid"
-export const uuidV4 = () => v4()
+import { v4 } from "uuid";
+export const uuidV4 = () => v4();

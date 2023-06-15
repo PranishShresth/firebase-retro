@@ -2,11 +2,9 @@ import {
   Box,
   Flex,
   Heading,
-  useColorModeValue,
-  Text,
-  Button,
   Stack,
-  Select,
+  Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import DualRingLoader from "components/Loader/DualRingLoader";
 import { RetroMemberSelectModal } from "components/Modals/RetroMemberSelectModal";
@@ -15,10 +13,9 @@ import NoWorkspaces from "components/NoWorkspaces/NoWorkspaces";
 import { RetroBody } from "components/RetroHome";
 import { firestore } from "configs/firebase/firestore";
 import { useAuthContext } from "context/Auth/AuthContext";
-import { getDoc, doc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-
 import { Collection } from "utils/firebaseCollection";
 import { Workspace } from "utils/interfaces";
 

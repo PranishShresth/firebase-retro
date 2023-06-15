@@ -1,11 +1,11 @@
-import React from "react";
-import { Stack, InputGroup, Input, Button } from "@chakra-ui/react";
-import { Controller, useForm } from "react-hook-form";
+import { Button, Input, InputGroup, Stack } from "@chakra-ui/react";
+import { ColourPicker } from "components/ColourPicker";
 import { Modal } from "components/Modal";
 import { firestore } from "configs/firebase/firestore";
 import { doc, updateDoc } from "firebase/firestore";
+import React from "react";
+import { Controller, useForm } from "react-hook-form";
 import { Board } from "utils/interfaces";
-import { ColourPicker } from "components/ColourPicker";
 
 interface Props {
   isEditModalOpen: boolean;
