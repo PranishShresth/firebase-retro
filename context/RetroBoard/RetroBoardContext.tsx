@@ -18,7 +18,7 @@ import {
 import { firestore } from "configs/firebase/firestore";
 import {
   initialState,
-  RetroBoardReducer,
+  retroBoardReducer,
   RetroBoardState,
   updateBoard,
   updateItems,
@@ -50,7 +50,7 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
     : null;
 
   const { member } = useAuthContext();
-  const [state, dispatch] = useReducer(RetroBoardReducer, initialState);
+  const [state, dispatch] = useReducer(retroBoardReducer, initialState);
   const [workspaceId, setWorkspaceId] = useState<string | null>(
     existingWorkspaceId
   );

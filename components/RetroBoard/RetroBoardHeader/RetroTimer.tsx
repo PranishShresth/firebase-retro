@@ -17,7 +17,7 @@ import { useState } from "react";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { BsStopCircle } from "react-icons/bs";
 import { Board } from "utils/interfaces";
-import { Colours } from "../ColourPicker";
+import { Colours } from "../../ColourPicker";
 interface RetroTimerProps {
   board: Board;
 }

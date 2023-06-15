@@ -13,8 +13,8 @@ import {
 import LogoIcon from "icons/LogoIcon";
 import React from "react";
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
-import { RetroBoardFilter } from "./RetroBoardFilter";
-import { RetroBoardShare } from "./RetroBoardShare";
+import { RetroBoardFilter } from "./RetroBoardHeader/RetroBoardFilter";
+import { RetroBoardShare } from "./RetroBoardHeader/RetroBoardShare";
 import { RetroColumnCreate } from "./RetroList/AddList";
 
 export const RetroMobileDrawer = () => {

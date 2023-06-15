@@ -67,6 +67,8 @@ export interface Preference {
   closed: boolean;
   /* Creates a timer for that board */
   timer: Timer | null;
+  /* Visibility of items, if set to true, user can only see their own items */
+  hideItems?: boolean;
 }
 
 export interface Board {

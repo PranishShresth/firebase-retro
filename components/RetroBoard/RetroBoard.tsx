@@ -11,7 +11,7 @@ import {
   calculateItemPosition,
 } from "utils/dragAndDropUtils";
 import { Box } from "@chakra-ui/layout";
-import RetroBoardHeader from "./RetroBoardHeader";
+import RetroBoardHeader from "./RetroBoardHeader/RetroBoardHeader";
 import { useRetroContext } from "context/RetroBoard/RetroBoardContext";
 import RetroColumn from "./RetroColumn";
 import RetroListHeader from "./RetroList/RetroListHeader";
@@ -33,9 +33,8 @@ export const RetroBoardSingle = () => {
   const { colorMode } = useColorMode();
   const isDarkMode = colorMode === "dark";
   const currentListCount = lists.length;
-
   const sortedList = useMemo(() => {
-    return lists.sort((a, b) => a.listOrder - b.listOrder);
+    return [...lists].sort((a, b) => a.listOrder - b.listOrder);
   }, [lists]);
 
   const onDragStart = useCallback(() => {

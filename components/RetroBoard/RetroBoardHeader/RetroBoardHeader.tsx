@@ -13,8 +13,8 @@ import { IoArrowBackSharp } from "react-icons/io5";
 import { MAX_SCREEN_WIDTH } from "utils/constants";
 import { RetroBoardFilter } from "./RetroBoardFilter";
 import { RetroBoardShare } from "./RetroBoardShare";
-import { RetroColumnCreate } from "./RetroList/AddList";
-import { RetroMobileDrawer } from "./RetroMobileDrawer";
+import { RetroColumnCreate } from "../RetroList/AddList";
+import { RetroMobileDrawer } from "../RetroMobileDrawer";
 const RetroBoardHeader = () => {
   const {
     board: { board, workspace },

@@ -1,2 +1,2 @@
 export * from "./RetroBoard";
-export * from "./RetroBoardHeader";
+export * from "./RetroBoardHeader/RetroBoardHeader";
