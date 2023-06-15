@@ -116,7 +116,8 @@ const BoardCard = ({ board }: Props) => {
               </Text>
             </Grid>
             <DateCreated>
-              {format(new Date(board.createdAt.seconds * 1000), "dd/MM/yyyy")}
+              {board.createdAt &&
+                format(new Date(board.createdAt.seconds * 1000), "dd/MM/yyyy")}
             </DateCreated>
             <EditBoard
               isEditModalOpen={isEditModalOpen}
