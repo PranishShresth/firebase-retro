@@ -32,7 +32,7 @@ export const RetroWorkspace = () => {
   const { member } = useAuthContext();
   const [isLoading, setIsLoading] = useState(true);
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
-  const workspaceBg = useColorModeValue("white", "gray.700");
+  const workspaceBg = useColorModeValue("white", "#141E29");
 
   const addWorkspace = (workspace: Workspace) => {
     setWorkspaces((prev) => [...prev, workspace]);
@@ -86,7 +86,7 @@ export const RetroWorkspace = () => {
           <Stack direction="column" height="100%">
             <Box maxW="32rem" padding={{ base: 4 }}>
               <Heading mb={4} mt={4}>
-                Hello {member?.firstName}!
+                Welcome back {member?.firstName}!
               </Heading>
               <Text fontSize="md" mb={4}>
                 Reflect. Learn. Improve. Retrospect with Ease!
@@ -102,10 +102,10 @@ export const RetroWorkspace = () => {
                   <Box
                     backgroundColor={workspaceBg}
                     borderRadius="8px"
-                    boxShadow="0 4px 12px 0 rgb(0 0 0 / 5%)"
                     key={workspaceId}
                     margin="1.5rem 0"
-                    padding="1rem"
+                    padding="16px 16px 24px 24px"
+                    boxShadow="4px 4px 16px 8px rgba(0,0,0,0.32)"
                   >
                     <Flex
                       alignItems="center"
@@ -113,7 +113,7 @@ export const RetroWorkspace = () => {
                       direction={{ base: "column", md: "row" }}
                       gap={{ base: 4, md: 0 }}
                     >
-                      <Heading as="h4" size="sm">
+                      <Heading as="h2" size="md">
                         {workspaceTitle}
                       </Heading>
                       <RetroMemberSelectModal
@@ -125,7 +125,10 @@ export const RetroWorkspace = () => {
                         workspaceTitle={workspaceTitle}
                       />
                     </Flex>
-                    <RetroBody workspaceId={workspaceId} />
+                    <RetroBody
+                      workspaceId={workspaceId}
+                      workspaceName={workspaceTitle}
+                    />
                   </Box>
                 )
               )}

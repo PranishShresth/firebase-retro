@@ -1,11 +1,11 @@
-import React from "react";
-import { RetroBoardProvider } from "context/RetroBoard/RetroBoardContext";
-import { RetroHeader } from "components/RetroHome";
-import styled from "styled-components";
-import Head from "next/head";
 import { Box, useColorModeValue } from "@chakra-ui/react";
-import withAuth from "utils/withAuth";
+import { RetroHeader } from "components/RetroHome";
 import { RetroWorkspaceBoards } from "components/RetroWorkspace/RetroWorkspaceBoards";
+import { RetroBoardProvider } from "context/RetroBoard/RetroBoardContext";
+import Head from "next/head";
+import React from "react";
+import styled from "styled-components";
+import withAuth from "utils/withAuth";
 
 const AppWrapper = styled(Box)`
   display: flex;
@@ -14,7 +14,7 @@ const AppWrapper = styled(Box)`
 `;
 
 const WorkspaceBoards = () => {
-  const bg = useColorModeValue("#F7F7F7", "gray.900");
+  const bg = useColorModeValue("#F7F7F7", "#0D131A");
 
   return (
     <AppWrapper background={bg}>

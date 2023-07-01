@@ -1,20 +1,13 @@
-import {
-  Badge,
-  Box,
-  Flex,
-  IconButton,
-  Tooltip,
-  useToast,
-} from "@chakra-ui/react";
+import { Box, Button, IconButton, Tooltip, useToast } from "@chakra-ui/react";
 import { FIVE_MINUTES_IN_SECONDS } from "components/RetroHome/RetroBody";
 import { firestore } from "configs/firebase/firestore";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { zonedTimeToUtc } from "date-fns-tz";
-import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { useInterval } from "hooks/useInterval";
 import { useState } from "react";
-import { AiOutlineClockCircle } from "react-icons/ai";
 import { BsStopCircle } from "react-icons/bs";
+import { IoMdAlarm } from "react-icons/io";
 import { Board } from "utils/interfaces";
 import { Colours } from "../../ColourPicker";
 
@@ -45,28 +38,45 @@ const padTo2Digits = (num: number) => {
   return num.toString().padStart(2, "0");
 };
 
+const initState = { minutes: 0, seconds: 0, total: 0 };
+
 export const RetroTimer = ({ board }: RetroTimerProps) => {
   const { user } = useAuthContext();
-  const [timeLeft, setTimeLeft] = useState<string | null>(null);
+  const [time, setTimeLeft] = useState<typeof initState>(initState);
+
+  const { total, minutes, seconds } = time;
   const toast = useToast();
   const allowStartStopTimer = user?.uid === board.userId;
+  const width = (total / (FIVE_MINUTES_IN_SECONDS * 1000)) * 100;
 
   const hasTimerStarted = !!board?.prefs.timer?.startAt;
+
+  const showTimer = hasTimerStarted;
+
+  const showTimerControl = allowStartStopTimer && !hasTimerStarted;
 
   const icon = hasTimerStarted ? (
     <BsStopCircle fill={Colours.fireOpal} />
   ) : (
-    <AiOutlineClockCircle />
+    <IoMdAlarm />
   );
+
   const handleStartTimer = async () => {
     const ref = doc(firestore, "boards", board.boardId);
     try {
-      await updateDoc(ref, {
-        timer: {
-          startAt: serverTimestamp(),
+      await setDoc(
+        ref,
+        {
+          prefs: {
+            timer: {
+              startAt: serverTimestamp(),
+            },
+          },
         },
-      });
-      clear();
+        { merge: true }
+      );
+
+      await clear();
     } catch (err) {
       console.log(err);
     }
@@ -76,12 +86,18 @@ export const RetroTimer = ({ board }: RetroTimerProps) => {
     const ref = doc(firestore, "boards", board.boardId);
 
     try {
-      await updateDoc(ref, {
-        timer: {
-          startAt: null,
+      await setDoc(
+        ref,
+        {
+          prefs: {
+            timer: {
+              startAt: null,
+            },
+          },
         },
-      });
-      setTimeLeft("");
+        { merge: true }
+      );
+      setTimeLeft(initState);
     } catch (err) {
       console.log(err);
     }
@@ -101,11 +117,17 @@ export const RetroTimer = ({ board }: RetroTimerProps) => {
 
         if (total <= 0) {
           clear();
-          updateDoc(ref, {
-            timer: {
-              startAt: null,
+          setDoc(
+            ref,
+            {
+              prefs: {
+                timer: {
+                  startAt: null,
+                },
+              },
             },
-          });
+            { merge: true }
+          );
 
           toast({
             title: "Time's Up!",
@@ -115,36 +137,50 @@ export const RetroTimer = ({ board }: RetroTimerProps) => {
             isClosable: true,
           });
         }
-        setTimeLeft(`${padTo2Digits(minutes)}:${padTo2Digits(seconds)}`);
+        setTimeLeft({ seconds, minutes, total });
       }
     },
     1000,
     [board.prefs.timer?.startAt]
   );
-  const onClick = hasTimerStarted ? handleResetTimer : handleStartTimer;
 
   return (
-    <Flex alignItems={"center"} justifyContent="space-between">
-      {hasTimerStarted && (
-        <Box marginRight={"1rem"}>
-          <Badge colorScheme="red" fontSize="lg">
-            {timeLeft}
-          </Badge>
-        </Box>
+    <>
+      {showTimer && (
+        <Tooltip bg="gray.300" color="black" hasArrow label={"Stop Timer"}>
+          <Button
+            variant="outline"
+            leftIcon={<IoMdAlarm fontSize={24} />}
+            borderColor="#EE2B02"
+            borderWidth="2px"
+            position="relative"
+            onClick={handleResetTimer}
+          >
+            {`${padTo2Digits(minutes)}:${padTo2Digits(seconds)}`} remaining
+            <Box
+              position="absolute"
+              top="0"
+              left="0"
+              width={`${width}%`}
+              height="100%"
+              background="rgba(254, 186, 172,0.3)"
+            ></Box>
+          </Button>
+        </Tooltip>
       )}
 
-      {allowStartStopTimer && (
-        <Tooltip
-          bg="gray.300"
-          color="black"
-          hasArrow
-          label={hasTimerStarted ? "Reset Timer" : "Start Timer"}
-        >
+      {showTimerControl && (
+        <Tooltip bg="gray.300" color="black" hasArrow label={"Start Timer"}>
           <Box>
-            <IconButton onClick={onClick} aria-label={"timer"} icon={icon} />
+            <IconButton
+              onClick={handleStartTimer}
+              aria-label={"timer"}
+              icon={icon}
+              variant="outline"
+            />
           </Box>
         </Tooltip>
       )}
-    </Flex>
+    </>
   );
 };

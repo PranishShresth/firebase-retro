@@ -1,4 +1,4 @@
-import { Button, IconButton, useMediaQuery } from "@chakra-ui/react";
+import { IconButton } from "@chakra-ui/react";
 import { darken } from "@chakra-ui/theme-tools";
 import { updateItemsSort } from "context/RetroBoard/reducers";
 import {
@@ -6,19 +6,18 @@ import {
   useDispatch,
 } from "context/RetroBoard/RetroBoardContext";
 import { BiSortAlt2 } from "react-icons/bi";
+import { LIGHT_GREEN_COLOR } from "utils/constants";
 
 export const RetroBoardSort = () => {
   const dispatch = useDispatch();
 
   const { sortByLikes } = useBoardPref();
 
-  const [isMobile] = useMediaQuery("(max-width: 768px)");
-
   const buttonProp = sortByLikes
     ? {
-        backgroundColor: "#CFFF18",
+        backgroundColor: LIGHT_GREEN_COLOR,
         color: "black",
-        _hover: { backgroundColor: darken("#CFFF18", 8) },
+        _hover: { backgroundColor: darken(LIGHT_GREEN_COLOR, 8) },
       }
     : { colorScheme: "gray" };
 
@@ -28,25 +27,13 @@ export const RetroBoardSort = () => {
 
   return (
     <>
-      {isMobile ? (
-        <IconButton
-          aria-label="sort"
-          icon={<BiSortAlt2 />}
-          onClick={sortLikes}
-        />
-      ) : (
-        <Button
-          borderRadius="4px"
-          leftIcon={<BiSortAlt2 />}
-          {...buttonProp}
-          onClick={sortLikes}
-          fontWeight="normal"
-          padding="0px 24px 0px 24px"
-          variant="outline"
-        >
-          Sort
-        </Button>
-      )}
+      <IconButton
+        aria-label="sort"
+        {...buttonProp}
+        icon={<BiSortAlt2 />}
+        onClick={sortLikes}
+        variant="outline"
+      />
     </>
   );
 };

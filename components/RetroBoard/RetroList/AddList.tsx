@@ -96,6 +96,7 @@ export const RetroColumnCreate = () => {
           _hover={{ backgroundColor: darken("#CFFF18", 8) }}
           padding="0px 24px 0px 24px"
           fontWeight="normal"
+          variant="outline"
         >
           Add a column
         </Button>

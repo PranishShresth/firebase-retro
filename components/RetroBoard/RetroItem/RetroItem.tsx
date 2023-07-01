@@ -6,11 +6,12 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useAuthContext } from "context/Auth/AuthContext";
-import { useBoard } from "context/RetroBoard/RetroBoardContext";
+import { useBoard, useBoardFinal } from "context/RetroBoard/RetroBoardContext";
 import React from "react";
 import { DraggableProvided, DraggableStateSnapshot } from "react-beautiful-dnd";
 import styled, { css } from "styled-components";
 import { Item } from "utils/interfaces";
+import { randomizeLetter } from "utils/shuffle";
 import { RetroMarkDown } from "../ReactMarkdown/RetroMarkdown";
 import EditItem from "./EditItem";
 import { RetroItemCopy } from "./RetroItemCopy";
@@ -29,7 +30,15 @@ interface Props {
 const RetroItem = ({ listColour, item, provided, snapshot }: Props) => {
   const { isOpen, onClose, onOpen: openEditBox } = useDisclosure();
   const bg = useColorModeValue("white", "#1C2A3A");
+  const board = useBoardFinal();
+  const { user } = useAuthContext();
+
   const isDragging = snapshot.isDragging;
+
+  const hideItems = board.prefs.hideItems && item.userId !== user?.uid;
+  const itemContent = hideItems
+    ? randomizeLetter(item.itemTitle)
+    : item.itemTitle;
 
   if (isOpen) {
     return (
@@ -53,8 +62,8 @@ const RetroItem = ({ listColour, item, provided, snapshot }: Props) => {
       {...provided.draggableProps}
       {...provided.dragHandleProps}
     >
-      <ContentDiv>
-        <RetroMarkDown text={item.itemTitle} />
+      <ContentDiv $hideItems={hideItems}>
+        <RetroMarkDown text={itemContent} />
       </ContentDiv>
       <Stack direction="row-reverse">
         <RetroCardActions
@@ -151,8 +160,13 @@ const StyledBox = styled(Box)<{ $isDragging: boolean; $listColour: string }>`
   position: relative;
 `;
 
-const ContentDiv = styled.div`
+const ContentDiv = styled.div<{ $hideItems?: boolean }>`
   padding-bottom: 5px;
+  ${({ $hideItems }) =>
+    $hideItems &&
+    css`
+      filter: blur(4px);
+    `}
 `;
 
 export default RetroItem;

@@ -3,6 +3,7 @@ import { AlertDialogBar } from "components/Alert";
 import { firestore } from "configs/firebase/firestore";
 import { deleteDoc, doc } from "firebase/firestore";
 import DeleteIcon from "icons/DeleteIcon";
+import { LIGHT_GREEN_COLOR } from "utils/constants";
 
 export const RetroItemDelete = ({ itemId }: { itemId: string }) => {
   const {
@@ -11,8 +12,8 @@ export const RetroItemDelete = ({ itemId }: { itemId: string }) => {
     onOpen: openDeleteDialog,
   } = useDisclosure();
   const bg = useColorModeValue("#f2f2f2", "#0D131A");
-  const iconBg = useColorModeValue("#1C2A3A", "#DADADA");
   const borderBg = useColorModeValue("#DADADA", "#1C2A3A");
+  const fillColor = useColorModeValue("#0D131A", LIGHT_GREEN_COLOR);
 
   const deleteItem = async () => {
     try {
@@ -27,7 +28,7 @@ export const RetroItemDelete = ({ itemId }: { itemId: string }) => {
       <IconButton
         onClick={openDeleteDialog}
         aria-label="Delete item"
-        icon={<DeleteIcon fill={iconBg} />}
+        icon={<DeleteIcon fill={fillColor} />}
         isRound
         size="sm"
         border={`1px solid ${borderBg}`}

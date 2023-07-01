@@ -1,10 +1,11 @@
 import {
-  Button,
+  Box,
   Icon,
   IconButton,
   Input,
   InputGroup,
   InputLeftElement,
+  InputRightElement,
   Modal,
   ModalContent,
   ModalOverlay,
@@ -27,7 +28,6 @@ export const RetroBoardFilter = () => {
   const { isOpen, onOpen, onClose: closeFilterModal } = useDisclosure();
   const dispatch = useDispatch();
   const { filterString } = useBoardPref();
-  const isFilterApplied = filterString !== "";
 
   const { handleSubmit, control } = useForm<FormInputs>({
     defaultValues: { itemFilter: "" },
@@ -39,26 +39,31 @@ export const RetroBoardFilter = () => {
   };
   const [isMobile] = useMediaQuery("(max-width: 768px)");
 
-  const buttonProp = isFilterApplied
-    ? { backgroundColor: "#2bc0c1", color: "white", _hover: { bg: "#2C7A7B" } }
-    : { colorScheme: "gray" };
-
   return (
     <>
       {isMobile ? (
         <IconButton aria-label="search" icon={<BiSearch />} onClick={onOpen} />
       ) : (
-        <Button
-          borderRadius="4px"
-          leftIcon={<BiSearch />}
-          {...buttonProp}
-          onClick={onOpen}
-          padding="0px 24px 0px 24px"
-          variant="outline"
-          fontWeight="normal"
-        >
-          Search
-        </Button>
+        <Box>
+          <InputGroup borderRadius={5} size="md">
+            <InputRightElement
+              pointerEvents="none"
+              // eslint-disable-next-line react/no-children-prop
+              children={<BiSearch color="gray.600" />}
+            />
+            <Input
+              type="text"
+              placeholder="Filter..."
+              width="95px"
+              _focus={{ width: 150 }}
+              transition="width 250ms ease-in"
+              border="1px solid #949494"
+              onChange={(ev) => {
+                filterBoardCards({ itemFilter: ev.target.value });
+              }}
+            />
+          </InputGroup>
+        </Box>
       )}
 
       <Modal isOpen={isOpen} onClose={closeFilterModal}>

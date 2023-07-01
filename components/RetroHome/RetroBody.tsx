@@ -69,7 +69,13 @@ const LG_WINDOW_WIDTH_BREAKPOINT = 991;
 const MD_WINDOW_WIDTH_BREAKPOINT = 767;
 const DEFAULT_BOARDS_LIMIT = 4;
 
-export const RetroBody = ({ workspaceId }: { workspaceId: string }) => {
+export const RetroBody = ({
+  workspaceId,
+  workspaceName,
+}: {
+  workspaceId: string;
+  workspaceName: string;
+}) => {
   const { colorMode } = useColorMode();
   const [boards, setBoards] = useState<BoardWithDocId[] | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
@@ -253,15 +259,16 @@ export const RetroBody = ({ workspaceId }: { workspaceId: string }) => {
       </BoardsContainer>
       {boards && boards.length > boardsLimit && (
         <Box
-          color={"#2bc0c1"}
           fontSize="0.825rem"
           fontWeight="bold"
-          marginTop="0.5rem"
+          textAlign="right"
+          marginTop="24px"
+          textDecoration="underline"
         >
           <Link href={`workspace/${workspaceId}/boards`} passHref>
             <a style={{ display: "inline-block" }}>
               <Flex alignItems="center">
-                View all boards <FiChevronsRight size="1rem" />
+                View all {workspaceName} boards <FiChevronsRight size="1rem" />
               </Flex>
             </a>
           </Link>

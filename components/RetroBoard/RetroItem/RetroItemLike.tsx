@@ -12,6 +12,7 @@ import { useAuthContext } from "context/Auth/AuthContext";
 import { useBoard } from "context/RetroBoard/RetroBoardContext";
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import LikeSvgIcon from "icons/LikeIcon";
+import { LIGHT_GREEN_COLOR } from "utils/constants";
 import { Item } from "utils/interfaces";
 
 const MAX_UPVOTES_PER_BOARD = 5;
@@ -31,7 +32,7 @@ const ToastAlert = ({ description }: { description: string }) => (
     status="info"
     variant="solid"
     color="#1C2A3A"
-    backgroundColor="#cfff18"
+    backgroundColor={LIGHT_GREEN_COLOR}
   >
     <AlertIcon />
     {description}
@@ -46,7 +47,7 @@ export const RetroItemLike = ({
   itemUpvotes: string[];
 }) => {
   const bg = useColorModeValue("#f2f2f2", "#0D131A");
-  const iconBg = useColorModeValue("#1C2A3A", "#DADADA");
+  const iconBg = useColorModeValue("#1C2A3A", LIGHT_GREEN_COLOR);
   const borderBg = useColorModeValue("#DADADA", "#1C2A3A");
   const likeHoverBg = useColorModeValue("#ffffff", "#9f9f9f");
   const toast = useToast();

@@ -43,6 +43,11 @@ export const useBoard = () => {
   return ctx.board;
 };
 
+export const useBoardFinal = () => {
+  const ctx = useContext(RetroBoardContext);
+  return ctx.board.board.board;
+};
+
 export const useDispatch = () => {
   return useContext(RetroBoardContext).dispatch;
 };

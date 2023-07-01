@@ -13,7 +13,6 @@ import {
   Stack,
   Text,
   useDisclosure,
-  useMediaQuery,
 } from "@chakra-ui/react";
 import { useClipboard } from "hooks/useClipboard";
 import { useRouter } from "next/router";
@@ -32,28 +31,14 @@ export const RetroBoardShare = () => {
 
   const url = `https://${window.location.hostname}/board/${boardId}`;
 
-  const [isMobile] = useMediaQuery("(max-width: 768px)");
-
   return (
     <>
-      {isMobile ? (
-        <IconButton
-          aria-label="share"
-          onClick={openShareModal}
-          icon={<BiShareAlt />}
-        />
-      ) : (
-        <Button
-          borderRadius="4px"
-          leftIcon={<BiShareAlt />}
-          onClick={openShareModal}
-          padding="0px 24px 0px 24px"
-          variant="outline"
-          fontWeight="normal"
-        >
-          Share
-        </Button>
-      )}
+      <IconButton
+        aria-label="share"
+        onClick={openShareModal}
+        icon={<BiShareAlt />}
+        variant="outline"
+      />
 
       <Modal onClose={closeShareModal} isOpen={isOpen} isCentered>
         <ModalOverlay />

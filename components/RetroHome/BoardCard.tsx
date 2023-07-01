@@ -50,7 +50,7 @@ const BoardCard = ({ board }: Props) => {
     onClose: closeEditBoardModal,
     onOpen: openEditBoardModal,
   } = useDisclosure();
-  const bg = useColorModeValue("white", "gray.600");
+  const bg = useColorModeValue("white", "#1C2A3A");
 
   const handleDeleteBoard = async () => {
     try {

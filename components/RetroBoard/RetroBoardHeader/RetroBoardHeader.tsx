@@ -15,6 +15,8 @@ import { RetroMobileDrawer } from "../RetroMobileDrawer";
 import { RetroBoardFilter } from "./RetroBoardFilter";
 import { RetroBoardShare } from "./RetroBoardShare";
 import { RetroBoardSort } from "./RetroBoardSort";
+import { RetroTimer } from "./RetroTimer";
+import { RetroVisibility } from "./RetroVisibility";
 
 const RetroBoardHeader = () => {
   const {
@@ -88,10 +90,11 @@ const RetroBoardHeader = () => {
       {isMobile && <RetroMobileDrawer />}
 
       <Stack display={{ base: "none", md: "flex" }} direction="row">
-        {/* <RetroTimer board={board} /> */}
         <RetroBoardFilter />
+        <RetroTimer board={board} />
         <RetroBoardShare />
         <RetroBoardSort />
+        <RetroVisibility />
         <RetroColumnCreate />
       </Stack>
     </Stack>
