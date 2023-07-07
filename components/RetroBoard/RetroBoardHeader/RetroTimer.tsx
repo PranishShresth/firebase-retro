@@ -154,7 +154,7 @@ export const RetroTimer = ({ board }: RetroTimerProps) => {
             borderColor="#EE2B02"
             borderWidth="2px"
             position="relative"
-            onClick={handleResetTimer}
+            onClick={allowStartStopTimer ? handleResetTimer : () => {}}
           >
             {`${padTo2Digits(minutes)}:${padTo2Digits(seconds)}`} remaining
             <Box
