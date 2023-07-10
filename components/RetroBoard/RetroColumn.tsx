@@ -27,11 +27,16 @@ const RetroColumn = ({ listColour, listId, droppableProvided }: Props) => {
     return items
       .filter((item) => item.listId === listId)
       .filter((item) => item.itemTitle.toLowerCase().includes(filterString))
-      .sort((a, b) =>
-        sortByLikes
-          ? b.itemUpvotes.length - a.itemUpvotes.length
-          : a.itemOrder - b.itemOrder
-      );
+      .sort((a, b) => {
+        if (sortByLikes) {
+          if (b.itemUpvotes.length === a.itemUpvotes.length) {
+            return a.createdAt?.seconds - b.createdAt?.seconds;
+          }
+          return b.itemUpvotes.length - a.itemUpvotes.length;
+        }
+
+        return a.itemOrder - b.itemOrder;
+      });
   }, [items, listId, filterString, sortByLikes]);
 
   return (
