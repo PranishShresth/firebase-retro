@@ -1,4 +1,4 @@
-import { IconButton } from "@chakra-ui/react";
+import { IconButton, Tooltip } from "@chakra-ui/react";
 import { darken } from "@chakra-ui/theme-tools";
 import { updateItemsSort } from "context/RetroBoard/reducers";
 import {
@@ -26,7 +26,12 @@ export const RetroBoardSort = () => {
   };
 
   return (
-    <>
+    <Tooltip
+      bg="gray.300"
+      color="black"
+      hasArrow
+      label={"Sort by most upvotes"}
+    >
       <IconButton
         aria-label="sort"
         {...buttonProp}
@@ -34,6 +39,6 @@ export const RetroBoardSort = () => {
         onClick={sortLikes}
         variant="outline"
       />
-    </>
+    </Tooltip>
   );
 };
