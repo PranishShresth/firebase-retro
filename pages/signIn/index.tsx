@@ -15,7 +15,7 @@ import { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import Router from "next/router";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { firebaseErrors } from "utils/firebaseErrors";
@@ -160,7 +160,13 @@ const SignIn: NextPage = () => {
             <PageLink href="/register">
               <a style={{ color: "#2bc0c1" }}>Sign up here!</a>
             </PageLink>
+            <PageLink href="/resetPassword">
+              <a style={{ color: "#2bc0c1", float: "right" }}>
+                Forgot Password?
+              </a>
+            </PageLink>
           </span>
+
           <div>
             <Button
               backgroundColor={"#2bc0c1"}

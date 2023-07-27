@@ -14,7 +14,7 @@ import { RetroBody } from "components/RetroHome";
 import { firestore } from "configs/firebase/firestore";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { doc, getDoc } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Collection } from "utils/firebaseCollection";
 import { Workspace } from "utils/interfaces";
@@ -92,7 +92,7 @@ export const RetroWorkspace = () => {
                 Reflect. Learn. Improve. Retrospect with Ease!
               </Text>
               <Text fontSize="md" mb={4}>
-                To start off, would you like to create workspace ?
+                To start off, why not create a workspace?
               </Text>
               <RetroWorkspaceCreateModal addWorkspace={addWorkspace} />
             </Box>
