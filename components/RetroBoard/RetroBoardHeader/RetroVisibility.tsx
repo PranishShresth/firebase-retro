@@ -1,10 +1,9 @@
-import { IconButton } from "@chakra-ui/react";
+import { IconButton, Tooltip } from "@chakra-ui/react";
 import { darken } from "@chakra-ui/theme-tools";
 import { firestore } from "configs/firebase/firestore";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { useBoard } from "context/RetroBoard/RetroBoardContext";
 import { doc, setDoc } from "firebase/firestore";
-import React from "react";
 import { AiOutlineEye } from "react-icons/ai";
 import { LIGHT_GREEN_COLOR } from "utils/constants";
 
@@ -44,7 +43,12 @@ export const RetroVisibility = () => {
   if (!allowVisibilityControl) return null;
 
   return (
-    <>
+    <Tooltip
+      bg="gray.300"
+      color="black"
+      hasArrow
+      label={"Hide items created by others"}
+    >
       <IconButton
         variant="outline"
         aria-label="Hide items"
@@ -52,6 +56,6 @@ export const RetroVisibility = () => {
         icon={<AiOutlineEye fill={itemsHidden ? "black" : "#F2F2F2"} />}
         onClick={hideItems}
       />
-    </>
+    </Tooltip>
   );
 };

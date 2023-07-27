@@ -12,6 +12,7 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  Tooltip,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useClipboard } from "hooks/useClipboard";
@@ -33,12 +34,14 @@ export const RetroBoardShare = () => {
 
   return (
     <>
-      <IconButton
-        aria-label="share"
-        onClick={openShareModal}
-        icon={<BiShareAlt />}
-        variant="outline"
-      />
+      <Tooltip bg="gray.300" color="black" hasArrow label={"Share"}>
+        <IconButton
+          aria-label="share"
+          onClick={openShareModal}
+          icon={<BiShareAlt />}
+          variant="outline"
+        />
+      </Tooltip>
 
       <Modal onClose={closeShareModal} isOpen={isOpen} isCentered>
         <ModalOverlay />
