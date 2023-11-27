@@ -4,14 +4,15 @@ import Select, { StylesConfig } from "react-select";
 
 export const TEMPLATE_OPTIONS = [
   { label: "None", value: "none" },
-  { label: "Australia Retro", value: "australiaRetro" },
+  { label: "Australia Dev Retro", value: "australiaDevRetro" },
+  { label: "Australia Town Hall", value: "australiaTownHall" },
 ];
 
 export const TemplateSelect = ({ field }: { field: FieldValues }) => {
   const inputBg = useColorModeValue("#f7f7f7", "gray.700");
   const optionsBg = useColorModeValue("#ffffff", "#2d3748");
   const optionColourBg = useColorModeValue("#000000", "#ffffff");
-  const optionHoverBg = useColorModeValue("#ffffff14", "#cbd5e0");
+  const optionHoverBg = useColorModeValue("#ffffff14", "#ccc");
 
   const colourStyles: StylesConfig<any> = {
     control: (styles) => ({
@@ -29,20 +30,33 @@ export const TemplateSelect = ({ field }: { field: FieldValues }) => {
           : isFocused
           ? optionHoverBg
           : optionsBg,
-        color: isDisabled ? "#ccc" : isSelected ? "black" : optionColourBg,
-        cursor: isDisabled ? "not-allowed" : "default",
 
-        // ":active": {
-        //   ...styles[":active"],
-        //   backgroundColor: !isDisabled
-        //     ? isSelected
-        //       ? data.color
-        //       : color.alpha(0.3).css()
-        //     : undefined,
-        // },
+        color: isDisabled
+          ? "#ccc"
+          : isSelected || isFocused
+          ? "black"
+          : optionColourBg,
+        cursor: isDisabled ? "not-allowed" : isFocused ? "pointer" : "default",
+
+        ":first-child": {
+          borderTopLeftRadius: 8,
+          borderTopRightRadius: 8,
+        },
+        ":last-child": {
+          borderBottomLeftRadius: 8,
+          borderBottomRightRadius: 8,
+        },
       };
     },
     input: (styles) => ({ ...styles, color: optionColourBg }),
+    menu: (provided) => ({
+      ...provided,
+      borderRadius: 8,
+    }),
+    menuList: (provided, state) => ({
+      paddingTop: 0,
+      paddingBottom: 0,
+    }),
     // placeholder: (styles) => ({ ...styles, ...dot("#ccc") }),
     singleValue: (styles, { data }) => ({ ...styles, color: optionColourBg }),
   };
