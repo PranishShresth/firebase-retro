@@ -13,8 +13,8 @@ import { ColourPicker } from "components/ColourPicker";
 import Skeleton from "components/Loader/Skeleton";
 import { Modal as CreateBoardModal } from "components/Modal";
 import {
-  TemplateSelect,
   TEMPLATE_OPTIONS,
+  TemplateSelect,
 } from "components/TemplateSelect/TemplateSelect";
 import { firestore } from "configs/firebase/firestore";
 import { useAuthContext } from "context/Auth/AuthContext";
@@ -30,14 +30,18 @@ import {
   where,
 } from "firebase/firestore"; // import Loading from "./Loader";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FaChalkboard } from "react-icons/fa";
 import { FiChevronsRight } from "react-icons/fi";
 import styled from "styled-components";
 import { MAX_SCREEN_WIDTH } from "utils/constants";
 import { BoardWithDocId, Preference } from "utils/interfaces";
-import { AUSTRALIA_RETRO_LISTS } from "utils/retroLists";
+import {
+  AUSTRALIA_DEV_RETRO,
+  AUSTRALIA_TOWN_HALL,
+  CustomBoard,
+} from "utils/retroLists";
 import { v4 as uuidv4 } from "uuid";
 import BoardCard from "./BoardCard";
 
@@ -131,6 +135,21 @@ export const RetroBody = ({
     }
   }, [member, workspaceId]);
 
+  const generateCustomBoard = (board: CustomBoard[], doc_id: string) => {
+    return board.forEach(async ({ listColour, listTitle }, index) => {
+      const list_doc_id = uuidv4();
+      const listref = doc(firestore, "lists", list_doc_id);
+      await setDoc(listref, {
+        listColour,
+        listTitle,
+        listId: list_doc_id,
+        boardId: doc_id,
+        listOrder: index,
+        createdAt: serverTimestamp(),
+      });
+    });
+  };
+
   const handleCreateBoard = async (data: BoardFormValues) => {
     try {
       closeBoardModal();
@@ -147,24 +166,17 @@ export const RetroBody = ({
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       });
-      const isAustraliaRetro =
-        data.boardTemplate && data.boardTemplate.value === "australiaRetro";
+      const isAustraliaTownHall =
+        data.boardTemplate && data.boardTemplate.value === "australiaTownHall";
 
-      if (isAustraliaRetro) {
-        AUSTRALIA_RETRO_LISTS.forEach(
-          async ({ listColour, listTitle }, index) => {
-            const list_doc_id = uuidv4();
-            const listref = doc(firestore, "lists", list_doc_id);
-            await setDoc(listref, {
-              listColour,
-              listTitle,
-              listId: list_doc_id,
-              boardId: doc_id,
-              listOrder: index,
-              createdAt: serverTimestamp(),
-            });
-          }
-        );
+      const isAustraliaDevRetro =
+        data.boardTemplate && data.boardTemplate.value === "australiaDevRetro";
+
+      if (isAustraliaDevRetro) {
+        generateCustomBoard(AUSTRALIA_DEV_RETRO, doc_id);
+      }
+      if (isAustraliaTownHall) {
+        generateCustomBoard(AUSTRALIA_TOWN_HALL, doc_id);
       }
     } catch (err) {
       console.log(err);
