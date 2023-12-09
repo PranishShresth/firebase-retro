@@ -1,6 +1,5 @@
-import { Timestamp } from "firebase/firestore";
 import { User } from "firebase/auth";
-import { add } from "date-fns";
+import { Timestamp } from "firebase/firestore";
 
 export type PermissionLevel = "public" | "private";
 
@@ -132,6 +131,19 @@ export interface Item {
   userId: string;
   /*List of the user ids who have voted on this item*/
   itemUpvotes: UserUpvotes;
+  /* Comments belonging to an item */
+  comments: Comment[];
+  /* Created timestamp */
+  createdAt: Timestamp;
+}
+
+export interface Comment {
+  /* UUID - unique identifier of the comment */
+  commentId: string;
+  /* Message of the comment */
+  message: string;
+  /* Id of the user who created this comment */
+  userId: string;
   /* Created timestamp */
   createdAt: Timestamp;
 }

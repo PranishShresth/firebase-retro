@@ -3,16 +3,16 @@ import { useColorMode } from "@chakra-ui/react";
 import NoPageFound from "components/404page/PageNotFound";
 import { RetroBoardSkeleton } from "components/Loader";
 import { firestore } from "configs/firebase/firestore";
-import { reorderItem, reorderList } from "context/RetroBoard/reducers";
 import { useBoard, useDispatch } from "context/RetroBoard/RetroBoardContext";
+import { reorderItem, reorderList } from "context/RetroBoard/reducers";
 import { doc, updateDoc } from "firebase/firestore";
 import { isEmpty } from "lodash-es";
 import { useCallback, useMemo } from "react";
 import {
   DragDropContext,
   Draggable,
-  Droppable,
   DropResult,
+  Droppable,
 } from "react-beautiful-dnd";
 import styled, { css } from "styled-components";
 import { MAX_SCREEN_WIDTH } from "utils/constants";
@@ -236,13 +236,13 @@ const RetroColumnWrapper = styled.div<{ $listCount: number }>`
       width: ${$listCount > 5 ? "300px" : "100%"};
     `}
   height:100%;
-  width: 300px;
+  width: 325px;
   display: flex;
   flex-direction: column;
 `;
 
 const FlexBox = styled(Box)<{ $listCount: number }>`
-  width: 300px;
+  width: 325px;
 `;
 const RetroBoardCanvas = styled(Box)`
   flex-grow: 1;

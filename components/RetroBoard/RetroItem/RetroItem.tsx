@@ -1,23 +1,32 @@
 import { Box, Stack } from "@chakra-ui/layout";
 import {
   Avatar,
+  Button,
   Tooltip,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
+import { firestore } from "configs/firebase/firestore";
 import { useAuthContext } from "context/Auth/AuthContext";
 import { useBoard, useBoardFinal } from "context/RetroBoard/RetroBoardContext";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import React from "react";
 import { DraggableProvided, DraggableStateSnapshot } from "react-beautiful-dnd";
+import { Controller, useForm } from "react-hook-form";
+import { IoIosSend } from "react-icons/io";
 import styled, { css } from "styled-components";
-import { Item } from "utils/interfaces";
+import { useIsDarkMode } from "utils/color";
+import { Comment, Item } from "utils/interfaces";
 import { randomizeLetter } from "utils/shuffle";
+import { v4 as uuidv4 } from "uuid";
 import { RetroMarkDown } from "../ReactMarkdown/RetroMarkdown";
 import EditItem from "./EditItem";
+import { RetroItemComment } from "./RetroItemComment";
 import { RetroItemCopy } from "./RetroItemCopy";
 import { RetroItemDelete } from "./RetroItemDelete";
 import { RetroItemEdit } from "./RetroItemEdit";
 import { RetroItemLike } from "./RetroItemLike";
+import { RetroTextArea } from "./RetroTextArea";
 
 interface Props {
   listColour: string;
@@ -27,18 +36,54 @@ interface Props {
   snapshot: DraggableStateSnapshot;
 }
 
+interface FormValues {
+  itemComment: string;
+}
+
 const RetroItem = ({ listColour, item, provided, snapshot }: Props) => {
   const { isOpen, onClose, onOpen: openEditBox } = useDisclosure();
+  const { isOpen: isCommentsExpanded, onToggle: toggleComments } =
+    useDisclosure();
+  const isDarkMode = useIsDarkMode();
   const bg = useColorModeValue("white", "#1C2A3A");
+  const textareaBg = useColorModeValue("white", "gray.600");
   const board = useBoardFinal();
   const { user } = useAuthContext();
+  const { handleSubmit, control, resetField, watch } = useForm<FormValues>({
+    defaultValues: {
+      itemComment: "",
+    },
+  });
 
   const isDragging = snapshot.isDragging;
+  const watchItemComment = watch("itemComment");
 
   const hideItems = board.prefs.hideItems && item.userId !== user?.uid;
   const itemContent = hideItems
     ? randomizeLetter(item.itemTitle)
     : item.itemTitle;
+
+  const handleAddingComment = async (data: FormValues) => {
+    const comment_id = uuidv4();
+
+    try {
+      if (user) {
+        const itemRef = doc(firestore, "items", item.itemId);
+
+        resetField("itemComment");
+
+        await updateDoc(itemRef, {
+          comments: arrayUnion({
+            userId: user?.uid,
+            message: data.itemComment,
+            commentId: comment_id,
+          }),
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   if (isOpen) {
     return (
@@ -54,7 +99,6 @@ const RetroItem = ({ listColour, item, provided, snapshot }: Props) => {
   return (
     <StyledBox
       $listColour={listColour}
-      padding="16px 16px 24px 24px"
       background={bg}
       ref={provided.innerRef}
       $isDragging={isDragging}
@@ -62,34 +106,91 @@ const RetroItem = ({ listColour, item, provided, snapshot }: Props) => {
       {...provided.draggableProps}
       {...provided.dragHandleProps}
     >
-      <ContentDiv $hideItems={hideItems}>
-        <RetroMarkDown text={itemContent} />
-      </ContentDiv>
-      <Stack direction="row-reverse">
-        <RetroCardActions
-          userId={item?.userId}
-          itemId={item.itemId}
-          text={item.itemTitle}
-          openEditBox={openEditBox}
-          itemUpvotes={item.itemUpvotes}
-        />
-      </Stack>
+      <Box padding="16px 16px 24px 24px">
+        <ContentDiv $hideItems={hideItems}>
+          <RetroMarkDown text={itemContent} />
+        </ContentDiv>
+
+        <Stack direction="row-reverse">
+          <RetroCardActions
+            userId={item?.userId}
+            itemId={item.itemId}
+            text={item.itemTitle}
+            openEditBox={openEditBox}
+            isCommentsExpanded={isCommentsExpanded}
+            toggleComments={toggleComments}
+            itemComments={item.comments}
+            itemUpvotes={item.itemUpvotes}
+          />
+        </Stack>
+      </Box>
+      {isCommentsExpanded && (
+        <CommentInputWrapper>
+          <CommentForm onSubmit={handleSubmit(handleAddingComment)}>
+            <Controller
+              control={control}
+              name="itemComment"
+              render={({ field }) => (
+                <RetroTextArea
+                  {...field}
+                  $isDarkMode={isDarkMode}
+                  placeholder="Enter your comment..."
+                  resize="none"
+                  focusBorderColor="blue.500"
+                  background={textareaBg}
+                  minHeight="40px"
+                />
+              )}
+            />
+            <Button
+              type="submit"
+              disabled={watchItemComment.length === 0}
+              colorScheme="facebook"
+              padding={0}
+            >
+              <IoIosSend size={24} />
+            </Button>
+          </CommentForm>
+          {item.comments &&
+            item.comments.map(({ commentId, message }) => (
+              <Comments key={commentId}>{message}</Comments>
+            ))}
+        </CommentInputWrapper>
+      )}
     </StyledBox>
   );
 };
+
+const CommentInputWrapper = styled.div`
+  margin-top: 24px;
+  padding: 12px;
+`;
+
+const CommentForm = styled.form`
+  column-gap: 8px;
+  display: flex;
+`;
+
+const Comments = styled.div``;
 
 const RetroCardActions = ({
   userId,
   itemId,
   openEditBox,
+  itemComments,
   itemUpvotes,
   text,
+  isCommentsExpanded,
+  toggleComments,
 }: {
   userId: string;
   itemId: string;
   openEditBox: () => void;
+  itemComments: Comment[];
   itemUpvotes: string[];
   text: string;
+  isCommentsExpanded: boolean;
+  toggleComments: () => void;
 }) => {
   const { user } = useAuthContext();
 
@@ -117,6 +218,12 @@ const RetroCardActions = ({
         </Stack>
         <Stack direction="row">
           <RetroItemLike itemId={itemId} itemUpvotes={itemUpvotes} />
+          <RetroItemComment
+            isCommentsExpanded={isCommentsExpanded}
+            itemId={itemId}
+            itemComments={itemComments}
+            toggleComments={toggleComments}
+          />
           <RetroItemMemberToolTip userId={userId} />
         </Stack>
       </Box>
