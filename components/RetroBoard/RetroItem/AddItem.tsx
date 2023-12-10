@@ -10,7 +10,7 @@ import { useAuthContext } from "context/Auth/AuthContext";
 import { useBoard } from "context/RetroBoard/RetroBoardContext";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { IoMdClose } from "react-icons/io";
 import { useIsDarkMode } from "utils/color";
@@ -68,6 +68,7 @@ function AddItem({ listId }: Props) {
         createdBy: member,
         itemUpvotes: [],
         itemOrder,
+        comments: [],
         createdAt: serverTimestamp(),
       });
       // scroll to the element after it is added

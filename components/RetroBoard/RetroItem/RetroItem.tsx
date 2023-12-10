@@ -1,23 +1,21 @@
 import { Box, Stack } from "@chakra-ui/layout";
-import {
-  Avatar,
-  Tooltip,
-  useColorModeValue,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { useColorModeValue, useDisclosure } from "@chakra-ui/react";
 import { useAuthContext } from "context/Auth/AuthContext";
-import { useBoard, useBoardFinal } from "context/RetroBoard/RetroBoardContext";
+import { useBoardFinal } from "context/RetroBoard/RetroBoardContext";
 import React from "react";
 import { DraggableProvided, DraggableStateSnapshot } from "react-beautiful-dnd";
 import styled, { css } from "styled-components";
-import { Item } from "utils/interfaces";
+import { Comment, Item } from "utils/interfaces";
 import { randomizeLetter } from "utils/shuffle";
 import { RetroMarkDown } from "../ReactMarkdown/RetroMarkdown";
 import EditItem from "./EditItem";
+import { RetroComment } from "./RetroComment";
+import { RetroItemComment } from "./RetroItemComment";
 import { RetroItemCopy } from "./RetroItemCopy";
 import { RetroItemDelete } from "./RetroItemDelete";
 import { RetroItemEdit } from "./RetroItemEdit";
 import { RetroItemLike } from "./RetroItemLike";
+import { RetroItemMemberToolTip } from "./RetroItemMemberTooltip";
 
 interface Props {
   listColour: string;
@@ -29,6 +27,8 @@ interface Props {
 
 const RetroItem = ({ listColour, item, provided, snapshot }: Props) => {
   const { isOpen, onClose, onOpen: openEditBox } = useDisclosure();
+  const { isOpen: isCommentsExpanded, onToggle: toggleComments } =
+    useDisclosure();
   const bg = useColorModeValue("white", "#1C2A3A");
   const board = useBoardFinal();
   const { user } = useAuthContext();
@@ -54,7 +54,6 @@ const RetroItem = ({ listColour, item, provided, snapshot }: Props) => {
   return (
     <StyledBox
       $listColour={listColour}
-      padding="16px 16px 24px 24px"
       background={bg}
       ref={provided.innerRef}
       $isDragging={isDragging}
@@ -62,18 +61,25 @@ const RetroItem = ({ listColour, item, provided, snapshot }: Props) => {
       {...provided.draggableProps}
       {...provided.dragHandleProps}
     >
-      <ContentDiv $hideItems={hideItems}>
-        <RetroMarkDown text={itemContent} />
-      </ContentDiv>
-      <Stack direction="row-reverse">
-        <RetroCardActions
-          userId={item?.userId}
-          itemId={item.itemId}
-          text={item.itemTitle}
-          openEditBox={openEditBox}
-          itemUpvotes={item.itemUpvotes}
-        />
-      </Stack>
+      <Box padding="16px 16px 24px 24px">
+        <ContentDiv $hideItems={hideItems}>
+          <RetroMarkDown text={itemContent} />
+        </ContentDiv>
+
+        <Stack direction="row-reverse">
+          <RetroCardActions
+            userId={item?.userId}
+            itemId={item.itemId}
+            text={item.itemTitle}
+            openEditBox={openEditBox}
+            isCommentsExpanded={isCommentsExpanded}
+            toggleComments={toggleComments}
+            itemComments={item.comments}
+            itemUpvotes={item.itemUpvotes}
+          />
+        </Stack>
+      </Box>
+      {isCommentsExpanded && <RetroComment item={item} />}
     </StyledBox>
   );
 };
@@ -82,14 +88,20 @@ const RetroCardActions = ({
   userId,
   itemId,
   openEditBox,
+  itemComments,
   itemUpvotes,
   text,
+  isCommentsExpanded,
+  toggleComments,
 }: {
   userId: string;
   itemId: string;
   openEditBox: () => void;
+  itemComments: Comment[];
   itemUpvotes: string[];
   text: string;
+  isCommentsExpanded: boolean;
+  toggleComments: () => void;
 }) => {
   const { user } = useAuthContext();
 
@@ -117,30 +129,16 @@ const RetroCardActions = ({
         </Stack>
         <Stack direction="row">
           <RetroItemLike itemId={itemId} itemUpvotes={itemUpvotes} />
-          <RetroItemMemberToolTip userId={userId} />
+          <RetroItemComment
+            isCommentsExpanded={isCommentsExpanded}
+            itemId={itemId}
+            itemComments={itemComments}
+            toggleComments={toggleComments}
+          />
+          <RetroItemMemberToolTip avatarSize="sm" userId={userId} />
         </Stack>
       </Box>
     </>
-  );
-};
-
-const RetroItemMemberToolTip = ({ userId }: { userId: string }) => {
-  const {
-    board: {
-      board: { members },
-    },
-  } = useBoard();
-
-  const member = members.find((_) => _.userId === userId);
-  if (!member) return null;
-
-  const label = `${member.firstName} ${member.lastName}`;
-  return (
-    <div>
-      <Tooltip bg="gray.300" color="black" hasArrow label={label}>
-        <Avatar size="sm" name={label} />
-      </Tooltip>
-    </div>
   );
 };
 
