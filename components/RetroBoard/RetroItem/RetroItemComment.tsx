@@ -19,7 +19,7 @@ export const RetroItemComment = ({
   const iconBg = useColorModeValue("#1C2A3A", LIGHT_GREEN_COLOR);
   const borderBg = useColorModeValue("#DADADA", "#1C2A3A");
   const likeHoverBg = useColorModeValue("#ffffff", "#9f9f9f");
-  const comments = itemComments.length;
+  const comments = itemComments && itemComments.length;
 
   return (
     <>
