@@ -144,8 +144,6 @@ export interface Comment {
   message: string;
   /* Id of the user who created this comment */
   userId: string;
-  /* Created timestamp */
-  createdAt: Timestamp;
 }
 
 export interface Upvotes {

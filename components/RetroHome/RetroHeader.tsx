@@ -11,7 +11,7 @@ import {
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { RetroToggle } from "components/Toggle/RetroToggle";
+import { DarkModeToggle } from "components/Toggle/Toggle";
 import { auth } from "configs/firebase/firebaseClient";
 import { useAuthContext } from "context/Auth/AuthContext";
 import Link from "next/link";
@@ -51,7 +51,7 @@ export const RetroHeader = () => {
           </Link>
 
           <Stack direction={"row"}>
-            <RetroToggle onToggle={toggleColorMode} colorMode={colorMode} />
+            <DarkModeToggle onToggle={toggleColorMode} colorMode={colorMode} />
             {member ? (
               <Menu>
                 <MenuButton>
