@@ -3,6 +3,7 @@ import {
   AlertIcon,
   Button,
   Text,
+  Tooltip,
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
@@ -12,8 +13,9 @@ import { useAuthContext } from "context/Auth/AuthContext";
 import { useBoard } from "context/RetroBoard/RetroBoardContext";
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import LikeSvgIcon from "icons/LikeIcon";
+import { useEffect, useState } from "react";
 import { LIGHT_GREEN_COLOR } from "utils/constants";
-import { Item } from "utils/interfaces";
+import { Item, Member } from "utils/interfaces";
 
 const MAX_UPVOTES_PER_BOARD = 5;
 
@@ -39,6 +41,16 @@ const ToastAlert = ({ description }: { description: string }) => (
   </Alert>
 );
 
+const getUpvoteUsers = (members: Member[], itemUpvotes: string[]) => {
+  return itemUpvotes.map((upvote) => {
+    const member = members.find((_) => _.userId === upvote);
+    if (!member) return null;
+
+    const label = `${member.firstName} ${member.lastName}`;
+    return label;
+  });
+};
+
 export const RetroItemLike = ({
   itemId,
   itemUpvotes,
@@ -50,12 +62,16 @@ export const RetroItemLike = ({
   const iconBg = useColorModeValue("#1C2A3A", LIGHT_GREEN_COLOR);
   const borderBg = useColorModeValue("#DADADA", "#1C2A3A");
   const likeHoverBg = useColorModeValue("#ffffff", "#9f9f9f");
+  const [upvoteUsers, setUpvoteUsers] = useState<string>("");
   const toast = useToast();
 
   const { user } = useAuthContext();
   const isUpvoted = user && itemUpvotes.includes(user.uid);
   const {
-    board: { items },
+    board: {
+      board: { members },
+      items,
+    },
   } = useBoard();
 
   const upVotes = itemUpvotes.length;
@@ -93,8 +109,20 @@ export const RetroItemLike = ({
     }
   };
 
+  useEffect(() => {
+    const users = getUpvoteUsers(members, itemUpvotes);
+    const usersString = users.filter(Boolean).join("\n");
+    setUpvoteUsers(usersString);
+  }, [itemUpvotes, members]);
+
   return (
-    <>
+    <Tooltip
+      bg="gray.300"
+      color="black"
+      hasArrow
+      label={upvoteUsers}
+      whiteSpace="pre-line"
+    >
       <Button
         onClick={toggleUpvote}
         aria-label="Like item"
@@ -123,6 +151,6 @@ export const RetroItemLike = ({
         )}
         <LikeSvgIcon fill={isUpvoted ? "#000000" : iconBg} />
       </Button>
-    </>
+    </Tooltip>
   );
 };
