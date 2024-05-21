@@ -50,7 +50,6 @@ export const RetroWorkspaceBoards = () => {
       );
 
       Promise.resolve(fetchCurrentWorkspace).then((workspace) => {
-        console.log(workspace.data());
         setWorkspace(workspace.data() as Workspace);
       });
 
