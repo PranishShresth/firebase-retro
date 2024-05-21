@@ -1,1 +1,7 @@
-{ "routes": [{ "src": "/[^.]+", "dest": "/", "status": 200 }] }
+{
+  "routes": [
+    { "src": "/dev-retro-latest", "dest": "/dev-retro-latest", "status": 200 },
+    { "src": "/retro-latest", "dest": "/retro-latest", "status": 200 },
+    { "src": "/[^.]+", "dest": "/", "status": 200 }
+  ]
+}

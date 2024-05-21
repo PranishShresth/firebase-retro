@@ -86,7 +86,7 @@ export const RetroBoardProvider = ({ children }: { children: ReactNode }) => {
       (snapshot) => {
         const board = snapshot.data() as Board;
         if (!workspaceId) {
-          setWorkspaceId(board.workspaceId);
+          setWorkspaceId(board?.workspaceId);
         }
         if (members) {
           dispatch(updateBoard({ board: { ...board, members: members } }));
