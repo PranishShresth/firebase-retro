@@ -11,6 +11,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { Board } from "utils/interfaces";
+import withAuth from "utils/withAuth";
 
 const DEV_RETRO_ID = "f215d431-df95-406c-b52c-7474a9198bd3";
 
@@ -51,4 +52,4 @@ const RedirectToLatest = () => {
   );
 };
 
-export default RedirectToLatest;
+export default withAuth(RedirectToLatest);
